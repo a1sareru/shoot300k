@@ -25,7 +25,7 @@
     <!-- Top -->
     <div id="main" class="tab-content">
       <p>这是某位懒惰贤者为自己开发的双色银卡组配卡助手。（<span id="last-updated">加载中...</span>）</p>
-      <p><strong>请尽可能在电脑浏览器使用！</strong>只做了最低程度的适配，所以不推荐移动端使用……！</p>
+      <p><strong>请尽可能在电脑浏览器使用！</strong>只做了最低程度的多端适配，所以不推荐移动端使用……！</p>
       <p>站点完全基于前端运行，不会存储您的任何数据，请放心使用。</p>
       <h3>🍎 使用方法</h3>
       <ul>
@@ -36,7 +36,7 @@
       <h3>⚠️ 注意事项</h3>
       <ul>
         <li>站点内的所有操作均只考虑 SSR 和 SR 类型的卡牌；</li>
-        <li>数据大部分来源于<span class="spoiler">游戏文件解包</span>，其余由人工自行补充；</li>
+        <li>数据大部分来自<span class="spoiler">游戏文件解包</span>，其余由人工自行补充；</li>
         </li>
         <li>【卡牌序号问题·其一】由于 coly <del style="color: gray;">不知出于何种考虑</del>
           将<u><strong>【賢者様の世界の味】アーサー</strong></u> 的 ID 设为 356（原本应为 337），
@@ -57,6 +57,10 @@
     <div id="selectCards" class="tab-content" style="margin: 10px;">
       <div class="selectCards-header">
         <div class="submit-result-container">
+          <button id="clear-selection" class="clear-btn">清空选择</button>
+          <button id="toggle-sr">选中全部 SR</button>
+          <button id="filter-ssr">只显示SSR</button>
+          <br>
           <button id="submit-cards" class="submit-btn">提交选卡</button>
           <button id="copy-result" class="copy-btn" style="display: none;">复制结果</button>
           <div id="selected-ids" class="result-text"></div>
@@ -87,188 +91,12 @@
     <p>© 2025 とある名無し賢者. All rights waived.</p>
   </footer>
 
-  <!-- 动作脚本 -->
-  <script>
-    // 获取所有导航项和内容区域
-    const tabs = document.querySelectorAll(".nav-item");
-    const sections = document.querySelectorAll(".section");
-
-    // 监听点击事件
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        // 移除所有的 active 类
-        tabs.forEach(t => t.classList.remove("active"));
-        sections.forEach(section => section.classList.remove("active"));
-
-        // 添加 active 类到被点击的选项和相应内容
-        tab.classList.add("active");
-        document.getElementById(tab.getAttribute("data-target")).classList.add("active");
-      });
-    });
-
-    async function fetchLastUpdated(owner, repo) {
-      const url = `https://api.github.com/repos/${owner}/${repo}`;
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`GitHub API 请求失败: ${response.status}`);
-
-        const data = await response.json();
-        const lastUpdated = new Date(data.pushed_at).toLocaleString("zh-CN", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false // 24小时制
-        });
-
-        document.getElementById("last-updated").textContent = `最后更新: ${lastUpdated}`;
-      } catch (error) {
-        document.getElementById("last-updated").textContent = "获取失败";
-        console.error("获取 GitHub 仓库信息失败:", error);
-      }
-    }
-
-    fetchLastUpdated("a1sareru", "shoot300k");
-
-    // 加载 CSV 数据并显示持有卡牌
-    function loadCards() {
-      fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('无法加载CSV文件');
-          }
-          return response.text();
-        })
-        .then(csvText => {
-          const cards = parseCSV(csvText);
-          // 过滤只显示 SSR 和 SR（rarity 为 4 或 3）
-          const filteredCards = cards.filter(card => {
-            const rarity = card.rarity.trim();
-            return rarity === "4" || rarity === "3";
-          });
-          renderCards(filteredCards);
-        })
-        .catch(error => {
-          document.getElementById('card-list').innerText = '加载卡牌数据出错: ' + error;
-          console.error(error);
-        });
-    }
-
-    // 简单 CSV 解析器（假设 CSV 没有字段内嵌逗号，且以换行分隔）
-    function parseCSV(text) {
-      const lines = text.trim().split('\n');
-      const headers = lines[0].split(',');
-      const data = lines.slice(1).map(line => {
-        const values = line.split(',');
-        const obj = {};
-        headers.forEach((header, index) => {
-          obj[header.trim()] = values[index] ? values[index].trim() : "";
-        });
-        return obj;
-      });
-      return data;
-    }
-
-    // 渲染卡牌列表到页面
-    function renderCards(cards) {
-      const cardListEl = document.getElementById('card-list');
-      if (cards.length === 0) {
-        cardListEl.innerText = '没有找到符合条件的卡牌。';
-        return;
-      }
-      cardListEl.innerHTML = '';
-      cards.forEach(card => {
-        const cardEl = document.createElement('div');
-        cardEl.className = 'card';
-        cardEl.dataset.id = card.id;
-        if (card.rarity.trim() === "4") {
-          cardEl.classList.add('gold-border');
-        } else if (card.rarity.trim() === "3") {
-          cardEl.classList.add('silver-border');
-        }
-        // 设置卡牌内容（图片和标题）
-        cardEl.innerHTML = `
-          <figure style="display: flex; flex-direction: column; align-items: center; margin: 0;">
-            <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg" 
-                alt="${card.title}" 
-                style="width: 34px; height: 60px;" 
-                onerror="this.src='';" />
-            <figcaption style="font-size: 9px; text-align: center; white-space: normal; word-break: break-word; line-height: 1.7; margin: 2px 0; padding: 2px;">
-              ${(() => {
-            const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>') + " | " + card.id;
-            const lines = modified.split('<br>');
-            if (lines.length > 0) {
-              lines[0] = `<strong style="font-size: 10.5px; font-weight: 900; color: #000; -webkit-text-stroke: 0.3px #a7d8e8;">${lines[0]}</strong>`;
-            }
-            return lines.join('<br>');
-          })()}
-            </figcaption>
-          </figure>
-        `;
-        cardEl.addEventListener('click', () => {
-          cardEl.classList.toggle('selected');
-        });
-        cardListEl.appendChild(cardEl);
-      });
-    }
-
-    // 提交选卡，显示结果
-    document.getElementById('submit-cards').addEventListener('click', () => {
-      const selectedCards = document.querySelectorAll('.card.selected');
-      const selectedIds = Array.from(selectedCards).map(card => card.dataset.id);
-      const idString = selectedIds.join(',');
-      document.getElementById('selected-ids').innerText = idString;
-      const copyButton = document.getElementById('copy-result');
-      copyButton.style.display = idString.trim().length > 0 ? 'inline-block' : 'none';
-    });
-
-    // 复制功能
-    document.getElementById('copy-result').addEventListener('click', () => {
-      const resultText = document.getElementById('selected-ids').innerText;
-      navigator.clipboard.writeText(resultText)
-        .then(() => { alert('结果已复制到剪贴板'); })
-        .catch(err => { alert('复制失败，请手动复制'); console.error(err); });
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-      document.querySelector(".nav-item[data-target='main']").classList.add("active");
-      document.querySelector("#main").classList.add("active");
-      // 1. 获取所有的导航项
-      const navItems = document.querySelectorAll(".nav-item");
-
-      // 2. 监听点击事件
-      navItems.forEach(item => {
-        item.addEventListener("click", function() {
-          // 2.1 移除所有导航项的 active 类
-          navItems.forEach(nav => nav.classList.remove("active"));
-
-          // 2.2 给当前点击的导航项添加 active 类
-          this.classList.add("active");
-
-          // 2.3 获取对应的 tab-content ID
-          const targetId = this.getAttribute("data-target");
-
-          // 2.4 隐藏所有 tab-content
-          document.querySelectorAll(".tab-content").forEach(tab => {
-            tab.classList.remove("active");
-          });
-
-          // 2.5 显示对应的 tab-content
-          document.getElementById(targetId).classList.add("active");
-
-          // 🚀 只有 "持有卡牌" 界面时，禁止 body 滚动
-          if (targetId === "selectCards") {
-            document.body.style.overflow = "hidden";
-            loadCards();
-          } else {
-            document.body.style.overflow = "auto";
-          }
-        });
-      });
-    });
-  </script>
 </body>
+
+<script src="js/navigation.js" defer></script>
+<script src="js/lastUpdate.js" defer></script>
+<script src="js/cardManager.js" defer></script>
+<script src="js/interaction.js" defer></script>
+<script src="js/main.js" defer></script>
 
 </html>

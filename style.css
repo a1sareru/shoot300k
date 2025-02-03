@@ -132,23 +132,20 @@
 
     .container {
         max-width: 960px;
-        margin: 100px auto 20px;
+        margin: 20px auto 20px;
         /* 确保底部有间距 */
         padding: 20px;
         background: #fff;
         box-shadow: 0 2px 5px #0000001a;
         border-radius: 4px;
 
-        /* 🚀 多留出 10px 避免被遮住 */
-        height: calc(100vh - 50px - 60px - 10px);
-        /* 避免页面整体滚动 */
-        overflow: auto;
+
     }
 
     @media (max-width: 600px) {
         .container {
             /* 增加顶部边距以适应展开的导航栏，更小的左右边距 */
-            margin: 130px 10px 10px;
+            margin: 110px 10px 10px;
             padding: 15px;
             font-size: 95%;
         }
@@ -171,46 +168,12 @@
         box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
     }
 
-
-    /* 固定顶部的tab区域 */
-    .tabs {
-        position: sticky;
-        top: 0;
-        background-color: #fff;
-        z-index: 1000;
-        display: flex;
-
-        /* 去除外边距，铺满宽度 */
-        border-bottom: 2px solid #eee;
-    }
-
-    .tab {
-        flex: 1;
-        text-align: center;
-        padding: 10px 0;
-        cursor: pointer;
-        border: 1px solid transparent;
-        border-bottom: none;
-        transition: background 0.3s;
-    }
-
-    .tab:hover {
-        background-color: #f0f0f0;
-    }
-
-    .tab.active {
-        border: 1px solid #ddd;
-        border-bottom: 2px solid #fff;
-        background-color: #fff;
-        font-weight: bold;
-    }
-
     /* 各部分内容 */
     .tab-content {
         display: none;
-        animation: fadeIn 0.3s ease-in;
-        padding-top: 10px;
-        margin: 60px;
+        animation: fadeIn 0.2s ease-in;
+        padding-top: 50px;
+        margin: auto 50px 50px;
     }
 
     .tab-content.active {
@@ -219,9 +182,8 @@
 
     @media (max-width: 600px) {
         .tab-content {
-            margin: 10px;
-            margin-top: 0px;
-            margin-bottom: 60px;
+            padding-top: 10px;
+            margin: 0 10px 60px;
         }
     }
 
@@ -315,8 +277,8 @@
         }
     }
 
-    /* 提交按钮样式 */
-    .submit-btn {
+    /* 按钮样式 */
+    button {
         background-color: #f49907;
         color: white;
         border: none;
@@ -325,18 +287,71 @@
         border-radius: 15px;
         cursor: pointer;
         transition: background-color 0.3s ease;
-        margin-right: 20px;
-        margin-bottom: 20px;
+        margin-right: 15px;
+        margin-bottom: 15px;
     }
 
-    .submit-btn:hover {
+    button:hover {
         background-color: #ffb949;
         transform: scale(1.01);
         box-shadow: 0 0 5px rgba(229, 160, 58, 0.54);
     }
 
-    .result-text {
-        margin: 0;
+    @media (max-width: 600px) {
+        button {
+            /* 缩小字体 */
+            font-size: 13px;
+
+            /* 减小按钮的内边距 */
+            padding: 8px 15px;
+
+            /* 缩小间距 */
+            margin-right: 7px;
+            margin-bottom: 7px;
+
+            /* 让圆角更小 */
+            border-radius: 10px;
+        }
+    }
+
+    .clear-btn {
+        /* 颜色：红色警示 */
+        background-color: #e74c3c;
+
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 15px;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .clear-btn:hover {
+        background-color: #c0392b;
+    }
+
+    @media (max-width: 600px) {
+        .clear-btn {
+            /* 缩小字体 */
+            font-size: 13px;
+
+            /* 减小按钮的内边距 */
+            padding: 8px 15px;
+
+            /* 让圆角更小 */
+            border-radius: 10px;
+        }
+    }
+
+    .submit-btn {
+        background-color: #544329;
+        font-weight: 700;
+    }
+
+    .submit-btn:hover {
+        background-color: #7e6b57;
     }
 
     /* 复制按钮样式 */
@@ -356,16 +371,20 @@
         background-color: #1976D2;
     }
 
-    /* 固定提交及结果区域（仅在持有卡牌tab中） */
     .selectCards-header {
-        top: 40px;
-        padding-bottom: 20px;
+        margin-bottom: 25px;
+    }
+
+    @media screen and (max-width: 600px) {
+        .selectCards-header {
+            margin-bottom: 10px;
+        }
     }
 
     /* 卡牌列表滚动容器 */
     .selectCards-scrollable {
         /* 确保不会遮住 footer */
-        max-height: calc(85vh - 160px - 60px - 10px);
+        max-height: calc(85vh - 160px - 60px - 50px);
         overflow-y: auto;
 
         /* 淡灰色背景，柔和过渡 */
@@ -383,11 +402,20 @@
         border: 1px solid #d1d9e6;
     }
 
+    @media screen and (max-width: 600px) {
+        .selectCards-scrollable {
+            max-height: calc(85vh - 160px - 60px - 90px);
+        }
+
+    }
+
     #selected-ids {
         font-size: 14px;
-        display: flex;
         flex-wrap: wrap;
         justify-content: center;
+
+        /* 避免被 `card-list` 遮挡 */
+        position: relative;
 
         /* 轻微灰色背景，柔和视觉 */
         background-color: #f8f9fa;
@@ -408,7 +436,7 @@
         word-break: break-word;
 
         /* 让框最小高度为 40px，防止内容过少时太小 */
-        min-height: 50px;
+        min-height: 90px;
 
         /* 让框不会无限变高 */
         max-height: 120px;
@@ -418,22 +446,18 @@
 
         /* 确保它是块级元素 */
         display: block;
+
     }
 
     /* 居中提交区域 */
     .submit-result-container {
-        height: 100px;
-        width: 80%;
+        width: 90%;
         margin: 0 auto;
-        gap: 20px;
     }
 
     @media (max-width: 600px) {
         .submit-result-container {
-            width: 100%;
             padding: 0 10px;
-            /* 根据需要调整内边距 */
             box-sizing: border-box;
-            /* 确保内边距也算在宽度内 */
         }
     }
