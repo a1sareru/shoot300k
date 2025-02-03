@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shoot300k</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    /* 基础重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #ffffff;
+      color: #333333;
+      line-height: 1.8;
+      padding: 20px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      min-height: 100vh;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+    }
+
+    p {
+      /* 段落间距设置为16px */
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 600px) {
+      p {
+        /* 在较小的屏幕上减少段落间距 */
+        margin-bottom: 8px;
+      }
+    }
+
+    h3 {
+      font-size: 24px;
+      color: #333;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-left: 5px solid #ffcc00;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      h3 {
+        font-size: 18px;
+        padding: 8px;
+        margin-top: 15px;
+        margin-bottom: 8px;
+      }
+    }
+
+    /* spoiler样式 */
+    .spoiler {
+      color: #3f3f3f;
+      background-color: #3f3f3f;
+      padding: 2px;
+      border-radius: 3px;
+      transition: background-color 0.3s, color 0.3s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+
+      /* 防止文字被选择 */
+      user-select: none;
+    }
+
+    .spoiler:hover {
+      color: white;
+      background: linear-gradient(145deg, #555, #222);
+    }
+
+
+    /* 顶部导航栏 */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    /* 导航栏选项 */
+    .nav-item {
+      cursor: pointer;
+      padding: 10px 15px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .nav-item:hover {
+      background: #555;
+    }
+
+    .nav-item.active {
+      font-weight: bold;
+      border-bottom: 2px solid #ffcc00;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 5px 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .nav-item {
+        padding: 8px 10px;
+        text-align: center;
+        font-size: 14px;
+        flex-grow: 1;
+        width: 50%;
+        /* 使每个导航项填满一半的导航栏宽度 */
+      }
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 100px auto 20px;
+      /* 确保底部有间距 */
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 2px 5px #0000001a;
+      border-radius: 4px;
+
+      /* 🚀 多留出 10px 避免被遮住 */
+      height: calc(100vh - 50px - 60px - 10px);
+      /* 避免页面整体滚动 */
+      overflow: auto;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        /* 增加顶部边距以适应展开的导航栏，更小的左右边距 */
+        margin: 130px 10px 10px;
+        padding: 15px;
+        font-size: 95%;
+      }
+    }
+
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #333;
+      color: white;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+
+    /* 固定顶部的tab区域 */
+    .tabs {
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      z-index: 1000;
+      display: flex;
+
+      /* 去除外边距，铺满宽度 */
+      border-bottom: 2px solid #eee;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-bottom: none;
+      transition: background 0.3s;
+    }
+
+    .tab:hover {
+      background-color: #f0f0f0;
+    }
+
+    .tab.active {
+      border: 1px solid #ddd;
+      border-bottom: 2px solid #fff;
+      background-color: #fff;
+      font-weight: bold;
+    }
+
+    /* 各部分内容 */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in;
+      padding-top: 10px;
+      margin: 60px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .tab-content {
+        margin: 10px;
+        margin-top: 0px;
+        margin-bottom: 60px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+
+    /* 卡牌列表区域样式 */
+    #card-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      display: inline-block;
+      width: 106px;
+      height: 133px;
+      margin: 9px;
+      text-align: left;
+      padding: 8px;
+      border-radius: 12px;
+      background: #fafafa;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      cursor: pointer;
+    }
+
+    .card img {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+
+    .card p {
+      margin: 8px 0;
+      font-size: 0.9rem;
+    }
+
+    /* 边框样式 */
+    .gold-border {
+      border: 3px solid gold;
+    }
+
+    .silver-border {
+      border: 3px solid silver;
+    }
+
+    /* 选中效果 */
+    .card.selected {
+      transform: scale(1.02);
+      box-shadow: 0 0 5px #0000008b;
+    }
+
+    /* 只有选中时显示背景 */
+    .card.selected.gold-border {
+      background: linear-gradient(135deg, #fff9e1, #fdd991);
+    }
+
+    .card.selected.silver-border {
+      background: linear-gradient(135deg, #f8f8ff, #c0c0c0);
+    }
+
+    /* 图片与文字（figure） */
+    figure img {
+      width: 34px;
+      height: 60px;
+    }
+
+    figure figcaption {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 10px;
+      margin-right: 5px;
+    }
+
+    @media (max-width: 600px) {
+      figure img {
+        width: 30px;
+        height: auto;
+      }
+
+      figure figcaption {
+        font-size: 8px;
+      }
+    }
+
+    /* 提交按钮样式 */
+    .submit-btn {
+      background-color: #f49907;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 20px;
+      margin-bottom: 20px;
+    }
+
+    .submit-btn:hover {
+      background-color: #ffb949;
+      transform: scale(1.01);
+      box-shadow: 0 0 5px rgba(229, 160, 58, 0.54);
+    }
+
+    .result-text {
+      margin: 0;
+    }
+
+    /* 复制按钮样式 */
+    .copy-btn {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      align-self: right;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      background-color: #1976D2;
+    }
+
+    /* 固定提交及结果区域（仅在持有卡牌tab中） */
+    .selectCards-header {
+      top: 40px;
+      padding-bottom: 20px;
+    }
+
+    /* 卡牌列表滚动容器 */
+    .selectCards-scrollable {
+      /* 确保不会遮住 footer */
+      max-height: calc(85vh - 160px - 60px - 10px);
+      overflow-y: auto;
+
+      /* 淡灰色背景，柔和过渡 */
+      background: #eef2f5;
+
+      /* 让边角更柔和 */
+      border-radius: 8px;
+
+      margin: 15px;
+
+      /* 🚀 添加“内嵌”视觉效果 */
+      /* 内阴影 */
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+      /* 轻微的边框，让它有层次感 */
+      border: 1px solid #d1d9e6;
+    }
+
+    #selected-ids {
+      font-size: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      /* 轻微灰色背景，柔和视觉 */
+      background-color: #f8f9fa;
+
+      /* 轻微边框 */
+      border: 1px solid #ccc;
+
+      /* 圆角边框 */
+      border-radius: 6px;
+
+      /* 适当的内边距 */
+      padding: 8px 12px;
+
+      /* 允许换行 */
+      white-space: pre-wrap;
+
+      /* 遇到长单词换行 */
+      word-break: break-word;
+
+      /* 让框最小高度为 40px，防止内容过少时太小 */
+      min-height: 50px;
+
+      /* 让框不会无限变高 */
+      max-height: 120px;
+
+      /* 超出时可以滚动 */
+      overflow-y: auto;
+
+      /* 确保它是块级元素 */
+      display: block;
+    }
+
+    /* 居中提交区域 */
+    .submit-result-container {
+      height: 100px;
+      width: 80%;
+      margin: 0 auto;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .submit-result-container {
+        width: 100%;
+        padding: 0 10px;
+        /* 根据需要调整内边距 */
+        box-sizing: border-box;
+        /* 确保内边距也算在宽度内 */
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 固定顶部的导航栏 -->
+  <nav class="navbar">
+    <a class="nav-item active" data-target="main">✨ Top</a>
+    <a class="nav-item" data-target="selectCards">🎴 持有卡牌</a>
+    <a class="nav-item" data-target="calc">🧮 卡组计算</a>
+    <a class="nav-item" data-target="about">🤦 关于</a>
+  </nav>
+
+  <!-- 各个页面 -->
+  <div class="container">
+    <!-- Top -->
+    <div id="main" class="tab-content">
+      <p>这是某位懒惰贤者为自己开发的双色银卡组配卡助手。（站点的最后更新时间：<span id="last-updated">加载中...</span>）</p>
+      <p><strong>请尽可能在电脑浏览器使用！</strong>只做了最低程度的适配，所以不推荐移动端使用……！</p>
+      <p>站点完全基于前端运行，不会存储您的任何数据，请放心使用。</p>
+      <h3>🍎 使用方法</h3>
+      <ul>
+        <li>首先，在「持有卡牌」页面，通过选中卡牌，生成您的「卡牌库存」字符串。</li>
+        <li>然后，前往「卡组计算」页面，输入导出的「卡牌库存」字符串，进行计算。</li>
+      </ul>
+
+      <h3>⚠️ 注意事项</h3>
+      <ul>
+        <li>站点内的所有操作均只考虑 SSR 和 SR 类型的卡牌；</li>
+        <li>数据大部分来源于<span class="spoiler">游戏文件解包</span>，其余由人工自行补充；</li>
+        </li>
+        <li>【卡牌序号问题·其一】由于 coly <del style="color: gray;">不知出于何种考虑</del>
+          将<u><strong>【賢者様の世界の味】アーサー</strong></u> 的 ID 设为 356（原本应为 337），
+          因此，本站点对所有 ID 大于 336 的卡片进行了 +19 的调整。请确保使用正确的数据进行计算。
+          （若使用「持有卡牌」页面导出数据，且未做额外修改，则可忽略此提示）；</li>
+        <li>【卡牌序号问题·其二】此外，本站点假设 <strong>【ぴかぴか見ーつけた！】ムル</strong> 及其后的所有卡片 ID
+          均未受上述调整影响（即：【ぴかぴか見ーつけた！】ムル = 1106）。
+          未来若游戏数据更新，相关卡片 ID 可能会有所变动，届时相关调整将在本页面注明，敬请留意；</li>
+        <li>如有错漏报告或其他建议，欢迎联系开发者🙌；</li>
+        <li>开发者的联系方式，以及有关该项目的更多信息，请参阅「关于」页面。</li>
+      </ul>
+
+      <h3>📣 公告板</h3>
+      <p style="font-size: smaller;">（※本版块最后更新时间：2025-02-02 14:45:19 UTC）</p>
+      <p>🚧 工事中……</p>
+    </div>
+    <!-- 持有卡牌 -->
+    <div id="selectCards" class="tab-content" style="margin: 10px;">
+      <div class="selectCards-header">
+        <div class="submit-result-container">
+          <button id="submit-cards" class="submit-btn">提交选卡</button>
+          <button id="copy-result" class="copy-btn" style="display: none;">复制结果</button>
+          <div id="selected-ids" class="result-text"></div>
+        </div>
+      </div>
+      <!-- 滚动区域：卡牌列表 -->
+      <div class="selectCards-scrollable">
+        <div id="card-list">加载中...</div>
+      </div>
+    </div>
+    <!-- 卡组计算 -->
+    <div id="calc" class="tab-content">
+      <h2>卡组计算</h2>
+      <p>TODO：根据特定的输入进行计算。</p>
+    </div>
+    <!-- 关于 -->
+    <div id="about" class="tab-content">
+      <h3>⚖️ Disclaimer</h3>
+      <p>本工具仅供个人研究与学习使用，任何使用本工具的行为均应符合适用法律法规。开发者不对任何用户的使用方式负责，亦不承担任何由此引发的法律责任。</p>
+      <p>本工具不存储、不传播任何受版权保护的内容。如果本工具被认为侵犯了您的合法权益，请通过电子邮件联系我们，我们将立即停止相关内容的提供并进行删除。</p>
+      <p>开发者放弃对此工具的所有权利，包括但不限于知识产权、商业利益和后续维护责任。本工具以“原样”提供，不保证其准确性、完整性或适用性，使用者需自行承担所有风险。</p>
+      <p>联系方式：<a href="mailto:kmbk.kr.dev@outlook.jp">kmbk.kr.dev[AT]outlook.jp</a></p>
+    </div>
+  </div>
+
+  <!-- 底栏 -->
+  <footer class="bottom-bar text-center">
+    <p>© 2025 とある名無し賢者. All rights waived.</p>
+  </footer>
+
+  <!-- 动作脚本 -->
+  <script>
+    // 获取所有导航项和内容区域
+    const tabs = document.querySelectorAll(".nav-item");
+    const sections = document.querySelectorAll(".section");
+
+    // 监听点击事件
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        // 移除所有的 active 类
+        tabs.forEach(t => t.classList.remove("active"));
+        sections.forEach(section => section.classList.remove("active"));
+
+        // 添加 active 类到被点击的选项和相应内容
+        tab.classList.add("active");
+        document.getElementById(tab.getAttribute("data-target")).classList.add("active");
+      });
+    });
+
+    async function fetchLastUpdated(owner, repo) {
+      const url = `https://api.github.com/repos/${owner}/${repo}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`GitHub API 请求失败: ${response.status}`);
+
+        const data = await response.json();
+        const lastUpdated = new Date(data.pushed_at).toLocaleString();
+        document.getElementById("last-updated").textContent = `最后更新: ${lastUpdated}`;
+      } catch (error) {
+        document.getElementById("last-updated").textContent = "获取失败";
+        console.error("获取 GitHub 仓库信息失败:", error);
+      }
+    }
+
+    fetchLastUpdated("a1sareru", "shoot30k");
+
+    // 加载 CSV 数据并显示持有卡牌
+    function loadCards() {
+      fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('无法加载CSV文件');
+          }
+          return response.text();
+        })
+        .then(csvText => {
+          const cards = parseCSV(csvText);
+          // 过滤只显示 SSR 和 SR（rarity 为 4 或 3）
+          const filteredCards = cards.filter(card => {
+            const rarity = card.rarity.trim();
+            return rarity === "4" || rarity === "3";
+          });
+          renderCards(filteredCards);
+        })
+        .catch(error => {
+          document.getElementById('card-list').innerText = '加载卡牌数据出错: ' + error;
+          console.error(error);
+        });
+    }
+
+    // 简单 CSV 解析器（假设 CSV 没有字段内嵌逗号，且以换行分隔）
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',');
+      const data = lines.slice(1).map(line => {
+        const values = line.split(',');
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header.trim()] = values[index] ? values[index].trim() : "";
+        });
+        return obj;
+      });
+      return data;
+    }
+
+    // 渲染卡牌列表到页面
+    function renderCards(cards) {
+      const cardListEl = document.getElementById('card-list');
+      if (cards.length === 0) {
+        cardListEl.innerText = '没有找到符合条件的卡牌。';
+        return;
+      }
+      cardListEl.innerHTML = '';
+      cards.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card';
+        cardEl.dataset.id = card.id;
+        if (card.rarity.trim() === "4") {
+          cardEl.classList.add('gold-border');
+        } else if (card.rarity.trim() === "3") {
+          cardEl.classList.add('silver-border');
+        }
+        // 设置卡牌内容（图片和标题）
+        cardEl.innerHTML = `
+          <figure style="display: flex; flex-direction: column; align-items: center; margin: 0;">
+            <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg" 
+                 alt="${card.title}" 
+                 style="width: 34px; height: 60px;" 
+                 onerror="this.src='';" />
+            <figcaption style="font-size: 9px; text-align: center; white-space: normal; word-break: break-word;">
+              ${(() => {
+            const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>');
+            const lines = modified.split('<br>');
+            if (lines.length > 0) {
+              lines[0] = `<strong style="font-size: 11px; font-weight: 900; color: #000; -webkit-text-stroke: 0.3px #a7d8e8;">${lines[0]}</strong>`;
+            }
+            return lines.join('<br>');
+          })()}
+            </figcaption>
+          </figure>
+        `;
+        cardEl.addEventListener('click', () => {
+          cardEl.classList.toggle('selected');
+        });
+        cardListEl.appendChild(cardEl);
+      });
+    }
+
+    // 提交选卡，显示结果
+    document.getElementById('submit-cards').addEventListener('click', () => {
+      const selectedCards = document.querySelectorAll('.card.selected');
+      const selectedIds = Array.from(selectedCards).map(card => card.dataset.id);
+      const idString = selectedIds.join(',');
+      document.getElementById('selected-ids').innerText = idString;
+      const copyButton = document.getElementById('copy-result');
+      copyButton.style.display = idString.trim().length > 0 ? 'inline-block' : 'none';
+    });
+
+    // 复制功能
+    document.getElementById('copy-result').addEventListener('click', () => {
+      const resultText = document.getElementById('selected-ids').innerText;
+      navigator.clipboard.writeText(resultText)
+        .then(() => { alert('结果已复制到剪贴板'); })
+        .catch(err => { alert('复制失败，请手动复制'); console.error(err); });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelector(".nav-item[data-target='main']").classList.add("active");
+      document.querySelector("#main").classList.add("active");
+      // 1. 获取所有的导航项
+      const navItems = document.querySelectorAll(".nav-item");
+
+      // 2. 监听点击事件
+      navItems.forEach(item => {
+        item.addEventListener("click", function() {
+          // 2.1 移除所有导航项的 active 类
+          navItems.forEach(nav => nav.classList.remove("active"));
+
+          // 2.2 给当前点击的导航项添加 active 类
+          this.classList.add("active");
+
+          // 2.3 获取对应的 tab-content ID
+          const targetId = this.getAttribute("data-target");
+
+          // 2.4 隐藏所有 tab-content
+          document.querySelectorAll(".tab-content").forEach(tab => {
+            tab.classList.remove("active");
+          });
+
+          // 2.5 显示对应的 tab-content
+          document.getElementById(targetId).classList.add("active");
+
+          // 🚀 只有 "持有卡牌" 界面时，禁止 body 滚动
+          if (targetId === "selectCards") {
+            document.body.style.overflow = "hidden";
+            loadCards();
+          } else {
+            document.body.style.overflow = "auto";
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
