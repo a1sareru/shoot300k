@@ -108,7 +108,7 @@ function toggleAllSR() {
     // 如果当前处于 SSR 过滤模式，先恢复所有卡片
     if (isFilteringSSR) {
         isFilteringSSR = false;
-        document.getElementById("filter-ssr").textContent = "只显示 SSR";
+        document.getElementById("filter-ssr").textContent = "只显示SSR";
         loadCards(() => {
             toggleAllSR(); // 重新调用自身，确保 SR 选中操作执行
         });
@@ -127,7 +127,7 @@ function toggleAllSR() {
     });
 
     // 根据状态切换按钮文本
-    toggleButton.textContent = allSelected ? "选中全部 SR" : "去除全部 SR";
+    toggleButton.textContent = allSelected ? "选中全部SR" : "去除全部SR";
 }
 
 function filterSSR() {
@@ -136,7 +136,7 @@ function filterSSR() {
     if (isFilteringSSR) {
         // 退出 SSR 过滤模式，恢复所有卡牌
         isFilteringSSR = false;
-        document.getElementById("filter-ssr").textContent = "只显示 SSR";
+        document.getElementById("filter-ssr").textContent = "只显示SSR";
         loadCards(() => {
             restoreSelectedCards(); // 重新渲染后恢复选中状态
         });

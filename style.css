@@ -19,6 +19,7 @@
     @media (max-width: 768px) {
         body {
             padding: 10px;
+            font-size: small;
         }
     }
 
@@ -282,9 +283,9 @@
         background-color: #f49907;
         color: white;
         border: none;
-        padding: 10px 20px;
-        font-size: 15px;
-        border-radius: 15px;
+        padding: 6px 14px;
+        font-size: 14px;
+        border-radius: 10px;
         cursor: pointer;
         transition: background-color 0.3s ease;
         margin-right: 15px;
@@ -299,18 +300,14 @@
 
     @media (max-width: 600px) {
         button {
-            /* 缩小字体 */
-            font-size: 13px;
-
-            /* 减小按钮的内边距 */
-            padding: 8px 15px;
+            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 8px;
 
             /* 缩小间距 */
             margin-right: 7px;
             margin-bottom: 7px;
 
-            /* 让圆角更小 */
-            border-radius: 10px;
         }
     }
 
@@ -320,9 +317,6 @@
 
         color: white;
         border: none;
-        padding: 10px 20px;
-        font-size: 15px;
-        border-radius: 15px;
         cursor: pointer;
         transition: background-color 0.3s ease;
         margin-top: 10px;
@@ -330,19 +324,6 @@
 
     .clear-btn:hover {
         background-color: #c0392b;
-    }
-
-    @media (max-width: 600px) {
-        .clear-btn {
-            /* 缩小字体 */
-            font-size: 13px;
-
-            /* 减小按钮的内边距 */
-            padding: 8px 15px;
-
-            /* 让圆角更小 */
-            border-radius: 10px;
-        }
     }
 
     .submit-btn {
@@ -384,7 +365,7 @@
     /* 卡牌列表滚动容器 */
     .selectCards-scrollable {
         /* 确保不会遮住 footer */
-        max-height: calc(85vh - 160px - 60px - 50px);
+        max-height: calc(85vh - 160px - 60px - 90px);
         overflow-y: auto;
 
         /* 淡灰色背景，柔和过渡 */
@@ -404,7 +385,7 @@
 
     @media screen and (max-width: 600px) {
         .selectCards-scrollable {
-            max-height: calc(85vh - 160px - 60px - 90px);
+            max-height: calc(85vh - 160px - 60px - 175px);
         }
 
     }
@@ -435,11 +416,8 @@
         /* 遇到长单词换行 */
         word-break: break-word;
 
-        /* 让框最小高度为 40px，防止内容过少时太小 */
-        min-height: 90px;
-
-        /* 让框不会无限变高 */
-        max-height: 120px;
+        /* 设置框的固定高度，防止内容过少时太小 */
+        height: 70px;
 
         /* 超出时可以滚动 */
         overflow-y: auto;
