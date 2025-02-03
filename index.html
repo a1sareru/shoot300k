@@ -254,9 +254,9 @@
 
     .card {
       display: inline-block;
-      width: 106px;
-      height: 133px;
-      margin: 9px;
+      width: 110px;
+      height: 135px;
+      margin: 5px;
       text-align: left;
       padding: 8px;
       border-radius: 12px;
@@ -462,7 +462,7 @@
   <div class="container">
     <!-- Top -->
     <div id="main" class="tab-content">
-      <p>这是某位懒惰贤者为自己开发的双色银卡组配卡助手。（站点的最后更新时间：<span id="last-updated">加载中...</span>）</p>
+      <p>这是某位懒惰贤者为自己开发的双色银卡组配卡助手。（<span id="last-updated">加载中...</span>）</p>
       <p><strong>请尽可能在电脑浏览器使用！</strong>只做了最低程度的适配，所以不推荐移动端使用……！</p>
       <p>站点完全基于前端运行，不会存储您的任何数据，请放心使用。</p>
       <h3>🍎 使用方法</h3>
@@ -551,7 +551,16 @@
         if (!response.ok) throw new Error(`GitHub API 请求失败: ${response.status}`);
 
         const data = await response.json();
-        const lastUpdated = new Date(data.pushed_at).toLocaleString();
+        const lastUpdated = new Date(data.pushed_at).toLocaleString("zh-CN", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false // 24小时制
+        });
+
         document.getElementById("last-updated").textContent = `最后更新: ${lastUpdated}`;
       } catch (error) {
         document.getElementById("last-updated").textContent = "获取失败";
@@ -559,7 +568,7 @@
       }
     }
 
-    fetchLastUpdated("a1sareru", "shoot30k");
+    fetchLastUpdated("a1sareru", "shoot300k");
 
     // 加载 CSV 数据并显示持有卡牌
     function loadCards() {
@@ -621,18 +630,18 @@
         cardEl.innerHTML = `
           <figure style="display: flex; flex-direction: column; align-items: center; margin: 0;">
             <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg" 
-                 alt="${card.title}" 
-                 style="width: 34px; height: 60px;" 
-                 onerror="this.src='';" />
-            <figcaption style="font-size: 9px; text-align: center; white-space: normal; word-break: break-word;">
+                alt="${card.title}" 
+                style="width: 34px; height: 60px;" 
+                onerror="this.src='';" />
+            <figcaption style="font-size: 9px; text-align: center; white-space: normal; word-break: break-word; line-height: 1.7; margin: 2px 0; padding: 2px;">
               ${(() => {
-            const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>');
-            const lines = modified.split('<br>');
-            if (lines.length > 0) {
-              lines[0] = `<strong style="font-size: 11px; font-weight: 900; color: #000; -webkit-text-stroke: 0.3px #a7d8e8;">${lines[0]}</strong>`;
-            }
-            return lines.join('<br>');
-          })()}
+                const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>')+" | "+card.id;
+                const lines = modified.split('<br>');
+                if (lines.length > 0) {
+                  lines[0] = `<strong style="font-size: 10.5px; font-weight: 900; color: #000; -webkit-text-stroke: 0.3px #a7d8e8;">${lines[0]}</strong>`;
+                }
+                return lines.join('<br>');
+              })()}
             </figcaption>
           </figure>
         `;
