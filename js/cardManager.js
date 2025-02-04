@@ -3,7 +3,7 @@ let isFilteringSSR = false; // 标记是否处于 SSR 过滤模式
 
 // 加载 CSV 数据并显示持有卡牌
 function loadCards() {
-    fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv')
+    fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/public/public/data/character_card.csv')
         .then(response => {
             if (!response.ok) {
                 throw new Error('无法加载CSV文件');
@@ -71,7 +71,7 @@ function renderCards(cards, selectedIds = new Set()) {
         // 设置卡牌内容（图片和标题）
         cardEl.innerHTML = `
             <figure>
-              <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg" 
+              <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/public/public/images/cards/${card.id}.jpg" 
                   alt="${card.title}" 
                   onerror="this.src='';" />
               <figcaption>
@@ -145,7 +145,7 @@ function filterSSR() {
             Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
         );
 
-        fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv')
+        fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/public/public/data/character_card.csv')
             .then(response => response.text())
             .then(csvText => {
                 const cards = parseCSV(csvText);
