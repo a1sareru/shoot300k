@@ -70,17 +70,16 @@ function renderCards(cards, selectedIds = new Set()) {
 
         // 设置卡牌内容（图片和标题）
         cardEl.innerHTML = `
-            <figure style="display: flex; flex-direction: column; align-items: center; margin: 0;">
+            <figure>
               <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg" 
                   alt="${card.title}" 
-                  style="width: 34px; height: 60px;" 
                   onerror="this.src='';" />
-              <figcaption style="font-size: 9px; text-align: center; white-space: normal; word-break: break-word; line-height: 1.7; margin: 2px 0; padding: 2px;">
+              <figcaption>
                 ${(() => {
                 const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>') + " | " + card.id;
                 const lines = modified.split('<br>');
                 if (lines.length > 0) {
-                    lines[0] = `<strong style="font-size: 10.5px; font-weight: 900; color: #000; -webkit-text-stroke: 0.3px #a7d8e8;">${lines[0]}</strong>`;
+                    lines[0] = `<strong class="card-title">${lines[0]}</strong>`;
                 }
                 return lines.join('<br>');
             })()}
