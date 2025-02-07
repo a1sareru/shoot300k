@@ -8,7 +8,7 @@ on:
       - 'scripts/**'
       - 'public/data/**'
       - '.github/workflows/calc.yml'
-
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,15 +35,16 @@ jobs:
             -b public/data/card_give_characteristic.csv \
             -g public/data/card_give_characteristic_grow_list.csv \
             -t public/data/characteristics_normal.csv \
-            -o public/solutions/
+            -o solutions/
 
       - name: Commit and Push Generated Files
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git checkout -B public
+          git checkout --orphan artifacts
+          git rm -rf .
 
-          git add public/solutions/
+          git add solutions/
           git commit -m "Auto-generated solutions from GitHub Actions" || echo "No changes to commit"
-          git push origin public
+          git push origin artifacts
