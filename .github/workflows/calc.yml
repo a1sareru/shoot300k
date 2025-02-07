@@ -3,7 +3,11 @@ name: calc
 on:
   push:
     branches:
-      - public # only run on the public branch
+      - main
+    files:
+      - 'scripts/**'
+      - 'public/data/**'
+      - '.github/workflows/calc.yml'
 
 jobs:
   build:
