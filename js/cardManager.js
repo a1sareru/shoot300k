@@ -71,12 +71,13 @@ function renderCards(cards, selectedIds = new Set()) {
         // 设置卡牌内容（图片和标题）
         cardEl.innerHTML = `
             <figure>
-              <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg" 
-                  alt="${card.title}" 
+              <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg"
+                  alt="${card.title}"
                   onerror="this.src='';" />
               <figcaption>
                 ${(() => {
-                const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>') + " | " + card.id;
+                const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>') + " | " +
+                    (card.id >= 337 ? card.id - 19 : card.id);
                 const lines = modified.split('<br>');
                 if (lines.length > 0) {
                     lines[0] = `<strong class="card-title">${lines[0]}</strong>`;

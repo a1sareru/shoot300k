@@ -1,7 +1,10 @@
 // 提交选卡，显示结果
 document.getElementById('submit-cards').addEventListener('click', () => {
     const selectedCards = document.querySelectorAll('.card.selected');
-    const selectedIds = Array.from(selectedCards).map(card => card.dataset.id);
+    const selectedIds = Array.from(selectedCards).map(card => {
+        const id = Number(card.dataset.id);
+        return id >= 337 ? id - 19 : id;
+    });
     const idString = selectedIds.join(',');
     document.getElementById('selected-ids').innerText = idString;
     const copyButton = document.getElementById('copy-result');
