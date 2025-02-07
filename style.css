@@ -35,7 +35,7 @@
         }
     }
 
-    a {
+    .my-links {
         /* 允许长单词或连续字符换行 */
         word-break: break-word;
 
@@ -52,13 +52,14 @@
         transition: color 0.3s ease-in-out;
     }
 
-    a:hover {
+    .my-links:hover {
         /* 悬停时加深蓝色 */
         color: #0073E6;
 
         /* 仅在悬停时显示下划线 */
         text-decoration: underline;
     }
+
 
     h3 {
         font-size: 24px;
