@@ -42,7 +42,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git fetch origin artifacts || git checkout -b artifacts
+          git fetch origin artifacts || true
+          git checkout artifacts 2>/dev/null || git checkout -b artifacts
+
           rm -rf solutions/
           mv output/ solutions/
 
