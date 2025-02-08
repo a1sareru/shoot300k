@@ -300,23 +300,20 @@ if __name__ == "__main__":
                     #  so we can skip this tag pair
                     continue
 
-                tag_pair_as_key = f"{color_1_tags[i]},{color_2_tags[j]}"
-
                 # find solutions
-                sol = find_solutions_2_2(tagA, tagB)
                 flag_next = False
                 quad_list = []
-                for s in sol:
+                for s in find_solutions_2_2(tagA, tagB):
                     # add a 4-array to store the card id, each element is a list
                     quad = [[] for _ in range(4)]
-                    for i in range(4):
-                        intersection = set(cards_encoded[color_1][s[i][0]]) & set(
-                            cards_encoded[color_2][s[i][1]])
+                    for m in range(4):
+                        intersection = set(cards_encoded[color_1][s[m][0]]) & set(
+                            cards_encoded[color_2][s[m][1]])
                         if not intersection:
                             flag_next = True
                             break
                         else:
-                            quad[i] = intersection
+                            quad[m] = intersection
 
                     # if there is no card, skip this solution
                     if flag_next:
@@ -324,8 +321,15 @@ if __name__ == "__main__":
                         continue
                     quad_list.append(quad)
 
+                if not quad_list:
+                    # there is no solution, so we can skip this tag pair
+                    continue
+
                 # expand the quad list
                 expanded_quads = [list(product(*quad)) for quad in quad_list]
+
+                # generate the key for the tag pair
+                tag_pair_as_key = f"{color_1_tags[i]},{color_2_tags[j]}"
 
                 # Store the results in the corresponding json structure
                 # quad_dict: flatten it before storing
