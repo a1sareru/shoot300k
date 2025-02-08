@@ -5,142 +5,48 @@ import os
 import json
 
 
-def popcount(x):
-    return bin(x).count("1")
-
-
-def get_subsets(mask, k):
+def generate_valid_sets(x):
     """
-    From a given mask, select exactly k bits and return these subsets (as integers)
+    Given a number x with only one bit set in the low 7 bits,
+    find all valid sets of 4 numbers that satisfy the following conditions:
+     - 2 of the numbers have 2 bits set in the low 7 bits
+     - 2 of the numbers have 1 bit set in the low 7 bits
+     - n1 | n2 | n3 | n4 | x == 127
     """
-    bits = [1 << i for i in range(7) if mask & (1 << i)]
-    for comb in combinations(bits, k):
-        subset = 0
-        for bit in comb:
-            subset |= bit
-        yield subset
+    FULL_MASK = 0b1111111  # The mask for the low 7 bits
+    x_low = x & FULL_MASK
 
+    # Enumerate all possible 2-bit numbers
+    two_bit_numbers = [sum(1 << i for i in bits) for bits in combinations(range(7), 2)]
+
+    valid_sets = []
+    
+    # Enumerate all possible combinations of 2-bit numbers
+    for two1, two2 in combinations(two_bit_numbers, 2):
+        # skip if two1, two2, or x_low have common bits
+        if two1 & two2 or two1 & x_low or two2 & x_low:
+            continue
+        # Calculate the remaining bits
+        remain = FULL_MASK & ~(two1 | two2 | x_low)
+        # Generate all possible combinations of 1-bit numbers accordingly
+        bit_indices = [i for i in range(7) if remain & (1 << i)]
+        one1 = 1 << bit_indices[0]
+        one2 = 1 << bit_indices[1]
+        valid_sets.append((two1, two2, one1, one2)) # one[i]'s sequence does not matter
+
+    return valid_sets
 
 def find_solutions_2_2(A, B):
-    """
-    Parameters:
-        A, B: integers, each with exactly one bit set in the low 7 bits.
-    Returns:
-        solutions: a list of 4-tuples,
-                   each 4-tuple is a pair of (first, second) numbers for a card.
-    Idea:
-        We need to select 2 cards from group0 and 2 cards from group1,
-        such that the OR of the first numbers and the OR of the second numbers
-        are exactly A and B, respectively.
-        We can further prove that:
-            - The OR of the first numbers in group0 must have exactly 4 bits set.
-            - The OR of the first numbers in group1 must have exactly 2 bits set.
-            - The OR of the first numbers in group0, group1, and A must have exactly 7 bits set.
-            - The OR of the second numbers in group0 must have exactly 2 bits set.
-            - The OR of the second numbers in group1 must have exactly 4 bits set.
-            - The OR of the second numbers in group0, group1, and B must have exactly 7 bits set.
-    """
-    full_mask = 0b1111111  # 127
-    # Construct S1 (1-bit numbers) and S2 (2-bit numbers)
-    S1 = [1 << i for i in range(7)]
-    S2 = []
-    for i in range(7):
-        for j in range(i+1, 7):
-            S2.append((1 << i) | (1 << j))
-    # Construct cards: each card is a pair (r, c)
-    cards = [(r, c) for r in S1 for c in S2]  # total: 7*21 = 147 cards
-    n_cards = len(cards)
-
-    # Enumerate all pairs of cards and classify them by permutation:
-    # group0: each card is a pair (c, r)
-    # note: it satisfies that popcount(f_mask) == 4 and popcount(s_mask) == 2
-    group0 = {}  # key is (f_mask, s_mask)
-    for i in range(n_cards):
-        r_i, c_i = cards[i]
-        for j in range(i+1, n_cards):
-            r_j, c_j = cards[j]
-            # the first position contribution (2-bit number)
-            f_mask = c_i | c_j
-            # the second position contribution (1-bit number)
-            s_mask = r_i | r_j
-            if popcount(f_mask) != 4:
-                continue
-            if popcount(s_mask) != 2:
-                continue
-            key = (f_mask, s_mask)
-            pair_info = {'indices': (i, j),
-                         'assignment': ((c_i, r_i), (c_j, r_j))}
-            group0.setdefault(key, []).append(pair_info)
-
-    # group1: each card is a pair (r, c)
-    # note: it satisfies that popcount(f_mask) == 2 and popcount(s_mask) == 4
-    group1 = {}
-    for i in range(n_cards):
-        r_i, c_i = cards[i]
-        for j in range(i+1, n_cards):
-            r_j, c_j = cards[j]
-            # the first position contribution (1-bit number)
-            f_mask = r_i | r_j
-            # the second position contribution (2-bit number)
-            s_mask = c_i | c_j
-            if popcount(f_mask) != 2:
-                continue
-            if popcount(s_mask) != 4:
-                continue
-            key = (f_mask, s_mask)
-            pair_info = {'indices': (i, j),
-                         'assignment': ((r_i, c_i), (r_j, c_j))}
-            group1.setdefault(key, []).append(pair_info)
-
+    set_A = generate_valid_sets(A)
+    set_B = generate_valid_sets(B)
     solutions = []
-
-    # According to A, the first position requirement is:
-    #   A | f0 | f1 = 127.
-    # There is only one bit in A,
-    #  so the remaining 6 bits must be provided by group0 (4 bits) and group1 (2 bits).
-    # Let first_target = 127 ^ A (6 bits), then select all splits into 4+2.
-    first_target = full_mask ^ A  # 6 个 bit
-    first_splits = []
-    for f0 in get_subsets(first_target, 4):
-        f1 = first_target ^ f0  # f1 is 2-bit number
-        if popcount(f1) != 2:
-            continue
-        first_splits.append((f0, f1))
-
-    # Respectively, the second position requirement is:
-    #   B | s0 | s1 = 127.
-    # Let second_target = 127 ^ B (6 bits), then select all splits into 2+4.
-    second_target = full_mask ^ B  # 6 bit
-    second_splits = []
-    for s0 in get_subsets(second_target, 2):
-        s1 = second_target ^ s0  # s1 is 4-bit number
-        if popcount(s1) != 4:
-            continue
-        second_splits.append((s0, s1))
-
-    # Now, for each "bit split" group,
-    #  from group0, find the pair with the first position or = f0 and the second position or = s0,
-    #  and from group1, find the pair with the first position or = f1 and the second position or = s1,
-    # Then merge a pair of group0 pairs with a pair of group1 pairs,
-    #  if the cards they use are not duplicated, they form a solution.
-    for (f0, f1) in first_splits:
-        for (s0, s1) in second_splits:
-            key0 = (f0, s0)
-            key1 = (f1, s1)
-            if key0 not in group0 or key1 not in group1:
-                continue
-            for pair0 in group0[key0]:
-                indices0 = set(pair0['indices'])
-                for pair1 in group1[key1]:
-                    indices1 = set(pair1['indices'])
-                    if indices0 & indices1:  # if there are common cards, continue
-                        continue
-                    # merge the two pairs to form a solution, orderless
-                    sol = list(pair0['assignment']) + list(pair1['assignment'])
-                    solutions.append(sol)
-
+    for a in set_A:
+        for b in set_B:
+            solutions.append([(a[0], b[2]), (a[1], b[3]), (a[2], b[0]), (a[3], b[1])])
+            solutions.append([(a[0], b[2]), (a[1], b[3]), (a[2], b[1]), (a[3], b[0])])
+            solutions.append([(a[0], b[3]), (a[1], b[2]), (a[2], b[0]), (a[3], b[1])])
+            solutions.append([(a[0], b[3]), (a[1], b[2]), (a[2], b[1]), (a[3], b[0])])
     return solutions
-
 
 # Generate all possible binary codes (low 7 bits)
 def generate_tag_codes():
