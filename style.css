@@ -351,9 +351,9 @@
 
     @media (max-width: 600px) {
         button {
-            font-size: 12px;
-            padding: 5px 12px;
-            border-radius: 8px;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 6px;
 
             /* 缩小间距 */
             margin-right: 7px;
@@ -363,14 +363,7 @@
     }
 
     .clear-btn {
-        /* 颜色：红色警示 */
         background-color: #e74c3c;
-
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-top: 10px;
     }
 
     .clear-btn:hover {
@@ -379,7 +372,6 @@
 
     .submit-btn {
         background-color: #544329;
-        font-weight: 700;
     }
 
     .submit-btn:hover {
@@ -478,6 +470,16 @@
 
     }
 
+    @media screen and (max-width: 600px) {
+        #selected-ids {
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            height: 40px;
+        }
+
+    }
+
     /* 居中提交区域 */
     .submit-result-container {
         width: 90%;
@@ -507,6 +509,21 @@
         margin-top: 10px;
         font-size: 14px;
         padding: 6px 12px;
+    }
+
+    @media screen and (max-width: 600px) {
+        #card-input {
+            font-size: 13px;
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
     }
 
     .result-container {
@@ -664,7 +681,7 @@
 
     @media (max-width: 600px) {
         .card-with-info-and-tags {
-            width: 120px;
+            width: 110px;
             padding: 8px;
         }
 
