@@ -1,48 +1,12 @@
 let isFilteringSSR = false; // 标记是否处于 SSR 过滤模式
 
-
-// 加载 CSV 数据并显示持有卡牌
-function loadCards() {
-    fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('无法加载CSV文件');
-            }
-            return response.text();
-        })
-        .then(csvText => {
-            const cards = parseCSV(csvText);
-            // 过滤只显示 SSR 和 SR（rarity 为 4 或 3）
-            const filteredCards = cards.filter(card => {
-                const rarity = card.rarity.trim();
-                return rarity === "4" || rarity === "3";
-            });
-            renderCards(filteredCards);
-        })
-        .catch(error => {
-            document.getElementById('card-list').innerText = '加载卡牌数据出错: ' + error;
-            console.error(error);
-        });
+// 加载 CSV 数据并渲染显示所有卡牌
+async function loadCards() {
+    const cards = await fetchAndParseCards();
+    const filteredCards = filterHighRarityCards(cards);
+    renderCards(filteredCards);
     setupButtons();
-
 }
-
-
-// 解析 CSV 文件
-function parseCSV(text) {
-    const lines = text.trim().split('\n');
-    const headers = lines[0].split(',');
-    const data = lines.slice(1).map(line => {
-        const values = line.split(',');
-        const obj = {};
-        headers.forEach((header, index) => {
-            obj[header.trim()] = values[index] ? values[index].trim() : "";
-        });
-        return obj;
-    });
-    return data;
-}
-
 
 // 渲染卡牌列表到页面
 function renderCards(cards, selectedIds = new Set()) {
@@ -75,15 +39,7 @@ function renderCards(cards, selectedIds = new Set()) {
                   alt="${card.title}"
                   onerror="this.src='';" />
               <figcaption>
-                ${(() => {
-                const modified = card.title.replace(/【/g, '').replace(/】/g, '<br>') + " | " +
-                    (card.id >= 337 ? card.id - 19 : card.id);
-                const lines = modified.split('<br>');
-                if (lines.length > 0) {
-                    lines[0] = `<strong class="card-title">${lines[0]}</strong>`;
-                }
-                return lines.join('<br>');
-            })()}
+                ${formatCardTitle(card)}
               </figcaption>
             </figure>
           `;

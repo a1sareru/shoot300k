@@ -60,12 +60,23 @@
         text-decoration: underline;
     }
 
+    .komejirushi-text {
+        color: #54391c;
+        font-size: smaller;
+        font-weight: 700;
+    }
+
+    @media screen and (max-width: 600px) {
+        .komejirushi-text {
+            font-size: x-small;
+        }
+    }
 
     h3 {
         font-size: 24px;
         color: #333;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-top: 25px;
+        margin-top: 20px;
         margin-bottom: 15px;
         padding: 10px;
         background-color: #f5f5f5;
@@ -78,7 +89,7 @@
         h3 {
             font-size: 18px;
             padding: 8px;
-            margin-top: 18px;
+            margin-top: 14px;
             margin-bottom: 10px;
         }
     }
@@ -230,6 +241,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
+        margin-bottom: 40px;
     }
 
     .card {
@@ -477,4 +489,224 @@
             padding: 0 10px;
             box-sizing: border-box;
         }
+    }
+
+    #card-input {
+        width: 100%;
+        max-width: 600px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+
+        /* 禁止用户调整大小 */
+        resize: none;
+    }
+
+    .submit-btn {
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .result-container {
+        border: 1px solid #ddd;
+        padding: 8px;
+        margin-top: 12px;
+
+        /* 淡灰色背景，柔和过渡 */
+        background: #eef2f5;
+
+        /* 让边角更柔和 */
+        border-radius: 8px;
+
+
+        /* 🚀 添加“内嵌”视觉效果 */
+        /* 内阴影 */
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .error-text {
+        font-size: 13px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .result-group {
+        border: 1px solid #ddd;
+        padding: 8px;
+        margin-top: 8px;
+        background: white;
+    }
+
+    /* .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    } */
+
+    .tag-container {
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .tag-icon {
+        width: 28px;
+        height: 28px;
+        margin-right: 4px;
+    }
+
+    @media (max-width: 600px) {
+        #card-input {
+            font-size: 13px;
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .result-container {
+            padding: 6px;
+            margin-top: 10px;
+        }
+
+        .error-text {
+            font-size: 12px;
+        }
+
+        .result-group {
+            padding: 6px;
+            margin-top: 6px;
+        }
+
+        /* .card-container {
+            gap: 5px;
+            margin-top: 5px;
+        } */
+
+        .tag-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 3px;
+        }
+    }
+
+    .card-group {
+        display: flex;
+        flex-wrap: wrap;
+
+        /* 让多张卡之间有间距 */
+        gap: 10px;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media screen and (max-width: 600px) {
+        .card-group {
+            gap: 5px;
+        }
+
+    }
+
+    /* 卡片整体样式 */
+
+    /* 角色名样式 */
+    .character-name {
+        font-size: 12px;
+        color: #666;
+    }
+
+    /* Quad 卡片 */
+    .card-with-info-and-tags {
+        display: flex;
+        /* display: flex; */
+        width: 110px;
+        margin: 5px;
+        text-align: left;
+        padding: 8px 2px;
+        border: 2px solid #ddd;
+        background: #fafafa;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 8px;
+        box-shadow: 2px 2px 5px #0000001a;
+        transition: transform 0.2s ease-in-out;
+    }
+
+
+
+    /* 适配 figcaption 文字 */
+    .card-with-info-and-tags figcaption {
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        font-size: 9px;
+        text-align: center;
+        word-break: normal;
+        line-break: strict;
+        line-height: 1.5;
+        margin: 2px 0;
+        padding: 2px;
+    }
+
+
+    @media (max-width: 600px) {
+        .card-with-info-and-tags {
+            width: 120px;
+            padding: 8px;
+        }
+
+        .card-with-info-and-tags figcaption {
+            font-size: 8px;
+        }
+    }
+
+    /* 统一卡片图片样式 */
+    .card-img {
+        width: 34px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    /* Quad 卡片的容器（横向排列） */
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Set 组的容器 */
+    .set-card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        background: #eef2ff;
+        border: 2px dashed #667eea;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 10px;
+        gap: 8px;
+        width: auto;
+    }
+
+    /* Set 组中的卡片 */
+    .set-card-container figure {
+        width: 90px;
+    }
+
+    .set-card-container img {
+        width: 34px;
+        height: 60px;
     }

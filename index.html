@@ -24,7 +24,10 @@
   <div class="container">
     <!-- Top -->
     <div id="main" class="tab-content">
-      <p>这是某位懒惰贤者为自己开发的双色银卡组配卡助手。（<span id="last-updated">加载中...</span>）</p>
+      <p>这是某位懒惰贤者为自己开发的双色银卡组配卡助手。
+        <span id="last-updated" class="komejirushi-text">
+        </span>
+      </p>
       <p><strong>请尽可能在电脑浏览器使用！</strong>只做了最低程度的多端适配，所以不推荐移动端使用……！</p>
       <p>站点完全基于前端运行，不会存储您的任何数据，请放心使用。</p>
       <h3>🍎 使用方法</h3>
@@ -38,24 +41,28 @@
         <li>站点内的所有操作均只考虑 SSR 和 SR 类型的卡牌；</li>
         <li>基础数据及其结构来源或借鉴了 <span class="spoiler">游戏文件解包</span> ，其余由开发者人工补充；</li>
         <li>卡牌序号已与 <a class="my-links" href="https://wiki.biligame.com/mahoyaku">魔法使的约定WIKI_BWIKI_哔哩哔哩</a> 及 <a
-          class="my-links" href="https://gamerch.com/wizard-promise">魔法使いの約束攻略Wiki | Gamerch</a> 对齐；</li>
-        <li>开发者 <del style="color: gray;">如果没有失忆的话</del> 目前打算每个月更新一次卡牌数据；</li>
+            class="my-links" href="https://gamerch.com/wizard-promise">魔法使いの約束攻略Wiki | Gamerch</a> 对齐；</li>
+        <li>开发者 <del style="color: gray;">如果没有失忆的话</del>
+          目前打算每个月更新一次卡牌数据
+          <span id="data-last-updated" class="komejirushi-text"></span>；
+        </li>
         <li>如有错漏报告或其他建议（🙇‍♀️🙇‍♀️🙇‍♀️🫶🫶🫶），欢迎联系开发者 🙌 🙌 🙌</li>
         <li>开发者的联系方式，以及有关该项目的更多信息，请参阅「关于」页面。</li>
       </ul>
 
       <h3>📣 公告板</h3>
-      <p style="font-size: smaller;">（※本版块最后更新时间：2025-02-02 14:45:19 UTC）</p>
+      <p class="komejirushi-text">※ 本版块最后更新：2025-02-02</p>
       <p>🚧 工事中……</p>
     </div>
     <!-- 持有卡牌 -->
     <div id="selectCards" class="tab-content" style="margin: 10px;">
       <div class="selectCards-header">
         <div class="submit-result-container">
-          <div>
-            <p>注意：「只显示SSR」按钮会清空已选的SR，请慎重操作。推荐先筛SSR后筛SR。
+          <div class="komejirushi-text">
+            <p>⚠️ 注意：「只显示SSR」按钮会清空已选的SR，请慎重操作。推荐先筛SSR后筛SR。
               <del>更推荐完全不考虑SR。</del>
             </p>
+            <p>另：建议妥善保存所使用的字符串。</p>
           </div>
           <button id="clear-selection" class="clear-btn">清空选择</button>
           <button id="toggle-sr">选中全部SR</button>
@@ -73,8 +80,26 @@
     </div>
     <!-- 卡组计算 -->
     <div id="calc" class="tab-content">
-      <h2>卡组计算</h2>
-      <p>TODO：根据特定的输入进行计算。</p>
+      <h2>🧮 卡组计算</h2>
+      <p>输入你的持有卡牌ID列表（以半角逗号分隔），并计算可用卡组：</p>
+      <p class="komejirushi-text">⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
+
+      <div style="display: grid;">
+        <!-- 用户输入框 -->
+        <textarea id="card-input" placeholder="输入卡牌ID列表，例如：101,202,303" rows="3"></textarea>
+
+        <!-- 提交按钮 -->
+        <button id="submit-calc" class="submit-btn">计算卡组</button>
+      </div>
+
+      <!-- 计算错误消息 -->
+      <p id="calc-error" class="error-text" style="display: none; color: red;"></p>
+
+      <!-- 计算结果区域 -->
+      <h3>计算结果</h3>
+      <div id="calc-results" class="result-container">
+        <p>暂无计算结果</p>
+      </div>
     </div>
     <!-- 关于 -->
     <div id="about" class="tab-content">
@@ -97,10 +122,11 @@
 
 </body>
 
+<script src="js/utils.js" defer></script>
 <script src="js/navigation.js" defer></script>
 <script src="js/lastUpdate.js" defer></script>
 <script src="js/cardManager.js" defer></script>
 <script src="js/interaction.js" defer></script>
-<script src="js/main.js" defer></script>
+<script src="js/calc.js" defer></script>
 
 </html>
