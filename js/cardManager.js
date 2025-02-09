@@ -5,6 +5,12 @@ async function loadCards() {
     const cards = await fetchAndParseCards();
     const filteredCards = filterHighRarityCards(cards);
     renderCards(filteredCards);
+
+    // ✅ 保持选中状态
+    restoreSelectedCards(new Set(
+        Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
+    ));
+
     setupButtons();
 }
 
@@ -86,36 +92,52 @@ function toggleAllSR() {
     toggleButton.textContent = allSelected ? "选中全部SR" : "去除全部SR";
 }
 
+function restoreSelectedCards(selectedIds) {
+    document.querySelectorAll(".card").forEach(card => {
+        if (selectedIds.has(card.dataset.id)) {
+            card.classList.add("selected"); // ✅ 重新标记选中
+        }
+    });
+}
+
 function filterSSR() {
     const cardListEl = document.getElementById('card-list');
+    const toggleSRButton = document.getElementById("toggle-sr");
+
+    // 记录所有已选中的卡片ID
+    const selectedIds = new Set(
+        Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
+    );
 
     if (isFilteringSSR) {
-        // 退出 SSR 过滤模式，恢复所有卡牌
+        // 退出 SSR 过滤模式，恢复所有卡牌，并恢复选中状态
         isFilteringSSR = false;
         document.getElementById("filter-ssr").textContent = "只显示SSR";
-        loadCards(() => {
-            restoreSelectedCards(); // 重新渲染后恢复选中状态
+        toggleSRButton.textContent = "选中全部SR";
+
+        // ✅ 这里要传 selectedIds
+        loadCards().then(() => {
+            restoreSelectedCards(selectedIds); // 重新渲染后恢复选中状态
         });
     } else {
-        // 进入 SSR 过滤模式，记录当前选中的卡牌
-        const selectedIds = new Set(
-            Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
-        );
-
+        // 进入 SSR 过滤模式
         fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv')
             .then(response => response.text())
             .then(csvText => {
                 const cards = parseCSV(csvText);
                 const ssrCards = cards.filter(card => card.rarity.trim() === "4");
 
-                renderCards(ssrCards, selectedIds); // 传入已选中的 ID，确保选中状态不丢失
+                renderCards(ssrCards); // 只渲染 SSR
                 isFilteringSSR = true;
                 document.getElementById("filter-ssr").textContent = "显示所有卡牌";
+                toggleSRButton.textContent = "SR不在服务区";
+
+                // ✅ 重新恢复 SSR 选中的状态
+                restoreSelectedCards(selectedIds);
             })
             .catch(error => console.error("加载卡牌数据失败:", error));
     }
 }
-
 
 // 清除所有已选卡片的选中状态
 function clearAllSelectedCards() {
