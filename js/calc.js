@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // 渲染计算结果
-            renderResults(results);
+            renderResults(results, processedIds);
         } catch (error) {
             document.getElementById("calc-error").textContent = "计算失败，请检查输入或稍后重试";
             document.getElementById("calc-error").style.display = "block";
@@ -107,7 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    async function renderResults(results) {
+
+    async function renderResults(results, processedIds) {
         calcResults.innerHTML = "";
 
         if (results.length === 0) {
@@ -118,6 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // **确保 `cardMap` 先填充**
         const cards = await fetchAndParseCards();
         const cardMap = new Map(cards.map(card => [String(card.id), card]));
+        const ownedCardIds = new Set(processedIds); // 转换为 Set 以便快速查询
+        console.log(ownedCardIds);
 
         results.forEach(group => {
             const groupDiv = document.createElement("div");
@@ -129,22 +132,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 处理四元组数据 (quad) -> 4 张卡片
             group.quad.forEach(cardId => {
-                // const displayId = cardId >= 337 ? cardId - 19 : cardId;
-                const cardElement = createCardElement(cardId, cardMap);
+                const cardElement = createCardElement(cardId, cardMap, ownedCardIds);
                 if (cardElement) {
                     cardContainer.appendChild(cardElement);
                 }
             });
 
-            // 处理 set 数据
-            let setCards = Array.isArray(group.set) ? group.set : [group.set];
-            if (setCards.length > 0) {
+            // 处理 set 数据，剔除未持有的卡
+            let setCards = Array.isArray(group.set) ? group.set.filter(id => ownedCardIds.has(id)) : [];
+
+            if (setCards.length === 1) {
+                // 只有一个 set 卡片时，作为普通卡片渲染
+                const singleCardId = setCards[0];
+                const singleCardElement = createCardElement(singleCardId, cardMap, ownedCardIds);
+                if (singleCardElement) {
+                    cardContainer.appendChild(singleCardElement);
+                }
+            } else if (setCards.length > 1) {
+                // 有多个 set 卡片时，使用 set-container
                 const setCardDiv = document.createElement("div");
                 setCardDiv.classList.add("card-with-info-and-tags", "set-card-container");
 
                 setCards.forEach(cardId => {
-                    // const displayId = cardId >= 337 ? cardId - 19 : cardId;
-                    const setCardFigure = createCardElement(cardId, cardMap);
+                    const setCardFigure = createCardElement(cardId, cardMap, ownedCardIds);
                     if (setCardFigure) {
                         setCardDiv.appendChild(setCardFigure);
                     }
@@ -158,25 +168,31 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 生成卡片 HTML 结构，尽可能保持和 cardManager.js 格式一致
-    function createCardElement(cardId, cardMap) {
+    function createCardElement(cardId, cardMap, ownedCardIds) {
         const cardDiv = document.createElement("div");
         cardDiv.classList.add("card-with-info-and-tags");
-
-        // **检查 `cardMap` 是否已填充**
-        if (!cardMap || cardMap.size === 0) {
-            console.error("cardMap 还未填充，跳过卡片:", cardId);
-            return null;  // 返回 `null` 而不是 `undefined`
-        }
 
         // 获取卡片信息
         const cardInfo = cardMap.get(String(cardId));
         if (!cardInfo) {
             console.error(`卡片 ID ${cardId} 未找到！`);
-            return null;  // 避免 `appendChild(undefined)`
+            return null;
         }
 
         const cardImgSrc = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${cardId}.jpg`;
+
+        // 获取稀有度（rarity），确保它是 3 或 4
+        const rarity = cardInfo.rarity;
+        if (rarity === '3') {
+            cardDiv.classList.add("rarity-3");
+        } else if (rarity === '4') {
+            cardDiv.classList.add("rarity-4");
+        }
+
+        // 检查用户是否持有此卡，如果未持有，边框设为粉色
+        if (!ownedCardIds.has(cardId)) {
+            cardDiv.style.border = "4px solid pink";
+        }
 
         // 创建卡片 figure 结构
         cardDiv.innerHTML = `

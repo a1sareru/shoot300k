@@ -628,7 +628,7 @@
     .card-with-info-and-tags {
         display: flex;
         /* display: flex; */
-        width: 110px;
+        width: 128px;
         margin: 5px;
         text-align: left;
         padding: 8px 2px;
@@ -656,6 +656,9 @@
         line-height: 1.5;
         margin: 2px 0;
         padding: 2px;
+
+        /* 防止被压缩 */
+        flex-shrink: 0;
     }
 
 
@@ -682,8 +685,13 @@
     .card-container {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+
+        /* 避免 .set-card-container 过长时拉高其他元素 */
+        align-items: flex-start;
+
+        justify-content: flex-start;
         gap: 10px;
+
     }
 
     /* Set 组的容器 */
@@ -692,21 +700,27 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: flex-start;
-        background: #eef2ff;
-        border: 2px dashed #667eea;
+        /* background: #ebf0ffbb; */
+        border: 2px dotted #b7c4ff;
         border-radius: 8px;
-        padding: 10px;
-        margin-top: 10px;
-        gap: 8px;
+        padding: 5px;
+        margin-top: 5px;
+        gap: 5px;
         width: auto;
-    }
-
-    /* Set 组中的卡片 */
-    .set-card-container figure {
-        width: 90px;
     }
 
     .set-card-container img {
         width: 34px;
         height: 60px;
+    }
+
+
+    /* 3星卡片（渐变淡银色） */
+    .rarity-3 {
+        background: linear-gradient(135deg, #f8f8ff, #d1d1d171);
+    }
+
+    /* 4星卡片（渐变淡金色） */
+    .rarity-4 {
+        background: linear-gradient(135deg, #fff9e171, #fdd99171);
     }

@@ -84,9 +84,11 @@
       <p>输入你的持有卡牌ID列表（以半角逗号分隔），并计算可用卡组：</p>
       <p class="komejirushi-text">⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
 
-      <div style="display: grid;">
+      <div>
         <!-- 用户输入框 -->
-        <textarea id="card-input" placeholder="输入卡牌ID列表，例如：101,202,303" rows="3"></textarea>
+        <div>
+          <textarea id="card-input" placeholder="输入卡牌ID列表，例如：101,202,303" rows="3"></textarea>
+        </div>
 
         <!-- 提交按钮 -->
         <button id="submit-calc" class="submit-btn">计算卡组</button>
