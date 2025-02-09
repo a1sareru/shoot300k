@@ -115,40 +115,46 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // 确保 `cardMap` 先填充
         const cards = await fetchAndParseCards();
         const cardMap = new Map(cards.map(card => [String(card.id), card]));
-        const ownedCardIds = new Set(processedIds); // 转换为 Set 以便快速查询
-        const cardTags = await fetchAndParseCardTags(); // 解析卡片的 rarity=3 特性
+        const ownedCardIds = new Set(processedIds); // 用户持有的卡片
+        const cardTags = await fetchAndParseCardTags(); // 解析卡片特性
 
-        results.forEach(async group => { // 修改这里，forEach 里使用 async
+        results.forEach(async group => {
             const groupDiv = document.createElement("div");
             groupDiv.classList.add("result-group");
 
-            // 卡组显示区域
             const cardContainer = document.createElement("div");
             cardContainer.classList.add("card-container");
 
             // 处理四元组数据 (quad) -> 4 张卡片
             for (const cardId of group.quad) {
-                const cardElement = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, false); // ❶ 关闭 tag 显示
+                const cardElement = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, false);
                 if (cardElement) {
                     cardContainer.appendChild(cardElement);
                 }
             }
 
-            // 处理 set 数据
             let setCards = Array.isArray(group.set) ? group.set.filter(id => ownedCardIds.has(id)) : [];
-            if (setCards.length > 0) {
+
+            // 处理 set 数据
+            if (setCards.length === 1) {
+                // 只有一个卡牌时，按普通 card 方式处理
+                const singleCardId = setCards[0];
+                const singleCardElement = await createCardElement(singleCardId, cardMap, ownedCardIds, cardTags, false);
+                if (singleCardElement) {
+                    cardContainer.appendChild(singleCardElement); // 直接放入普通卡区域
+                }
+            } else if (setCards.length > 1) {
+                // 多个 set 内卡牌，仍然作为 set-card-container 处理
                 const setCardDiv = document.createElement("div");
                 setCardDiv.classList.add("card-with-info-and-tags", "set-card-container");
 
-                // ❷ 解析 set_tag 并获取 tag 图片
                 if (group.set_tag) {
                     const tagsContainer = document.createElement("div");
                     tagsContainer.classList.add("tags-container");
 
-                    const tagIds = group.set_tag.split(",").map(tag => tag.trim()); // 解析 "x,y" 结构
+                    const tagIds = group.set_tag.split(",").map(tag => tag.trim());
                     tagIds.forEach(tagId => {
                         const tagImg = document.createElement("img");
                         tagImg.src = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/characteristics/${tagId}.png`;
@@ -159,9 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     setCardDiv.appendChild(tagsContainer);
                 }
 
-                // ❸ 生成 set 内的卡片，但不再显示 tag
                 for (const cardId of setCards) {
-                    const setCardFigure = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, true); // ❹ 关闭 tag 显示
+                    const setCardFigure = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, true);
                     if (setCardFigure) {
                         setCardDiv.appendChild(setCardFigure);
                     }
