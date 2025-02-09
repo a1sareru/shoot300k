@@ -699,19 +699,15 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        align-items: flex-start;
-        /* background: #ebf0ffbb; */
+        align-items: center;
+
+
         border: 2px dotted #b7c4ff;
         border-radius: 8px;
         padding: 5px;
         margin-top: 5px;
         gap: 5px;
         width: auto;
-    }
-
-    .set-card-container img {
-        width: 34px;
-        height: 60px;
     }
 
 
@@ -723,4 +719,20 @@
     /* 4星卡片（渐变淡金色） */
     .rarity-4 {
         background: linear-gradient(135deg, #fff9e171, #fdd99171);
+    }
+
+
+    .tags-container {
+        display: flex;
+        flex-direction: column;
+        /* 竖向排列 */
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .tag-img {
+        width: 60px;
+        height: auto;
+        margin: 5px 0;
+        /* 竖向间距 */
     }

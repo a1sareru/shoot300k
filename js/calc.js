@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
     async function calculateCardSet(cardIds) {
         try {
             // 预处理：所有 cardId >= 337 的需要 +19
-            // const processedIds = cardIds.map(id => (id >= 337 ? id + 19 : id));
             const inputIds = cardIds.map(id => (id >= 337 ? id + 19 : id));
             const processedIds = await loadCards(inputIds);
 
@@ -116,13 +115,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // **确保 `cardMap` 先填充**
+        // 确保 `cardMap` 先填充
         const cards = await fetchAndParseCards();
         const cardMap = new Map(cards.map(card => [String(card.id), card]));
         const ownedCardIds = new Set(processedIds); // 转换为 Set 以便快速查询
-        console.log(ownedCardIds);
+        const cardTags = await fetchAndParseCardTags(); // 解析卡片的 rarity=3 特性
 
-        results.forEach(group => {
+        results.forEach(async group => { // 修改这里，forEach 里使用 async
             const groupDiv = document.createElement("div");
             groupDiv.classList.add("result-group");
 
@@ -131,34 +130,42 @@ document.addEventListener("DOMContentLoaded", () => {
             cardContainer.classList.add("card-container");
 
             // 处理四元组数据 (quad) -> 4 张卡片
-            group.quad.forEach(cardId => {
-                const cardElement = createCardElement(cardId, cardMap, ownedCardIds);
+            for (const cardId of group.quad) {
+                const cardElement = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, false); // ❶ 关闭 tag 显示
                 if (cardElement) {
                     cardContainer.appendChild(cardElement);
                 }
-            });
+            }
 
-            // 处理 set 数据，剔除未持有的卡
+            // 处理 set 数据
             let setCards = Array.isArray(group.set) ? group.set.filter(id => ownedCardIds.has(id)) : [];
-
-            if (setCards.length === 1) {
-                // 只有一个 set 卡片时，作为普通卡片渲染
-                const singleCardId = setCards[0];
-                const singleCardElement = createCardElement(singleCardId, cardMap, ownedCardIds);
-                if (singleCardElement) {
-                    cardContainer.appendChild(singleCardElement);
-                }
-            } else if (setCards.length > 1) {
-                // 有多个 set 卡片时，使用 set-container
+            if (setCards.length > 0) {
                 const setCardDiv = document.createElement("div");
                 setCardDiv.classList.add("card-with-info-and-tags", "set-card-container");
 
-                setCards.forEach(cardId => {
-                    const setCardFigure = createCardElement(cardId, cardMap, ownedCardIds);
+                // ❷ 解析 set_tag 并获取 tag 图片
+                if (group.set_tag) {
+                    const tagsContainer = document.createElement("div");
+                    tagsContainer.classList.add("tags-container");
+
+                    const tagIds = group.set_tag.split(",").map(tag => tag.trim()); // 解析 "x,y" 结构
+                    tagIds.forEach(tagId => {
+                        const tagImg = document.createElement("img");
+                        tagImg.src = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/characteristics/${tagId}.png`;
+                        tagImg.classList.add("tag-img");
+                        tagsContainer.appendChild(tagImg);
+                    });
+
+                    setCardDiv.appendChild(tagsContainer);
+                }
+
+                // ❸ 生成 set 内的卡片，但不再显示 tag
+                for (const cardId of setCards) {
+                    const setCardFigure = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, true); // ❹ 关闭 tag 显示
                     if (setCardFigure) {
                         setCardDiv.appendChild(setCardFigure);
                     }
-                });
+                }
 
                 cardContainer.appendChild(setCardDiv);
             }
@@ -168,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function createCardElement(cardId, cardMap, ownedCardIds) {
+    async function createCardElement(cardId, cardMap, ownedCardIds, cardTags, hideTags = false) {
         const cardDiv = document.createElement("div");
         cardDiv.classList.add("card-with-info-and-tags");
 
@@ -194,16 +201,90 @@ document.addEventListener("DOMContentLoaded", () => {
             cardDiv.style.border = "4px solid pink";
         }
 
+        // 如果 hideTags 为 false，才显示 tag
+        if (!hideTags) {
+            const tagsContainer = document.createElement("div");
+            tagsContainer.classList.add("tags-container");
+
+            const rarity3Tags = cardTags.get(String(cardId)) || new Set();
+            rarity3Tags.forEach(tagId => {
+                const tagImg = document.createElement("img");
+                tagImg.src = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/characteristics/${tagId}.png`;
+                tagImg.classList.add("tag-img");
+                tagsContainer.appendChild(tagImg);
+            });
+
+            cardDiv.appendChild(tagsContainer);
+        }
+
         // 创建卡片 figure 结构
-        cardDiv.innerHTML = `
-            <figure>
-              <img src="${cardImgSrc}" alt="${cardInfo.title}" class="card-img"
-                  onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';" />
-              <figcaption>${formatCardTitle(cardInfo)}</figcaption>
-            </figure>
+        const figure = document.createElement("figure");
+        figure.innerHTML = `
+            <img src="${cardImgSrc}" alt="${cardInfo.title}" class="card-img"
+                onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';" />
+            <figcaption>${formatCardTitle(cardInfo)}</figcaption>
         `;
 
+        cardDiv.appendChild(figure);
+
         return cardDiv;
+    }
+
+    async function fetchAndParseCardTags() {
+        const urls = [
+            "https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/card_give_characteristic.csv",
+            "https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/card_give_characteristic_grow_list.csv"
+        ];
+
+        const rarityDataUrl = "https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/characteristics_normal.csv";
+
+        const cardTags = new Map(); // cardId -> Set(tagId)
+        const rarity3Tags = new Set(); // 存储 rarity=3 的 tagId
+
+        // 先获取 rarity=3 的 tagId
+        const rarityResponse = await fetch(rarityDataUrl);
+        if (!rarityResponse.ok) {
+            console.error("无法加载特性稀有度数据");
+            return cardTags;
+        }
+        const rarityText = await rarityResponse.text();
+        const rarityRows = rarityText.split("\n").map(row => row.split(","));
+
+        rarityRows.forEach(row => {
+            if (row.length < 2) return; // 需要至少有 rarity 和 tagId
+            const tagId = row[0].trim(); // tagId 在第一列
+            const rarity = row[3].trim(); // rarity 在第二列
+            if (rarity === "3") {
+                rarity3Tags.add(tagId);
+            }
+        });
+
+        // 处理 card -> tag 数据
+        for (const url of urls) {
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error(`无法加载卡片特性数据: ${url}`);
+                continue;
+            }
+            const text = await response.text();
+            const rows = text.split("\n").map(row => row.split(","));
+
+            rows.forEach(row => {
+                if (row.length < 3) return; // 需要至少有3列数据
+                const cardId = row[0].trim();
+                const tagId = row[2].trim(); // 第3列是特性ID
+
+                // 仅保留 rarity=3 的 tagId
+                if (!rarity3Tags.has(tagId)) return;
+
+                if (!cardTags.has(cardId)) {
+                    cardTags.set(cardId, new Set());
+                }
+                cardTags.get(cardId).add(tagId);
+            });
+        }
+
+        return cardTags; // 返回 cardId -> Set(tagId) 的映射
     }
 
 });
