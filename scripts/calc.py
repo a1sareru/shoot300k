@@ -215,11 +215,11 @@ if __name__ == "__main__":
                     for m in range(4):
                         intersection = set(cards_encoded[color_1][s[m][0]]) & set(
                             cards_encoded[color_2][s[m][1]])
-                        if not intersection:
+                        if not intersection or len(intersection) > 1:
                             flag_next = True
                             break
                         else:
-                            quad[m] = intersection
+                            quad[m] = intersection.pop()
 
                     # if there is no card, skip this solution
                     if flag_next:
@@ -231,16 +231,12 @@ if __name__ == "__main__":
                     # there is no solution, so we can skip this tag pair
                     continue
 
-                # expand the quad list
-                expanded_quads = [list(product(*quad)) for quad in quad_list]
-
                 # generate the key for the tag pair
                 tag_pair_as_key = f"{color_1_tags[i]},{color_2_tags[j]}"
 
                 # Store the results in the corresponding json structure
                 # quad_dict: flatten it before storing
-                quad_dict[color_pair_as_key][tag_pair_as_key] = [
-                    tup for sublist in expanded_quads for tup in sublist]
+                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
                 # card0_dict
                 card0_dict[color_pair_as_key][tag_pair_as_key] = list(
                     set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
