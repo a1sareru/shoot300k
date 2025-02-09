@@ -8,6 +8,12 @@ on:
       - 'scripts/**'
       - 'public/data/**'
       - '.github/workflows/calc.yml'
+    paths-ignore:
+      - 'js/**'
+      - '.gitignore'
+      - 'favicon.ico'
+      - 'index.html'
+      - 'style.css'
   workflow_dispatch:
 jobs:
   build:
