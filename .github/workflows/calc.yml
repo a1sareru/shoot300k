@@ -9,6 +9,7 @@ on:
       - 'public/data/**'
       - '.github/workflows/calc.yml'
     paths-ignore:
+      - '.github/workflows/static.yml'
       - 'js/**'
       - '.gitignore'
       - 'favicon.ico'
