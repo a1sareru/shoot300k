@@ -191,7 +191,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return null;
         }
 
+        // 计算显示时的ID
+        const displayId = cardId >= 337 ? cardId - 19 : cardId;
+
         const cardImgSrc = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${cardId}.jpg`;
+        const cardLink = `https://wiki.biligame.com/mahoyaku/Card_${displayId}`;
 
         // 获取稀有度（rarity），确保它是 3 或 4
         const rarity = cardInfo.rarity;
@@ -225,13 +229,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // 创建卡片 figure 结构
         const figure = document.createElement("figure");
         figure.innerHTML = `
-            <img src="${cardImgSrc}" alt="${cardInfo.title}" class="card-img"
-                onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';" />
+            <a href="${cardLink}" target="_blank" rel="noopener noreferrer">
+                <img src="${cardImgSrc}" alt="${cardInfo.title}" class="card-img"
+                    onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';" />
+            </a>
             <figcaption>${formatCardTitle(cardInfo)}</figcaption>
         `;
 
         cardDiv.appendChild(figure);
-
         return cardDiv;
     }
 

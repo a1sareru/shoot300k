@@ -86,46 +86,48 @@
     <div id="calc" class="tab-content">
       <h2>🧮 卡组计算</h2>
       <p>在下面的文本框内输入你所持有卡牌对应的ID列表（以半角逗号分隔），点击按钮即可计算。</p>
-      <p>未持有的卡牌（即需要借用的卡牌）将以<span style="color: pink; font-weight: 600;">粉色边框</span>标出。</p>
-      <p class="komejirushi-text">⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
+      <div class="komejirushi-text">
+        <p>未持有的卡牌（即需要借用的卡牌）将以<span style="color: pink; font-weight: 600;">粉色边框</span>标出。</p>
+        <p>点击结果中的卡牌图片可跳转到卡牌在中文WIKI的对应页面 <del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。</p>
+        <p>⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
 
-      <div>
-        <!-- 用户输入框 -->
         <div>
-          <textarea id="card-input" placeholder="输入卡牌ID列表，例如：488,879,495,794,167,71" rows="3"></textarea>
+          <!-- 用户输入框 -->
+          <div>
+            <textarea id="card-input" placeholder="输入卡牌ID列表，例如：488,879,495,794,167,71" rows="3"></textarea>
+          </div>
+
+          <!-- 提交按钮 -->
+          <button id="submit-calc" class="submit-btn">计算卡组</button>
         </div>
 
-        <!-- 提交按钮 -->
-        <button id="submit-calc" class="submit-btn">计算卡组</button>
+        <!-- 计算错误消息 -->
+        <p id="calc-error" class="error-text" style="display: none; color: red;"></p>
+
+        <!-- 计算结果区域 -->
+        <h3>计算结果</h3>
+        <div id="calc-results" class="result-container">
+          <p style="color: gray;">还没有进行过计算哦</p>
+        </div>
       </div>
-
-      <!-- 计算错误消息 -->
-      <p id="calc-error" class="error-text" style="display: none; color: red;"></p>
-
-      <!-- 计算结果区域 -->
-      <h3>计算结果</h3>
-      <div id="calc-results" class="result-container">
-        <p style="color: gray;">还没有进行过计算哦</p>
+      <!-- 关于 -->
+      <div id="about" class="tab-content">
+        <h3>⚖️ Disclaimer</h3>
+        <p>本工具仅供个人研究与学习使用，任何使用本工具的行为均应符合适用法律法规。开发者不对任何用户的使用方式负责，亦不承担任何由此引发的法律责任。</p>
+        <p>本工具不存储、不传播任何受版权保护的内容。如果本工具被认为侵犯了您的合法权益，请通过电子邮件联系我们，我们将立即停止相关内容的提供并进行删除。</p>
+        <p>开发者放弃对此工具的所有权利，包括但不限于知识产权、商业利益和后续维护责任。本工具以“原样”提供，不保证其准确性、完整性或适用性，使用者需自行承担所有风险。</p>
+        <h3>📮 Contact us</h3>
+        <p><a class="my-links" href="mailto:kmbk.kr.dev@outlook.jp">kmbk.kr.dev[AT]outlook.jp</a></p>
+        <p>※ 除报错、建议和提问外，也欢迎其他主题的邮件。</p>
+        <h3>🎯 Furthermore</h3>
+        <p>本站点将来可能增加的功能：显示卡池/显示卡牌获取方式。</p>
       </div>
     </div>
-    <!-- 关于 -->
-    <div id="about" class="tab-content">
-      <h3>⚖️ Disclaimer</h3>
-      <p>本工具仅供个人研究与学习使用，任何使用本工具的行为均应符合适用法律法规。开发者不对任何用户的使用方式负责，亦不承担任何由此引发的法律责任。</p>
-      <p>本工具不存储、不传播任何受版权保护的内容。如果本工具被认为侵犯了您的合法权益，请通过电子邮件联系我们，我们将立即停止相关内容的提供并进行删除。</p>
-      <p>开发者放弃对此工具的所有权利，包括但不限于知识产权、商业利益和后续维护责任。本工具以“原样”提供，不保证其准确性、完整性或适用性，使用者需自行承担所有风险。</p>
-      <h3>📮 Contact us</h3>
-      <p><a class="my-links" href="mailto:kmbk.kr.dev@outlook.jp">kmbk.kr.dev[AT]outlook.jp</a></p>
-      <p>※ 除报错、建议和提问外，也欢迎其他主题的邮件。</p>
-      <h3>🎯 Furthermore</h3>
-      <p>本站点将来可能增加的功能：显示卡池/显示卡牌获取方式。</p>
-    </div>
-  </div>
 
-  <!-- 底栏 -->
-  <footer class="bottom-bar text-center">
-    <p>© 2025 とある名無し賢者. All rights waived.</p>
-  </footer>
+    <!-- 底栏 -->
+    <footer class="bottom-bar text-center">
+      <p>© 2025 とある名無し賢者. All rights waived.</p>
+    </footer>
 
 </body>
 
