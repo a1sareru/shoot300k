@@ -46,6 +46,24 @@ jobs:
             -t public/data/characteristics_normal.csv \
             -o output/
 
+      - name: Get Last Modified Date from GitHub API
+        id: get_last_modified
+        run: |
+          # Get the file list of public/data directory using GitHub API without auth
+          response=$(curl -s "https://api.github.com/repos/a1sareru/shoot300k/contents/public/data")
+          
+          # Extract last modified date from the response (assuming file list is returned)
+          last_modified=$(echo "$response" | jq -r 'map(select(.type == "file")) | map(.git_url) | .[0]' | \
+            xargs -I {} curl -s "{}" | jq -r .commit.committer.date | sort | tail -n 1)
+
+          echo "Last modified date: $last_modified"
+          echo "::set-output name=last_modified::$last_modified"
+
+      - name: Update Last Modified Date File
+        run: |
+          # Update the data-last-update file with the latest modification date
+          echo "${{ steps.get_last_modified.outputs.last_modified }}" > data-last-update
+
       - name: Commit and Push Generated Files
         run: |
           git config --global user.name "github-actions[bot]"
@@ -56,9 +74,6 @@ jobs:
 
           rm -rf solutions/
           mv output/ solutions/
-
-          CURRENT_DATE=$(date +"%Y-%m-%d")
-          echo $CURRENT_DATE > data-last-update
 
           git add solutions/ data-last-update
           git commit -m "Auto-generated solutions from GitHub Actions" || echo "No changes to commit"
