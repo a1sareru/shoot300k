@@ -56,6 +56,9 @@ jobs:
           rm -rf solutions/
           mv output/ solutions/
 
-          git add solutions/
+          CURRENT_DATE=$(date +"%Y-%m-%d")
+          echo $CURRENT_DATE > data-last-update
+
+          git add solutions/ data-last-update
           git commit -m "Auto-generated solutions from GitHub Actions" || echo "No changes to commit"
           git push origin artifacts
