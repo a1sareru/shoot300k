@@ -32,13 +32,13 @@
       </p>
       <p><strong>请尽可能在电脑浏览器使用！</strong>只做了最低程度的多端适配，所以不推荐移动端使用……！</p>
       <p>站点完全基于前端运行，不会存储您的任何数据，请放心使用。</p>
-      <h3>🍎 使用方法</h3>
+      <h2>🍎 使用方法</h2>
       <ul>
         <li>首先，在「持有卡牌」页面，通过选中卡牌，生成您的「卡牌库存」字符串。</li>
         <li>然后，前往「卡组计算」页面，输入导出的「卡牌库存」字符串，进行计算。</li>
       </ul>
 
-      <h3>⚠️ 注意事项</h3>
+      <h2>⚠️ 注意事项</h2>
       <ul>
         <li>站点内的所有操作均只考虑 SSR 和 SR 类型的卡牌；</li>
         <li>基础数据及其结构来源或借鉴了 <span class="spoiler">游戏文件解包</span> ，其余由开发者人工补充；</li>
@@ -52,7 +52,7 @@
         <li>开发者的联系方式，以及有关该项目的更多信息，请参阅「关于」页面。</li>
       </ul>
 
-      <h3>📣 记事</h3>
+      <h2>📣 记事</h2>
       <p><span style="font-weight: 900;">[2025-02-11]</span><br>
         感谢微博 <a href="https://weibo.com/u/7917052807">@魔法使的约定情报站</a>
         在接收投稿的同时还附上了详细介绍！皮下辛苦了！<br>
@@ -66,7 +66,7 @@
         <br>牌组的归并优化做得并不充分，但总之凑合能用；如果我之后把现在使用的简易算法说明贴上来的话，会得到优化建议吗（……）
       </p>
 
-      <h3>🧭 站点导航</h3>
+      <h2>🧭 站点导航</h2>
       <del>为什么要放在最后呢，因为确实不是很重要……</del>
       <ul>
         <li>「Top」：站点首页。</li>
@@ -129,7 +129,7 @@
       <p id="calc-error" class="error-text" style="display: none; color: red;"></p>
 
       <!-- 计算结果区域 -->
-      <h3>计算结果</h3>
+      <h2>计算结果</h2>
       <div id="calc-results" class="result-container">
         <p style="color: gray;">还没有进行过计算哦</p>
       </div>
@@ -175,7 +175,7 @@
       <p id="prophecy-calc-error" class="error-text" style="display: none; color: red;"></p>
 
       <!-- 计算结果区域 -->
-      <h3>预言(?)结果</h3>
+      <h2>预言(?)结果</h2>
       <div id="prophecy-calc-results" class="result-container">
         <p style="color: gray;">还没有进行过预言(?)哦</p>
       </div>
@@ -184,17 +184,149 @@
 
     <!-- 关于 -->
     <div id="about" class="tab-content">
-      <h3>⚖️ Disclaimer</h3>
+      <h2>⚖️ Disclaimer</h2>
+
       <p>本工具仅供个人研究与学习使用，任何使用本工具的行为均应符合适用法律法规。开发者不对任何用户的使用方式负责，亦不承担任何由此引发的法律责任。</p>
       <p>本工具不存储、不传播任何受版权保护的内容。如果本工具被认为侵犯了您的合法权益，请通过电子邮件联系我们，我们将立即停止相关内容的提供并进行删除。</p>
       <p>开发者放弃对此工具的所有权利，包括但不限于知识产权、商业利益和后续维护责任。本工具以“原样”提供，不保证其准确性、完整性或适用性，使用者需自行承担所有风险。</p>
-      <h3>📮 Contact us</h3>
+
+      <h2>📮 Contact us</h2>
+
       <p><a class="my-links" href="mailto:kmbk.kr.dev@outlook.jp">kmbk.kr.dev[AT]outlook.jp</a></p>
       <p>※ 除报错、建议和提问外，也欢迎其他主题的邮件。</p>
-      <h3>🎯 Furthermore</h3>
+
+      <h2>⚓️ Furthermore</h2>
+
       <p>本站点将来可能增加的功能：显示卡池/显示卡牌获取方式。<del>虽然大概率只是在画饼</del></p>
+
+      <h2>💡 Algorithm</h2>
+
+      <p>（更新于 2025-02-11）</p>
+
+      <p><del>顺便解释一下为什么「予言書(仮)」里可能出现很多重复组合</del></p>
+
+      <h3>🎯 目标描述</h3>
+
+      <p>通过 5 张卡牌凑出 2 种颜色的全部 14 种銀枠特性。</p>
+
+      <h3>🧐 问题的简化</h3>
+
+      <h4>1️⃣ 排除稀有度为 R 和 N 的卡牌</h4>
+      <p>目前（2025-02-11） 唯一一张带有 4 个銀枠特性的 SSR 是
+      <ul>
+        <li>
+          <a href="https://wiki.biligame.com/mahoyaku/Card_378" target="_blank" rel="noopener noreferrer">
+            <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/397.jpg"
+              alt="【水面に揺蕩う想い】スノウ" class="card-img"
+              onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';">
+          </a><span style="font-weight: 800;">【水面に揺蕩う想い】スノウ</span> （20年まほパ大雪）
+        </li>
+      </ul>
+      不过它带的是 2白1赤1紫，在不同的场合可以视作一张「白白赤」或一张「白白紫」。</p>
+      <p>
+        由于 4 张 SSR 最多也只能提供<span style="font-weight: 700;">两种颜色</span>的 12 个銀枠特性，
+        因此可知目前不可能有使用 R 卡和 N 卡的 30 万分卡组。
+      </p>
+
+      <h4>2️⃣ 考察特殊情况→分析目标卡组的卡牌构成</h4>
+      <p>通常情况下，一张 SSR 会带有 2 种颜色共计 3 种銀枠特性（可记为 AAB），一张 SR 会带有 2 种颜色共计 2 种銀枠特性（可记为 AB）。</p>
+      <p>除了上面提到的这张魔法趴大雪外， 注意到的特殊情况有：
+      <ol>
+        <li>西祝祭 SSR 的銀枠被「愛嬌」占据了一个位置，所以等价于普通 SR；</li>
+        <li>同理，西祝祭 SR 等价于普通 R，在求解时应当排除；</li>
+        <li>以下 3 张 SR 均携带了 2 个颜色共计 3 种銀枠特性，可以视作普通 SSR：
+          <ul>
+            <li>
+              <a href="https://wiki.biligame.com/mahoyaku/Card_177" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/177.jpg"
+                  alt="【夢のような黄昏】スノウ" class="card-img"
+                  onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';">
+              </a><span style="font-weight: 800;">【夢のような黄昏】スノウ</span> （20年情人节 Snow）
+            </li>
+            <li>
+              </p>
+              <a href="https://wiki.biligame.com/mahoyaku/Card_847" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/866.jpg"
+                  alt="【熱烈な愛を止めるため】ファウスト" class="card-img"
+                  onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';">
+              </a><span style="font-weight: 800;">【熱烈な愛を止めるため】ファウスト</span> （23年情人节 Faust）
+            </li>
+            <li>
+              <a href="https://wiki.biligame.com/mahoyaku/Card_848" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/867.jpg"
+                  alt="【溢れんばかりのお土産を】シノ" class="card-img"
+                  onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';">
+              </a><span style="font-weight: 800;">【溢れんばかりのお土産を】シノ</span> （23年情人节 Shino）
+            </li>
+          </ul>
+        </li>
+      </ol>
+      </p>
+      <p>可以看出，特殊情况的卡牌，实际上仍然可以当作一般情况来处理<del>（换个名字罢了）</del>。
+        为便于讨论，暂时约定下文中「SSR」指「携带了当前讨论的 2 种颜色共计 3 种銀枠特性的卡牌」，
+        「SR」指「携带了当前讨论的 2 种颜色共计 2 种銀枠特性的卡牌」。</p>
+      <p>回到目标卡组的构成讨论，可以证明：
+        <span style="font-weight: 700;">对于一个 AB 双色目标卡组 ，其必然包含至少 2 张 AAB 型 SSR以及至少 2 张 BBA 型 SSR。</span>
+        下面给出该引理的简要证明思路：
+      </p>
+      <ul>
+        <li>用 5 张卡凑出 14 个 tag，说明其中至少有 4 张是一般意义上的 SSR（反证法，少于 4 张时最多只能提供 \(3\times 3+2\times 2=13\) 个銀枠特性）；</li>
+        <li>再次使用反证法：如果卡组中只有 1 张 AAB 型 SSR，则该卡组最多只能凑出 \(2\times 1+1\times 4=6\)个銀枠特性，这不符合每种颜色要凑齐 7 个銀枠特性的需求（BBA同理）。</li>
+      </ul>
+      <p>根据引理可知，每个目标卡组由 2 张 AAB 型 SSR、 2 张 BBA 型 SSR，以及 1 张至少提供两种颜色各 1 个銀枠特性的未知卡牌构成。</p>
+
+      <h4>3️⃣ 压缩搜索空间→转化为组合方案的枚举问题</h4>
+      <p>常规的想法是使用动态规划相关的算法，并根据问题特性进行剪枝等优化。但是根据上面的结论，实际上可以将问题转化为组合方案的枚举问题。</p>
+      <p><del>我当然不会承认是因为动态规划和引用求解器的方案跑了一天一夜都没结束才开始被迫思考如何避免搜索空间爆炸问题。</del></p>
+      <p>既然已经证明了关于卡组构成的以上结论，那么对于指定的两种颜色，任意抽出两种颜色各 1 个銀枠特性，问题便转化为如何找出可凑出两种颜色的剩下各 6 个特性的 4 张卡。</p>
+      <p>容易看出，符合条件的 4 张卡 （AAB，AAB，BBA，BBA）一共也只有 12 个銀枠特性，因此可以通过枚举这 4 张卡的组合方案来解决问题。</p>
+
+      <h3>🔍 分解步骤</h3>
+
+      <h4>1️⃣ 进一步抽象问题</h4>
+      <p>对于给定的两种颜色 AB，每种颜色各抽去任意 1 个銀枠特性，求解 4 张 SSR，使之可以提供剩余的全部 6 个銀枠特性</p>
+
+      <h4>2️⃣ 4 张 SSR 的方案种类</h4>
+      <p>对于指定的颜色 A，每张 SSR 均携带了 1 或 2 种该色的銀枠特性，则需要将同色的 6 种特性分为 \(\{2,2,1,1\}\) 的组合后，再与另一种颜色组合。</p>
+      <p>同色 6 种特性的 \(\{2,2,1,1\}\) 组合，共有
+        \[
+        \frac{\binom{6}{2} \times \binom{4}{2} \times \binom{2}{1} \times \binom{1}{1}}{\binom{2}{1}\times\binom{1}{1}}
+        = 45
+        \]
+        种可能性；</p>
+      <p>两种颜色组合为 4 张卡牌，共有
+        \[
+        45 \times 45 \times \binom{2}{1} \times \binom{2}{1} = 8100
+        \]
+        种方案。</p>
+      <p>接下去只要对每个可能的组合检查是否有相应的卡牌即可。</p>
+
+      <h4>3️⃣ 方案汇总</h4>
+      <p>双色的选取共有 \(\binom{5}{2}=10\) 种可能，指定双色的銀枠特性的选取共有\(7\times 7=49\) 种可能，故一共只需要检查
+        \[
+        8100 \times 10 \times 49 = 3969000
+        \]
+        种组合方案。</p>
+      </p>
+
+      <h4>4️⃣ 数据结构</h4>
+      <p>以 490 种异色 2-标签组合为键，分别存储上述的「1张提供2-标签的卡牌」和「4 张 SSR」，这样，同一个键所对应的两个值就可构成一系列完整方案。</p>
+
+      <h3>🖥️ 结果呈现</h3>
+      <p>接收贤者酱的输入，逐个方案进行比对，输出所有符合要求的卡组。</p>
+
+      <h3>😿 优化改进</h3>
+      <p>目前的算法大概是不会有遗漏对方案，但是这种算法必然会产生相当多的重复方案。</p>
+      <p>对此，目前所做的唯一优化是：在检查 4 张 SSR 的 8100 种方案时，如果有多张卡牌满足某个位置的3-特性要求，
+        由于它们必然出现在某次匹配里「预先抽出的卡集合」中，选择直接跳过当前方案。</p>
+      <p>由于当前算法的优化必然影响结果的存储方式（数据结构），进而使得结果呈现部分的前端算法也需要修改，因此暂时也没有太好的优化想法……总之凑合用没问题！</p>
+      <p>如果有好心的贤者酱想出了更合适的优化方案，还请不吝赐教 🥹</p>
     </div>
   </div>
+
 
   <!-- 底栏 -->
   <footer class="bottom-bar text-center">
@@ -210,5 +342,6 @@
 <script src="js/interaction.js" defer></script>
 <script src="js/calc.js" defer></script>
 <script src="js/prophecy.js" defer></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 </html>
