@@ -72,7 +72,7 @@
         }
     }
 
-    h3 {
+    h2 {
         font-size: 24px;
         color: #333;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -86,11 +86,68 @@
     }
 
     @media (max-width: 600px) {
-        h3 {
+        h2 {
             font-size: 18px;
             padding: 8px;
             margin-top: 14px;
             margin-bottom: 10px;
+        }
+    }
+
+    /* h3 - 比 h2 略小，但仍有一定的强调 */
+    h3 {
+        font-size: 20px;
+        color: #444;
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        margin-top: 18px;
+        margin-bottom: 12px;
+        padding: 5px 0;
+        border-bottom: 2px solid #ddd;
+    }
+
+
+    /* h4 - 比 h3 更小，适合作为小标题 */
+    h4 {
+        font-size: 18px;
+        color: #555;
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        margin-top: 16px;
+        margin-bottom: 10px;
+        padding: 4px 0;
+    }
+
+    /* h5 - 最小的标题，适合辅助信息 */
+    h5 {
+        font-size: 16px;
+        color: #666;
+        font-weight: bold;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+        margin-top: 14px;
+        margin-bottom: 8px;
+        padding: 3px 0;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 600px) {
+        h3 {
+            font-size: 18px;
+            margin-top: 14px;
+            margin-bottom: 10px;
+            border-bottom: 1.5px solid #ccc;
+        }
+
+        h4 {
+            font-size: 16px;
+            margin-top: 12px;
+            margin-bottom: 8px;
+        }
+
+        h5 {
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 6px;
         }
     }
 
@@ -783,4 +840,41 @@
             flex-direction: column;
             align-items: center;
         }
+    }
+
+    /* 设置外层列表的基本缩进 */
+    ul,
+    ol {
+        /* 为所有列表（ul 和 ol）设置左缩进 */
+        margin-left: 20px;
+
+        /* 为所有列表设置内边距，确保内容不会与边界重叠 */
+        padding-left: 20px;
+    }
+
+    /* 设置列表项的样式 */
+    li {
+        /* 每个列表项之间的间距 */
+        margin-bottom: 8px;
+    }
+
+    /* 处理嵌套列表，递归缩进 */
+    ul ul,
+    ol ol {
+        /* 每层嵌套增加左边缩进 */
+        margin-left: 20px;
+
+        /* 每层嵌套增加内边距 */
+        padding-left: 20px;
+    }
+
+    /* 递归嵌套时可设置不同的符号 */
+    ul ul {
+        /* 第二层列表使用圆圈符号 */
+        list-style-type: circle;
+    }
+
+    ol ol {
+        /* 第二层有序列表使用字母符号 */
+        list-style-type: lower-alpha;
     }

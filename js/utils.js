@@ -229,7 +229,7 @@ async function createCardElement(cardId, cardMap, ownedCardIds, cardTags, hideTa
     figure.innerHTML = `
         <a href="${cardLink}" target="_blank" rel="noopener noreferrer">
             <img src="${cardImgSrc}" alt="${cardInfo.title}" class="card-img"
-                onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/placeholder.jpg';" />
+                onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/images/miscs/placeholder.png';" />
         </a>
         <figcaption>${formatCardTitle(cardInfo)}</figcaption>
     `;
