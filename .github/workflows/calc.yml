@@ -55,14 +55,14 @@ jobs:
           # Extract last modified date from the response (assuming file list is returned)
           last_modified=$(echo "$response" | jq -r 'map(select(.type == "file")) | map(.git_url) | .[0]' | \
             xargs -I {} curl -s "{}" | jq -r .commit.committer.date | sort | tail -n 1)
-
+          
           echo "Last modified date: $last_modified"
-          echo "::set-output name=last_modified::$last_modified"
+          echo "last_modified=$last_modified" >> $GITHUB_ENV
 
       - name: Update Last Modified Date File
         run: |
           # Update the data-last-update file with the latest modification date
-          echo "${{ steps.get_last_modified.outputs.last_modified }}" > data-last-update
+          echo "${{ steps.get_last_modified.outputs.last_modified }}" > data-last-update-tmp
 
       - name: Commit and Push Generated Files
         run: |
@@ -72,8 +72,9 @@ jobs:
           git fetch origin artifacts || true
           git checkout artifacts 2>/dev/null || git checkout -b artifacts
 
-          rm -rf solutions/
+          rm -rf solutions/ data-last-update
           mv output/ solutions/
+          mv data-last-update-tmp data-last-update
 
           git add solutions/ data-last-update
           git commit -m "Auto-generated solutions from GitHub Actions" || echo "No changes to commit"
