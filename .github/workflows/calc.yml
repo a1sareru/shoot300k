@@ -55,16 +55,14 @@ jobs:
           # Get commit history for the file
           commit_data=$(curl -s "https://api.github.com/repos/${{ github.repository }}/commits?path=${FILE_PATH}")
 
-          # Extract last modified date from the most recent commit
-          last_modified=$(echo "$commit_data" | jq -r '.[0].commit.committer.date')
+          # Extract last modified date from the most recent commit to %Y-%m-%d format
+          last_modified=$(echo "$commit_data" | jq -r '.[0].commit.committer.date' | cut -d 'T' -f 1)
 
           # Output the last modified date
           echo "Last modified date of $FILE_PATH: $last_modified"
 
-      - name: Update Last Modified Date File
-        run: |
           # Update the data-last-update file with the latest modification date
-          echo "${{ steps.get_last_modified.outputs.last_modified }}" > data-last-update-tmp
+          echo "$last_modified" > data-last-update-tmp
 
       - name: Commit and Push Generated Files
         run: |
