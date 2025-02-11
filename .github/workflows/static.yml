@@ -7,6 +7,7 @@ on:
     branches: ["main"]
     paths-ignore:
       - ".github/workflows/calc.yml"
+      - ".github/workflows/last-update.yml"
       - "public/data/**"
       - "scripts/**"
 

@@ -1,4 +1,4 @@
-name: calc
+name: Calculate Solutions
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
       - '.github/workflows/calc.yml'
     paths-ignore:
       - '.github/workflows/static.yml'
+      - '.github/workflows/last-update.yml'
       - 'js/**'
       - 'public/images/**'
       - '.gitignore'
