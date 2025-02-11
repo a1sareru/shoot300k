@@ -49,15 +49,17 @@ jobs:
       - name: Get Last Modified Date from GitHub API
         id: get_last_modified
         run: |
-          # Get the file list of public/data directory using GitHub API without auth
-          response=$(curl -s "https://api.github.com/repos/a1sareru/shoot300k/contents/public/data")
-          
-          # Extract last modified date from the response (assuming file list is returned)
-          last_modified=$(echo "$response" | jq -r 'map(select(.type == "file")) | map(.git_url) | .[0]' | \
-            xargs -I {} curl -s "{}" | jq -r .commit.committer.date | sort | tail -n 1)
-          
-          echo "Last modified date: $last_modified"
-          echo "last_modified=$last_modified" >> $GITHUB_ENV
+          # Set file path
+          FILE_PATH="public/data/card_give_characteristic.csv"
+
+          # Get commit history for the file
+          commit_data=$(curl -s "https://api.github.com/repos/${{ github.repository }}/commits?path=${FILE_PATH}")
+
+          # Extract last modified date from the most recent commit
+          last_modified=$(echo "$commit_data" | jq -r '.[0].commit.committer.date')
+
+          # Output the last modified date
+          echo "Last modified date of $FILE_PATH: $last_modified"
 
       - name: Update Last Modified Date File
         run: |
