@@ -26,6 +26,6 @@ jobs:
           CURRENT_DATE=$(date +"%Y-%m-%d")
           echo $CURRENT_DATE > repo-last-update
 
-          git add data-last-update
+          git add repo-last-update
           git commit -m "Auto-generated repo-last-update information from GitHub Actions" || echo "No changes to commit"
           git push origin artifacts
