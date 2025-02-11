@@ -11,6 +11,7 @@ on:
     paths-ignore:
       - '.github/workflows/static.yml'
       - 'js/**'
+      - 'public/images/**'
       - '.gitignore'
       - 'favicon.ico'
       - 'index.html'

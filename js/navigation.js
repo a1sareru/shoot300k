@@ -31,6 +31,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 默认激活 "Top" 页面
-    document.querySelector(".nav-item[data-target='main']").classList.add("active");
-    document.querySelector("#main").classList.add("active");
+    document.querySelector(".nav-item[data-target='topPage']").classList.add("active");
+    document.querySelector("#topPage").classList.add("active");
 });

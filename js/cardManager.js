@@ -1,19 +1,5 @@
 let isFilteringSSR = false; // 标记是否处于 SSR 过滤模式
 
-// 加载 CSV 数据并渲染显示所有卡牌
-async function loadCards() {
-    const cards = await fetchAndParseCards();
-    const filteredCards = filterHighRarityCards(cards);
-    renderCards(filteredCards);
-
-    // ✅ 保持选中状态
-    restoreSelectedCards(new Set(
-        Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
-    ));
-
-    setupButtons();
-}
-
 // 渲染卡牌列表到页面
 function renderCards(cards, selectedIds = new Set()) {
     const cardListEl = document.getElementById('card-list');

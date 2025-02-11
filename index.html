@@ -14,16 +14,17 @@
 <body>
   <!-- 固定顶部的导航栏 -->
   <nav class="navbar">
-    <a class="nav-item active" data-target="main">✨ Top</a>
+    <a class="nav-item active" data-target="topPage">✨ Top</a>
     <a class="nav-item" data-target="selectCards">🎴 持有卡牌</a>
     <a class="nav-item" data-target="calc">🧮 卡组计算</a>
+    <a class="nav-item" data-target="prophecy">📜 予言書(仮)</a>
     <a class="nav-item" data-target="about">🤫 关于</a>
   </nav>
 
   <!-- 各个页面 -->
   <div class="container">
     <!-- Top -->
-    <div id="main" class="tab-content">
+    <div id="topPage" class="tab-content">
       <p>这是某位懒惰贤者为自己开发的双色银卡组配卡助手。
         <span id="last-updated" class="komejirushi-text">
         </span>
@@ -51,13 +52,33 @@
       </ul>
 
       <h3>📣 记事</h3>
-      <p class="komejirushi-text">※ 本版块最后更新：2025-02-09</p>
+      <p class="komejirushi-text">※ 本版块最后更新：2025-02-11</p>
+      <p><span style="font-weight: 900;">[2025-02-11]</span><br>
+        感谢微博 <a href="https://weibo.com/u/7917052807">@魔法使的约定情报站</a>
+        在接收投稿的同时还附上了详细介绍！皮下辛苦了！<br>
+        又：<del>在群里看到不是我一个人对着贫瘠的卡牌库存破防，于是</del>
+        初步完成了「予言書(仮)」页面，现在可以计算还差 1-2 张卡就能达成的卡组了。<br>
+        总之希望能帮上忙🫶 给大家点一首「あなたに友人になれたら」🎶（何
+      </p>
       <p><span style="font-weight: 900;">[2025-02-09]</span><br>
         <del>初步完成后拿自己的库存做测试数据，发现厨房活动抽到的 Nero 竟然贡献了唯一解，破防；于是</del>
         正在考虑「复刻卡池规划建议」这个功能该怎么做……
         <br>牌组的归并优化做得并不充分，但总之凑合能用；如果我之后把现在使用的简易算法说明贴上来的话，会得到优化建议吗（……）
       </p>
+
+      <h3>🧭 站点导航</h3>
+      <del>为什么要放在最后呢，因为确实不是很重要……</del>
+      <ul>
+        <li>「Top」：站点首页。</li>
+        <li>「持有卡牌」：选择您所持有的卡牌，生成卡牌库存字符串。</li>
+        <li>「卡组计算」：输入卡牌库存字符串，计算符合条件的卡组</li>
+        <li>「予言書(仮)」：输入卡牌库存字符串，计算还差 1-2 张卡就能达成的卡组</li>
+        <li>「关于」：关于本站点的其他信息。</li>
+      </ul>
+
     </div>
+
+
     <!-- 持有卡牌 -->
     <div id="selectCards" class="tab-content" style="margin: 10px;">
       <div class="selectCards-header">
@@ -82,9 +103,10 @@
         <div id="card-list">加载中...</div>
       </div>
     </div>
+
+
     <!-- 卡组计算 -->
     <div id="calc" class="tab-content">
-      <h2>🧮 卡组计算</h2>
       <p>在下面的文本框内输入你所持有卡牌对应的ID列表（以半角逗号分隔），点击按钮即可计算。</p>
       <div class="komejirushi-text">
         <p>未持有的卡牌（即需要借用的卡牌）将以<span style="color: pink; font-weight: 600;">粉色边框</span>标出。</p>
@@ -95,7 +117,8 @@
       <div>
         <!-- 用户输入框 -->
         <div>
-          <textarea id="card-input" placeholder="输入卡牌ID列表，例如：488,879,495,794,167,71" rows="3"></textarea>
+          <textarea class="string-input-area" id="card-input" placeholder="输入卡牌ID列表，例如：488,879,495,794,167,71"
+            rows="3"></textarea>
         </div>
 
         <!-- 提交按钮 -->
@@ -111,6 +134,54 @@
         <p style="color: gray;">还没有进行过计算哦</p>
       </div>
     </div>
+
+
+    <!-- 予言書（仮）-->
+    <div id="prophecy" class="tab-content">
+      <div class="prophecy-container">
+        <div class="prophecy-image">
+          <img
+            src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/miscs/kanryou.png"
+            alt="予言書：完了" />
+        </div>
+        <div class="prophecy-text">
+          <p>没有在「卡组计算」页面获得结果的贤者酱可以根据这个页面的计算结果规划下池子。</p>
+          <p>最多可提供缺 3 张卡牌的情况。对于已经获得了卡组的贤者酱，只显示缺 2 张的情况。</p>
+          <p>由于该功能难以进行充分测试，请谨慎使用<del>以防浏览器爆炸</del>。有任何问题欢迎联系开发者 🙇‍♀️🙇‍♀️🙇‍♀️</p>
+        </div>
+      </div>
+      <!-- 分割线 -->
+      <hr>
+      <br>
+      <p>在下面的文本框内输入你所持有卡牌对应的ID列表（以半角逗号分隔），点击按钮即可计算。</p>
+      <div class="komejirushi-text">
+        <p>未持有的卡牌（即需要借用的卡牌）将以<span style="color: #88dae3; font-weight: 600;">蓝色边框</span>标出。</p>
+        <p>点击结果中的卡牌图片可跳转到卡牌在中文WIKI的对应页面 <del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。</p>
+        <p>⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
+      </div>
+
+      <div>
+        <!-- 用户输入框 -->
+        <div>
+          <textarea class="string-input-area" id="prophecy-card-input" placeholder="输入卡牌ID列表，例如：488,879,495,794,167,71"
+            rows="3"></textarea>
+        </div>
+
+        <!-- 提交按钮 -->
+        <button id="submit-prophecy-calc" class="submit-btn">计算卡组</button>
+      </div>
+
+      <!-- 计算错误消息 -->
+      <p id="prophecy-calc-error" class="error-text" style="display: none; color: red;"></p>
+
+      <!-- 计算结果区域 -->
+      <h3>预言(?)结果</h3>
+      <div id="prophecy-calc-results" class="result-container">
+        <p style="color: gray;">还没有进行过预言(?)哦</p>
+      </div>
+    </div>
+
+
     <!-- 关于 -->
     <div id="about" class="tab-content">
       <h3>⚖️ Disclaimer</h3>
@@ -121,7 +192,7 @@
       <p><a class="my-links" href="mailto:kmbk.kr.dev@outlook.jp">kmbk.kr.dev[AT]outlook.jp</a></p>
       <p>※ 除报错、建议和提问外，也欢迎其他主题的邮件。</p>
       <h3>🎯 Furthermore</h3>
-      <p>本站点将来可能增加的功能：显示卡池/显示卡牌获取方式。</p>
+      <p>本站点将来可能增加的功能：显示卡池/显示卡牌获取方式。<del>虽然大概率只是在画饼</del></p>
     </div>
   </div>
 
@@ -138,5 +209,6 @@
 <script src="js/cardManager.js" defer></script>
 <script src="js/interaction.js" defer></script>
 <script src="js/calc.js" defer></script>
+<script src="js/prophecy.js" defer></script>
 
 </html>

@@ -61,9 +61,9 @@
     }
 
     .komejirushi-text {
-        color: #54391c;
+        color: #606060;
         font-size: smaller;
-        font-weight: 700;
+        font-weight: 600;
     }
 
     @media screen and (max-width: 600px) {
@@ -493,7 +493,7 @@
         }
     }
 
-    #card-input {
+    .string-input-area {
         width: 100%;
         max-width: 600px;
         padding: 8px;
@@ -752,4 +752,35 @@
         height: auto;
         margin: 5px 0;
         /* 竖向间距 */
+    }
+
+
+    .prophecy-container {
+        display: flex;
+
+        /* 确保在小屏幕时元素换行 */
+        flex-wrap: wrap;
+
+        align-items: center;
+
+        /* 给图片和文字之间添加间距 */
+        gap: 20px;
+    }
+
+    .prophecy-image img {
+        max-width: 90px;
+        height: auto;
+    }
+
+    .prophecy-text {
+        /* 文字部分占据剩余空间 */
+        flex: 1;
+    }
+
+    @media (max-width: 768px) {
+        .prophecy-container {
+            /* 小屏幕时改为纵向排列 */
+            flex-direction: column;
+            align-items: center;
+        }
     }
