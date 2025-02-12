@@ -203,7 +203,7 @@ async function createCardElement(cardId, cardMap, ownedCardIds, cardTags, hideTa
         cardDiv.classList.add("rarity-4");
     }
 
-    // 检查用户是否持有此卡，如果未持有，边框设为粉色
+    // 检查用户是否持有此卡，如果未持有，边框设为指定颜色
     if (!ownedCardIds.has(cardId)) {
         cardDiv.style.border = "4px solid " + color;
     }
