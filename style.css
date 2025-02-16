@@ -812,7 +812,7 @@
     }
 
 
-    .prophecy-container {
+    .plain-container {
         display: flex;
 
         /* 确保在小屏幕时元素换行 */
@@ -824,18 +824,18 @@
         gap: 20px;
     }
 
-    .prophecy-image img {
+    .plain-image img {
         max-width: 90px;
         height: auto;
     }
 
-    .prophecy-text {
+    .plain-text {
         /* 文字部分占据剩余空间 */
         flex: 1;
     }
 
     @media (max-width: 768px) {
-        .prophecy-container {
+        .plain-container {
             /* 小屏幕时改为纵向排列 */
             flex-direction: column;
             align-items: center;
