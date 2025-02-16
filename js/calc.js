@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const quadData = await quadResponse.json();
 
             let results = []; // 计算出的卡组组合
-            let results_with_borrow = [];
             // 遍历 card0Data 和 quadData
             for (const colorPair in card0Data) {
                 if (!(colorPair in quadData)) continue; // 只处理两个JSON中都存在的颜色对
@@ -82,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 });
                             }
                         } else if (quadCandidate.every(id => processedIds.includes(id))) {
-                            results_with_borrow.push({
+                            results.push({
                                 quad: quadCandidate,
                                 set: card0Candidates,
                                 set_tag: tagPair

@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const quadData = await quadResponse.json();
 
             let results = []; // 计算出的卡组组合
-            let results_with_borrow = [];
 
             // 遍历 card0Data 和 quadData
             for (const colorPair in card0Data) {
@@ -76,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     for (const quadCandidate of quadCandidates) {
                         if (card0Candidates.some(id => processedIds.includes(id))) {
                             if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
-                                // FIXME: 防一手贪心贤者酱干爆浏览器（何）
+                                // NOTE: 防一手贪心贤者酱干爆浏览器（何）
                                 flag_they_have_deck = true;
                             } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
                                 results.push({
@@ -87,11 +86,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                         } else {
                             if (quadCandidate.filter(id => processedIds.includes(id)).length >= 4) {
-                                // FIXME: 防一手贪心贤者酱干爆浏览器（何）
+                                // NOTE: 防一手贪心贤者酱干爆浏览器（何）
                                 flag_they_have_deck = true;
                             } else
                                 if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
-                                    results_with_borrow.push({
+                                    results.push({
                                         quad: quadCandidate,
                                         set: card0Candidates,
                                         set_tag: tagPair
@@ -100,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     }
                     // 如果没有结果，尝试降低要求
-                    if (!flag_they_have_deck && results === 0 && results_with_borrow.length == 0) {
+                    if (!flag_they_have_deck && results.length === 0) {
                         for (const quadCandidate of quadCandidates) {
                             if (card0Candidates.some(id => processedIds.includes(id))) {
                                 if (quadCandidate.filter(id => processedIds.includes(id)).length >= 1) {
@@ -111,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     });
                                 }
                             } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
-                                results_with_borrow.push({
+                                results.push({
                                     quad: quadCandidate,
                                     set: card0Candidates,
                                     set_tag: tagPair

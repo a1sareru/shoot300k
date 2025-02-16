@@ -133,6 +133,9 @@ async function renderCalcResults(calcResults, results, processedIds, highlightCo
         }
 
         let setCards = Array.isArray(group.set) ? group.set.filter(id => ownedCardIds.has(id)) : [];
+        if (setCards.length === 0) {
+            setCards = group.set;
+        }
 
         // 处理 set 数据
         if (setCards.length === 1) {
