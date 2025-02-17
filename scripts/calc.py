@@ -17,10 +17,11 @@ def generate_valid_sets(x):
     x_low = x & FULL_MASK
 
     # Enumerate all possible 2-bit numbers
-    two_bit_numbers = [sum(1 << i for i in bits) for bits in combinations(range(7), 2)]
+    two_bit_numbers = [sum(1 << i for i in bits)
+                       for bits in combinations(range(7), 2)]
 
     valid_sets = []
-    
+
     # Enumerate all possible combinations of 2-bit numbers
     for two1, two2 in combinations(two_bit_numbers, 2):
         # skip if two1, two2, or x_low have common bits
@@ -32,9 +33,11 @@ def generate_valid_sets(x):
         bit_indices = [i for i in range(7) if remain & (1 << i)]
         one1 = 1 << bit_indices[0]
         one2 = 1 << bit_indices[1]
-        valid_sets.append((two1, two2, one1, one2)) # one[i]'s sequence does not matter
+        # one[i]'s sequence does not matter
+        valid_sets.append((two1, two2, one1, one2))
 
     return valid_sets
+
 
 def find_solutions_2_2(A, B):
     set_A = generate_valid_sets(A)
@@ -42,13 +45,19 @@ def find_solutions_2_2(A, B):
     solutions = []
     for a in set_A:
         for b in set_B:
-            solutions.append([(a[0], b[2]), (a[1], b[3]), (a[2], b[0]), (a[3], b[1])])
-            solutions.append([(a[0], b[2]), (a[1], b[3]), (a[2], b[1]), (a[3], b[0])])
-            solutions.append([(a[0], b[3]), (a[1], b[2]), (a[2], b[0]), (a[3], b[1])])
-            solutions.append([(a[0], b[3]), (a[1], b[2]), (a[2], b[1]), (a[3], b[0])])
+            solutions.append([(a[0], b[2]), (a[1], b[3]),
+                             (a[2], b[0]), (a[3], b[1])])
+            solutions.append([(a[0], b[2]), (a[1], b[3]),
+                             (a[2], b[1]), (a[3], b[0])])
+            solutions.append([(a[0], b[3]), (a[1], b[2]),
+                             (a[2], b[0]), (a[3], b[1])])
+            solutions.append([(a[0], b[3]), (a[1], b[2]),
+                             (a[2], b[1]), (a[3], b[0])])
     return solutions
 
 # Generate all possible binary codes (low 7 bits)
+
+
 def generate_tag_codes():
     codes = set()
 
@@ -225,7 +234,7 @@ if __name__ == "__main__":
                     if flag_next:
                         flag_next = False
                         continue
-                    quad_list.append(quad)
+                    quad_list.append(sorted(quad))
 
                 if not quad_list:
                     # there is no solution, so we can skip this tag pair
@@ -249,8 +258,37 @@ if __name__ == "__main__":
         # break  # test one color pair for now
 
     # Save the results to the output directory
+    # FIXME: The following code would be replaced by the full solution generation later
     os.makedirs(args.output_dir, exist_ok=True)
     with open(f"{args.output_dir}/card0.json", "w") as f:
         json.dump(card0_dict, f, indent=4)
     with open(f"{args.output_dir}/quad.json", "w") as f:
         json.dump(quad_dict, f, indent=4)
+
+    # Generate the full solution by combining the two json structures
+    # and save it to the output directory
+    cnt = 0
+    full_solution = {}
+    quint_set = set()
+    for color_pair in questions:
+        color_1, color_2 = color_pair
+        color_pair_as_key = f"{color_1},{color_2}"
+        for tag_pair in quad_dict[color_pair_as_key]:
+            tag_pair_as_key = f"{color_1_tags[i]},{color_2_tags[j]}"
+            for quad in quad_dict[color_pair_as_key][tag_pair]:
+                tmp_card0_set = []
+                # remove the card0 from tmp_card0_set if sorted(quad+[card0]) is already in full_solution_set
+                for card0 in card0_dict[color_pair_as_key][tag_pair]:
+                    tmp_quint = tuple(sorted(quad+[card0]))
+                    if tmp_quint not in quint_set:
+                        tmp_card0_set.append(card0)
+                        quint_set.add(tmp_quint)
+                if len(tmp_card0_set) == 0:
+                    continue
+                full_solution[cnt] = {}
+                full_solution[cnt]["quad"] = quad
+                full_solution[cnt]["card0s"] = tmp_card0_set
+                cnt += 1
+
+    with open(f"{args.output_dir}/full_solution.json", "w") as f:
+        json.dump(full_solution, f, indent=4)
