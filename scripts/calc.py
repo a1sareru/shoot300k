@@ -288,7 +288,7 @@ if __name__ == "__main__":
                 full_solution[cnt] = {}
                 full_solution[cnt]["quad"] = quad
                 full_solution[cnt]["card0s"] = tmp_card0_set
-                full_solution[cnt]["set_tags"] = tag_pair
+                full_solution[cnt]["tags"] = tag_pair
                 cnt += 1
 
     with open(f"{args.output_dir}/full_solution.json", "w") as f:
