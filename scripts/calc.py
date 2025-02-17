@@ -258,13 +258,6 @@ if __name__ == "__main__":
         # break  # test one color pair for now
 
     # Save the results to the output directory
-    # FIXME: The following code would be replaced by the full solution generation later
-    os.makedirs(args.output_dir, exist_ok=True)
-    with open(f"{args.output_dir}/card0.json", "w") as f:
-        json.dump(card0_dict, f, indent=4)
-    with open(f"{args.output_dir}/quad.json", "w") as f:
-        json.dump(quad_dict, f, indent=4)
-
     # Generate the full solution by combining the two json structures
     # and save it to the output directory
     cnt = 0
