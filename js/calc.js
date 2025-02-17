@@ -47,47 +47,40 @@ document.addEventListener("DOMContentLoaded", () => {
             const processedIds = await filtedCardByIds(inputIds);
 
             // 读取 JSON 数据
-            const card0Response = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/card0.json");
-            const quadResponse = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/quad.json");
+            const fullSolutionResponse = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/full_solution.json");
 
-            if (!card0Response.ok || !quadResponse.ok) {
+            if (!fullSolutionResponse.ok) {
                 throw new Error("无法加载卡组计算数据");
             }
 
-            const card0Data = await card0Response.json();
-            const quadData = await quadResponse.json();
+            const fullSolutionData = await fullSolutionResponse.json();
 
             let results = []; // 计算出的卡组组合
-            // 遍历 card0Data 和 quadData
-            for (const colorPair in card0Data) {
-                if (!(colorPair in quadData)) continue; // 只处理两个JSON中都存在的颜色对
 
-                for (const tagPair in card0Data[colorPair]) {
-                    if (!(tagPair in quadData[colorPair])) continue; // 只处理两个JSON中都存在的标签对
+            // 遍历 fullSolutionData
+            for (const solution in fullSolutionData) {
+                // solution has "quad" and "card0s"
+                const quadCandidate = fullSolutionData[solution]["quad"];
+                const card0Candidates = fullSolutionData[solution]["card0s"];
+                const tags = fullSolutionData[solution]["tags"];
 
-                    const card0Candidates = card0Data[colorPair][tagPair];  // 这里是四元组列表
-                    const quadCandidates = quadData[colorPair][tagPair]; // 这里是普通整数列表
+                if (!quadCandidate || !card0Candidates) continue; // 跳过空数据
 
-                    if (!card0Candidates || !quadCandidates) continue; // 跳过空数据
-
-                    // 遍历四元组列表和整数列表
-                    for (const quadCandidate of quadCandidates) {
-                        if (card0Candidates.some(id => processedIds.includes(id))) {
-                            if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
-                                results.push({
-                                    quad: quadCandidate,
-                                    set: card0Candidates,
-                                    set_tag: tagPair
-                                });
-                            }
-                        } else if (quadCandidate.every(id => processedIds.includes(id))) {
-                            results.push({
-                                quad: quadCandidate,
-                                set: card0Candidates,
-                                set_tag: tagPair
-                            });
-                        }
+                if (card0Candidates.some(id => processedIds.includes(id))) {
+                    if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
+                        results.push({
+                            quad: quadCandidate,
+                            set: card0Candidates,
+                            set_tag: tags
+                        });
                     }
+                }
+                else if (quadCandidate.every(id => processedIds.includes(id))) {
+                    results.push({
+                        quad: quadCandidate,
+                        set: card0Candidates,
+                        set_tag: tags
+                    });
                 }
             }
 

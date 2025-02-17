@@ -45,83 +45,79 @@ document.addEventListener("DOMContentLoaded", () => {
             const processedIds = await filtedCardByIds(inputIds);
 
             // 读取 JSON 数据
-            const card0Response = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/card0.json");
-            const quadResponse = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/quad.json");
+            const fullSolutionResponse = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/full_solution.json");
 
-            if (!card0Response.ok || !quadResponse.ok) {
+            if (!fullSolutionResponse.ok) {
                 throw new Error("无法加载卡组计算数据");
             }
 
-            const card0Data = await card0Response.json();
-            const quadData = await quadResponse.json();
+            const fullSolutionData = await fullSolutionResponse.json();
 
             let results = []; // 计算出的卡组组合
+            let results_weak = []; // 计算出的卡组组合（弱）
 
-            // 遍历 card0Data 和 quadData
-            for (const colorPair in card0Data) {
-                if (!(colorPair in quadData)) continue;
+            let flag_calc_has_result = false; // calc has results
 
-                for (const tagPair in card0Data[colorPair]) {
-                    if (!(tagPair in quadData[colorPair])) continue;
+            // 遍历 fullSolutionData
+            for (const solution in fullSolutionData) {
+                // solution has "quad" and "card0s"
+                const quadCandidate = fullSolutionData[solution]["quad"];
+                const card0Candidates = fullSolutionData[solution]["card0s"];
+                const tags = fullSolutionData[solution]["tags"];
 
-                    const card0Candidates = card0Data[colorPair][tagPair]; // 这里是四元组列表
-                    const quadCandidates = quadData[colorPair][tagPair];  // 这里是普通整数列表
+                if (!quadCandidate || !card0Candidates) continue; // 跳过空数据
 
-                    if (!card0Candidates || !quadCandidates) continue;
-
-                    flag_they_have_deck = false;
-
-                    // 遍历四元组列表和整数列表（新的逻辑）
-                    for (const quadCandidate of quadCandidates) {
-                        if (card0Candidates.some(id => processedIds.includes(id))) {
-                            if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
-                                // NOTE: 防一手贪心贤者酱干爆浏览器（何）
-                                flag_they_have_deck = true;
-                            } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
-                                results.push({
-                                    quad: quadCandidate,
-                                    set: card0Candidates,
-                                    set_tag: tagPair
-                                });
-                            }
-                        } else {
-                            if (quadCandidate.filter(id => processedIds.includes(id)).length >= 4) {
-                                // NOTE: 防一手贪心贤者酱干爆浏览器（何）
-                                flag_they_have_deck = true;
-                            } else
-                                if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
-                                    results.push({
-                                        quad: quadCandidate,
-                                        set: card0Candidates,
-                                        set_tag: tagPair
-                                    });
-                                }
-                        }
-                    }
-                    // 如果没有结果，尝试降低要求
-                    if (!flag_they_have_deck && results.length === 0) {
-                        for (const quadCandidate of quadCandidates) {
-                            if (card0Candidates.some(id => processedIds.includes(id))) {
-                                if (quadCandidate.filter(id => processedIds.includes(id)).length >= 1) {
-                                    results.push({
-                                        quad: quadCandidate,
-                                        set: card0Candidates,
-                                        set_tag: tagPair
-                                    });
-                                }
-                            } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
-                                results.push({
-                                    quad: quadCandidate,
-                                    set: card0Candidates,
-                                    set_tag: tagPair
-                                });
-                            }
-                        }
+                if (card0Candidates.some(id => processedIds.includes(id))) {
+                    if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
+                        // NOTE: 防一手贪心贤者酱干爆浏览器（何）
+                        flag_calc_has_result = true;
+                    } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
+                        results.push({
+                            quad: quadCandidate,
+                            set: card0Candidates,
+                            set_tag: tags
+                        });
                     }
                 }
+                else {
+                    if (quadCandidate.filter(id => processedIds.includes(id)).length >= 4) {
+                        // NOTE: 防一手贪心贤者酱干爆浏览器（何）
+                        flag_calc_has_result = true;
+                    } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
+                        results.push({
+                            quad: quadCandidate,
+                            set: card0Candidates,
+                            set_tag: tags
+                        });
+                    }
+                }
+
+                // 如果没有结果，尝试降低要求
+                if (!flag_calc_has_result && results.length === 0) {
+                    if (card0Candidates.some(id => processedIds.includes(id))) {
+                        if (quadCandidate.filter(id => processedIds.includes(id)).length >= 1) {
+                            results_weak.push({
+                                quad: quadCandidate,
+                                set: card0Candidates,
+                                set_tag: tags
+                            });
+                        }
+                    }
+                    else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
+                        results_weak.push({
+                            quad: quadCandidate,
+                            set: card0Candidates,
+                            set_tag: tags
+                        });
+                    }
+                }
+
             }
 
-            // 渲染计算结果
+            if (!flag_calc_has_result && !results.length && results_weak.length) {
+                results = results.concat(results_weak);
+            }
+
             renderCalcResults(calcResults, results, processedIds, "#88dae3", "无能为力喏……加油攒石头抽卡吧贤者酱！");
         } catch (error) {
             calcError.textContent = "计算失败，请检查输入或稍后重试";
