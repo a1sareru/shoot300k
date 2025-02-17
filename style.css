@@ -35,6 +35,10 @@
         }
     }
 
+    del {
+        color: gray;
+    }
+
     .my-links {
         /* 允许长单词或连续字符换行 */
         word-break: break-word;
