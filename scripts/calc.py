@@ -55,9 +55,8 @@ def find_solutions_2_2(A, B):
                              (a[2], b[1]), (a[3], b[0])])
     return solutions
 
+
 # Generate all possible binary codes (low 7 bits)
-
-
 def generate_tag_codes():
     codes = set()
 
@@ -139,15 +138,6 @@ if __name__ == "__main__":
     df_cards = df_cards[~df_cards['id'].isin([133, 134])]
     # get all valid cards (SSR, SR)
     valid_cards = tuple(df_cards['id'].sort_values())
-    # get SSR cards
-    df_ssr = df_cards[df_cards['rarity'] == 4]
-    ssr_cards = list(df_ssr['id'])
-    # add SR(177, 866, 867) as SSR, since they provide 3 normal silver tags
-    ssr_cards.extend([177, 866, 867])
-    ssr_cards = sorted(ssr_cards)
-    # delete SSR(129-132) from SSR list, since they only provide 2 normal silver tags
-    ssr_cards = [c for c in ssr_cards if c not in range(129, 133)]
-    ssr_cards = tuple(ssr_cards)
 
     # Load card-tag mappings from base and grow lists
     #
