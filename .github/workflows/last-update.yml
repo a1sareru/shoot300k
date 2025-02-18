@@ -1,4 +1,4 @@
-name: Update Repo's Last Update Information
+name: Update repo's last update information
 
 on:
   push:

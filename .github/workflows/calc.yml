@@ -1,4 +1,4 @@
-name: Calculate Solutions
+name: Enumerate solutions when data is updated
 
 on:
   push:
