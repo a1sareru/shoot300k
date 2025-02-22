@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const calcResults = document.getElementById("prophecy-calc-results");
 
     // 尝试从 localStorage 读取上次的输入
-    const savedCardIds = localStorage.getItem("prophecyCardInput");
-    if (savedCardIds) {
-        cardInput.value = savedCardIds;
+    const savedIds = localStorage.getItem("prophecyCardInput");
+    if (savedIds) {
+        cardInput.value = savedIds;
     }
 
     // 监听输入框变化，实时保存
@@ -31,18 +31,18 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("prophecyCardInput", inputText);
 
         // 解析卡牌ID列表
-        const cardIds = inputText.split(",").map(id => Number(id.trim()));
+        const ids = inputText.split(",").map(id => Number(id.trim()));
 
         // 调用计算函数
-        await calculateProphecyCardSet(cardIds);
+        await calculateProphecyCardSet(ids);
     });
 
     // 计算卡组逻辑框架
-    async function calculateProphecyCardSet(cardIds) {
+    async function calculateProphecyCardSet(ids) {
         try {
             // 预处理：所有 cardId >= 337 的需要 +19
-            const inputIds = cardIds.map(id => (id >= 337 ? id + 19 : id));
-            const processedIds = await filtedCardByIds(inputIds);
+            const ids19 = ids.map(id => (id >= 337 ? id + 19 : id));
+            const filteredIds19 = await filtedCardByIds19(ids19);
 
             // 读取 JSON 数据
             const fullSolutionResponse = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/full_solution.json");
@@ -67,26 +67,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (!quadCandidate || !card0Candidates) continue; // 跳过空数据
 
-                if (card0Candidates.some(id => processedIds.includes(id))) {
-                    if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
+                if (card0Candidates.some(id => filteredIds19.includes(id))) {
+                    if (quadCandidate.filter(id => filteredIds19.includes(id)).length >= 3) {
                         // NOTE: 防一手贪心贤者酱干爆浏览器（何）
                         flag_calc_has_result = true;
-                    } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
+                    } else if (quadCandidate.filter(id => filteredIds19.includes(id)).length >= 2) {
                         results.push({
                             quad: quadCandidate,
-                            set: card0Candidates,
+                            dset: card0Candidates,
                             set_tag: tags
                         });
                     }
                 }
                 else {
-                    if (quadCandidate.filter(id => processedIds.includes(id)).length >= 4) {
+                    if (quadCandidate.filter(id => filteredIds19.includes(id)).length >= 4) {
                         // NOTE: 防一手贪心贤者酱干爆浏览器（何）
                         flag_calc_has_result = true;
-                    } else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
+                    } else if (quadCandidate.filter(id => filteredIds19.includes(id)).length >= 3) {
                         results.push({
                             quad: quadCandidate,
-                            set: card0Candidates,
+                            dset: card0Candidates,
                             set_tag: tags
                         });
                     }
@@ -94,19 +94,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // 如果没有结果，尝试降低要求
                 if (!flag_calc_has_result && results.length === 0) {
-                    if (card0Candidates.some(id => processedIds.includes(id))) {
-                        if (quadCandidate.filter(id => processedIds.includes(id)).length >= 1) {
+                    if (card0Candidates.some(id => filteredIds19.includes(id))) {
+                        if (quadCandidate.filter(id => filteredIds19.includes(id)).length >= 1) {
                             results_weak.push({
                                 quad: quadCandidate,
-                                set: card0Candidates,
+                                dset: card0Candidates,
                                 set_tag: tags
                             });
                         }
                     }
-                    else if (quadCandidate.filter(id => processedIds.includes(id)).length >= 2) {
+                    else if (quadCandidate.filter(id => filteredIds19.includes(id)).length >= 2) {
                         results_weak.push({
                             quad: quadCandidate,
-                            set: card0Candidates,
+                            dset: card0Candidates,
                             set_tag: tags
                         });
                     }
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 results = results.concat(results_weak);
             }
 
-            renderCalcResults(calcResults, results, processedIds, "#88dae3", "无能为力喏……加油攒石头抽卡吧贤者酱！");
+            renderCalcResults(calcResults, results, filteredIds19, "#88dae3", "无能为力喏……加油攒石头抽卡吧贤者酱！");
         } catch (error) {
             calcError.textContent = "计算失败，请检查输入或稍后重试";
             calcError.style.display = "block";

@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const calcResults = document.getElementById("calc-results");
 
     // 尝试从 localStorage 读取上次的输入
-    const savedCardIds = localStorage.getItem("cardInput");
-    if (savedCardIds) {
-        cardInput.value = savedCardIds;
+    const savedIds = localStorage.getItem("cardInput");
+    if (savedIds) {
+        cardInput.value = savedIds;
     }
 
     // 监听输入框变化，实时保存
@@ -31,20 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("cardInput", inputText);
 
         // 解析卡牌ID列表
-        const cardIds = inputText.split(",").map(id => Number(id.trim()));
+        const ids = inputText.split(",").map(id => Number(id.trim()));
 
         // 调用计算函数
-        await calculateCardSet(cardIds);
+        await calculateCardSet(ids);
     });
 
 
 
     // 计算卡组逻辑框架
-    async function calculateCardSet(cardIds) {
+    async function calculateCardSet(ids) {
         try {
             // 预处理：所有 cardId >= 337 的需要 +19
-            const inputIds = cardIds.map(id => (id >= 337 ? id + 19 : id));
-            const processedIds = await filtedCardByIds(inputIds);
+            const ids19 = ids.map(id => (id >= 337 ? id + 19 : id));
+            const filteredIds19 = await filtedCardByIds19(ids19);
 
             // 读取 JSON 数据
             const fullSolutionResponse = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/full_solution.json");
@@ -66,26 +66,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (!quadCandidate || !card0Candidates) continue; // 跳过空数据
 
-                if (card0Candidates.some(id => processedIds.includes(id))) {
-                    if (quadCandidate.filter(id => processedIds.includes(id)).length >= 3) {
+                if (card0Candidates.some(id => filteredIds19.includes(id))) {
+                    if (quadCandidate.filter(id => filteredIds19.includes(id)).length >= 3) {
                         results.push({
                             quad: quadCandidate,
-                            set: card0Candidates,
+                            dset: card0Candidates,
                             set_tag: tags
                         });
                     }
                 }
-                else if (quadCandidate.every(id => processedIds.includes(id))) {
+                else if (quadCandidate.every(id => filteredIds19.includes(id))) {
                     results.push({
                         quad: quadCandidate,
-                        set: card0Candidates,
+                        dset: card0Candidates,
                         set_tag: tags
                     });
                 }
             }
 
             // 渲染计算结果
-            renderCalcResults(calcResults, results, processedIds, "pink", "看起来暂时还配不出卡组喏……试试吾等的「予言書（仮）」如何～！");
+            renderCalcResults(calcResults, results, filteredIds19, "pink", "看起来暂时还配不出卡组喏……试试吾等的「予言書（仮）」如何～！");
         } catch (error) {
             document.getElementById("calc-error").textContent = "计算失败，请检查输入或稍后重试";
             document.getElementById("calc-error").style.display = "block";

@@ -13,14 +13,14 @@ function parseCSV(text) {
 }
 
 // 处理图片路径和标题格式化
-function formatCardTitle(card) {
+function formatCardTitle(card19) {
     // 解析标题，移除 "【" 并拆分 "】" 以获取卡牌名和角色名
-    const parts = card.title.replace(/【/g, '').split("】");
+    const parts = card19.title.replace(/【/g, '').split("】");
     const cardTitle = parts[0].trim();
     const cardNamae = parts.length > 1 ? fromNamaeGetName(parts[1].trim()) || "" : "";
 
     // 计算 ID 显示逻辑（id >= 337 需要 -19）
-    const formattedId = card.id >= 337 ? card.id - 19 : card.id;
+    const formattedId = card19.id >= 337 ? card19.id - 19 : card19.id;
 
     // 组合格式化后的标题
     let formattedTitle = `<strong class="card-title">${cardTitle}</strong>`;
@@ -97,14 +97,14 @@ async function loadCards() {
 }
 
 // 过滤出 SR (3) 和 SSR (4) 级别的卡牌
-async function filtedCardByIds(inputIds) {
-    const cards = await fetchAndParseCards();
-    const filteredCards = filterHighRarityCards(cards);
-    return inputIds.filter(id => new Set(filteredCards.map(card => card.id)).has(String(id)));
+async function filtedCardByIds19(ids19) {
+    const cards19 = await fetchAndParseCards();
+    const filteredCards19 = filterHighRarityCards(cards19);
+    return ids19.filter(id => new Set(filteredCards19.map(card => card.id)).has(String(id)));
 }
 
 // 渲染计算结果
-async function renderCalcResults(calcResults, results, processedIds, highlightColor = "pink", zeroResultsMessage = "未找到符合条件的卡组") {
+async function renderCalcResults(calcResults, results, ids19, highlightColor = "pink", zeroResultsMessage = "未找到符合条件的卡组") {
     calcResults.innerHTML = "";
 
     if (results.length === 0) {
@@ -112,9 +112,9 @@ async function renderCalcResults(calcResults, results, processedIds, highlightCo
         return;
     }
 
-    const cards = await fetchAndParseCards();
-    const cardMap = new Map(cards.map(card => [String(card.id), card]));
-    const ownedCardIds = new Set(processedIds); // 用户持有的卡片
+    const cards19 = await fetchAndParseCards();
+    const cardMap19 = new Map(cards19.map(card => [String(card.id), card]));
+    const ids19Set = new Set(ids19); // 用户持有的卡片
     const cardTags = await fetchAndParseCardTags(); // 解析卡片特性
 
     results.forEach(async group => {
@@ -125,36 +125,36 @@ async function renderCalcResults(calcResults, results, processedIds, highlightCo
         cardContainer.classList.add("card-container");
 
         // 处理四元组数据 (quad) -> 4 张卡片
-        for (const cardId of group.quad) {
-            const cardElement = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, false, highlightColor);
+        for (const id19 of group.quad) {
+            const cardElement = await createCardElement(id19, cardMap19, ids19Set, cardTags, false, highlightColor);
             if (cardElement) {
                 cardContainer.appendChild(cardElement);
             }
         }
 
-        let setCards = Array.isArray(group.set) ? group.set.filter(id => ownedCardIds.has(id)) : [];
-        if (setCards.length === 0) {
-            setCards = group.set;
+        let filteredIdsDsetSet = Array.isArray(group.dset) ? group.dset.filter(id => ids19Set.has(id)) : [];
+        if (filteredIdsDsetSet.length === 0) {
+            filteredIdsDsetSet = group.dset;
         }
 
         // 处理 set 数据
-        if (setCards.length === 1) {
+        if (filteredIdsDsetSet.length === 1) {
             // 只有一个卡牌时，按普通 card 方式处理
-            const singleCardId = setCards[0];
-            const singleCardElement = await createCardElement(singleCardId, cardMap, ownedCardIds, cardTags, false, highlightColor);
+            const soloId19 = filteredIdsDsetSet[0];
+            const singleCardElement = await createCardElement(soloId19, cardMap19, ids19Set, cardTags, false, highlightColor);
             if (singleCardElement) {
                 cardContainer.appendChild(singleCardElement); // 直接放入普通卡区域
             }
-        } else if (setCards.length > 1) {
+        } else if (filteredIdsDsetSet.length > 1) {
             // 多个 set 内卡牌，仍然作为 set-card-container 处理
             const setCardDiv = document.createElement("div");
             setCardDiv.classList.add("card-with-info-and-tags", "set-card-container");
 
-            if (group.set_tag) {
+            if (group.dset_tag) {
                 const tagsContainer = document.createElement("div");
                 tagsContainer.classList.add("tags-container");
 
-                const tagIds = group.set_tag.split(",").map(tag => tag.trim());
+                const tagIds = group.dset_tag.split(",").map(tag => tag.trim());
                 tagIds.forEach(tagId => {
                     const tagImg = document.createElement("img");
                     tagImg.src = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/characteristics/${tagId}.png`;
@@ -165,8 +165,8 @@ async function renderCalcResults(calcResults, results, processedIds, highlightCo
                 setCardDiv.appendChild(tagsContainer);
             }
 
-            for (const cardId of setCards) {
-                const setCardFigure = await createCardElement(cardId, cardMap, ownedCardIds, cardTags, true, highlightColor);
+            for (const id19 of filteredIdsDsetSet) {
+                const setCardFigure = await createCardElement(id19, cardMap19, ids19Set, cardTags, true, highlightColor);
                 if (setCardFigure) {
                     setCardDiv.appendChild(setCardFigure);
                 }
@@ -181,21 +181,21 @@ async function renderCalcResults(calcResults, results, processedIds, highlightCo
 }
 
 
-async function createCardElement(cardId, cardMap, ownedCardIds, cardTags, hideTags = false, color = "pink") {
+async function createCardElement(id19, cardMap, ownedIds19, cardTags, hideTags = false, color = "pink") {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card-with-info-and-tags");
 
     // 获取卡片信息
-    const cardInfo = cardMap.get(String(cardId));
+    const cardInfo = cardMap.get(String(id19));
     if (!cardInfo) {
-        console.error(`卡片 ID ${cardId} 未找到！`);
+        console.error(`卡片 ID ${id19} 未找到！`);
         return null;
     }
 
     // 计算显示时的ID
-    const displayId = cardId >= 337 ? cardId - 19 : cardId;
+    const displayId = id19 >= 337 ? id19 - 19 : id19;
 
-    const cardImgSrc = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${cardId}.jpg`;
+    const cardImgSrc = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${id19}.jpg`;
     const cardLink = `https://wiki.biligame.com/mahoyaku/Card_${displayId}`;
 
     // 获取稀有度（rarity），确保它是 3 或 4
@@ -207,7 +207,7 @@ async function createCardElement(cardId, cardMap, ownedCardIds, cardTags, hideTa
     }
 
     // 检查用户是否持有此卡，如果未持有，边框设为指定颜色
-    if (!ownedCardIds.has(cardId)) {
+    if (!ownedIds19.has(id19)) {
         cardDiv.style.border = "4px solid " + color;
     }
 
@@ -216,7 +216,7 @@ async function createCardElement(cardId, cardMap, ownedCardIds, cardTags, hideTa
         const tagsContainer = document.createElement("div");
         tagsContainer.classList.add("tags-container");
 
-        const rarity3Tags = cardTags.get(String(cardId)) || new Set();
+        const rarity3Tags = cardTags.get(String(id19)) || new Set();
         rarity3Tags.forEach(tagId => {
             const tagImg = document.createElement("img");
             tagImg.src = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/characteristics/${tagId}.png`;
