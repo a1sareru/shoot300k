@@ -24,8 +24,9 @@ async function fetchCardDataLastUpdated() {
         const currentDate = new Date();
 
         // 计算差距（单位：天）
-        const diffTime = Math.abs(currentDate - lastUpdatedDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffTime = Math.abs(currentDate - lastUpdatedDate) / 1000; // in milliseconds
+        const diffDays = Math.floor((diffTime) / (1000 * 60 * 60 * 24)); // in days (floor because we don't want partial days)
+        console.log(diffDays);
 
         // 显示最后更新时间及“X天前”
         document.getElementById("data-last-updated").textContent = `（卡牌数据最后更新：${diffDays}天前｜${lastUpdated}）`;
