@@ -87,6 +87,7 @@ function formatBannerText(banner, id_19 = 0) {
         || bannerText === "8th"
         || bannerText === "9th"
         || bannerText === "10th"
+        // 等魔法使的约定真能活这么久再说👋
     ) { // anniversary
         let year = bannerText.substring(0, bannerText.length - 2);
         formattedBanner += ` card-banner-special">`;
