@@ -328,6 +328,34 @@
         color: navy;
     }
 
+    .card-banner {
+        display: inline-block;
+        padding: 1.2px 5px;
+        border-radius: 3px;
+        box-shadow:0.5px 0.5px;
+        font-weight: 600;
+    }
+
+    .card-banner-kojo {
+        background: linear-gradient(
+            45deg,
+            rgba(0, 153, 68, .2), rgba(0,153,68,.2) 25%, transparent 25%, transparent 50%,
+            rgba(0,153,68,.2), rgba(0,153,68,.2) 75%, transparent 75%, transparent 
+        );
+        background-size: 5px 5px;
+        background-color: rgba(224, 165, 109, 0.5);
+    }
+
+    .card-banner-special {
+        background: linear-gradient(
+            45deg,
+            rgba(90, 150, 250, 0.15), rgba(90, 150, 250, 0.15) 25%, transparent 25%, transparent 50%,
+            rgba(90, 150, 250, 0.15), rgba(90, 150, 250, 0.15) 75%, transparent 75%, transparent
+        );
+        background-size: 5px 5px;
+        background-color: rgba(255, 177, 239, 0.25);
+    }
+
     /* 边框样式 */
     .gold-border {
         border: 3px solid gold;
@@ -717,6 +745,8 @@
         border-radius: 8px;
         box-shadow: 2px 2px 5px #0000001a;
         transition: transform 0.2s ease-in-out;
+
+        box-sizing: content-box;
     }
 
 

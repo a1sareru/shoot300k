@@ -31,7 +31,7 @@ function renderCards(cards, selectedIds = new Set()) {
                   alt="${card.title}"
                   onerror="this.src='';" />
               <figcaption>
-                ${formatCardTitle(card)}
+                ${formatCardCaptionForCardManager(card)}
               </figcaption>
             </figure>
           `;

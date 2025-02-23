@@ -1,3 +1,45 @@
+const kojoIds19 = [
+    2, 3, 4, 5, 6, 9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 21,
+    22, 23, 24, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 38,
+    39, 40, 41, 42, 44, 45, 46, 47, 48, 50, 51, 52, 53, 54,
+    56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 68, 69, 70, 71,
+    72, 74, 75, 76, 77, 78, 80, 81, 82, 83, 84, 86, 87, 88,
+    89, 90, 92, 93, 94, 95, 96, 98, 99, 100, 101, 102, 104,
+    105, 106, 107, 108, 110, 111, 112, 113, 114, 116, 117,
+    118, 119, 120, 122, 123, 124, 125, 126, 129, 132, 133,
+    135, 138, 139, 140, 141, 144, 146, 148, 149, 151, 152,
+    153, 156, 157, 158, 159, 161, 165, 166, 168, 169, 170,
+    172, 184, 185, 186, 189, 191, 211, 212, 213, 216, 217,
+    230, 231, 232, 234, 237, 248, 249, 250, 251, 265, 266,
+    267, 269, 271, 274, 275, 276, 277, 280, 292, 293, 294,
+    296, 298, 310, 311, 312, 314, 317, 328, 329, 330, 333,
+    334, 380, 381, 382, 383, 387, 388, 389, 390, 393, 395,
+    409, 410, 411, 413, 417, 428, 429, 430, 432, 434, 446,
+    447, 448, 449, 452, 480, 481, 482, 483, 486, 499, 500,
+    501, 502, 505, 520, 521, 522, 523, 527, 529, 530, 531,
+    532, 537, 551, 552, 553, 555, 558, 570, 571, 572, 575,
+    576, 592, 593, 594, 597, 599, 624, 625, 628, 629, 631,
+    632, 633, 635, 637, 658, 659, 660, 661, 664, 677, 678,
+    682, 685, 696, 697, 698, 699, 703, 725, 726, 727, 729,
+    731, 751, 752, 753, 755, 758, 759, 760, 761, 762, 766,
+    768, 769, 770, 772, 775, 786, 787, 788, 790, 793, 804,
+    805, 806, 807, 810, 835, 836, 837, 838, 842, 852, 853,
+    854, 856, 858, 913, 914, 915, 918, 920, 944, 946, 949,
+    951, 966, 967, 968, 969, 972, 1029, 1030, 1031, 1033, 1035,
+    1053, 1054, 1055, 1056, 1059, 1073, 1074, 1075, 1076, 1079,
+    1126, 1127, 1128, 1130, 1133, 1161, 1162, 1163, 1166, 1167,
+    1195, 1196, 1197, 1198, 1202, 1252, 1253, 1254, 1255, 1258
+];
+
+const mahopaIds19 = [
+    // #1
+    397, 398, 399, 400, 464, 465, 466, 467, 468, 507, 508, 509, 510, 546,
+    547, 548, 549, 578, 579, 580, 581,
+    // #2
+    844, 845, 846, 847, 909, 910, 911, 912, 931, 932, 933, 934, 953, 954,
+    955, 956, 974, 975, 976, 977, 978
+];
+
 // 解析 CSV 文件
 function parseCSV(text) {
     const lines = text.trim().split('\n');
@@ -12,15 +54,126 @@ function parseCSV(text) {
     });
 }
 
+// 将banner文本处理为display需要的文本
+function formatBannerText(banner, id_19 = 0) {
+    let formattedBanner = `<br><br><span class="card-banner`;
+    let bannerText = banner;
+
+    // 预处理：删去adult_前缀
+    if (bannerText.startsWith("adult_")) {
+        bannerText = bannerText.substring(6);
+    }
+
+    // 匹配处理
+    if (id_19 in kojoIds19) { // 恒常カード
+        formattedBanner += ` card-banner-kojo">`;
+        formattedBanner += `🪨 恒常`;
+    } else if (bannerText.startsWith("sanrio")) { // sanrio
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🎀 三丽鸥联动`;
+    } else if (bannerText.startsWith("rensen")) { // rensen
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🌱 Caulis`;
+    } else if (bannerText === "robe" || id_19 in mahopaIds19) { // mahopa
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🥳 魔法趴`;
+    } else if (bannerText === "1st"
+        || bannerText === "2nd"
+        || bannerText === "3rd"
+        || bannerText === "4th"
+        || bannerText === "5th"
+        || bannerText === "6th"
+        || bannerText === "7th"
+        || bannerText === "8th"
+        || bannerText === "9th"
+        || bannerText === "10th"
+    ) { // anniversary
+        let year = bannerText.substring(0, bannerText.length - 2);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🎈 ${year} 周年`;
+    } else if (bannerText.startsWith("bd_")) { // BD
+        // example: bd_201902
+        let year = bannerText.substring(5, 7);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🎂 ${year} 年诞生日`;
+    } else if (bannerText.startsWith("vd_")) { // VD
+        let year = bannerText.substring(5, 7);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🍫 ${year} 年情人节`;
+    } else if (bannerText.startsWith("wd_")) { // WD
+        let year = bannerText.substring(5, 7);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🍬 ${year} 年白情`;
+    } else if (bannerText.startsWith("af_")) { // AF
+        let year = bannerText.substring(5, 7);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🤡 ${year} 年愚人节`;
+    } else if (bannerText.startsWith("warupurugis_")) { // warupurugis
+        let year = bannerText.substring(14, 16);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🧙‍♀️ ${year} 年瓦夜`;
+    } else if (bannerText.startsWith("jb_")) { // JB
+        let year = bannerText.substring(5, 7);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `💍 ${year} 年 June Bride`;
+    } else if (bannerText.startsWith("propose_")) { // JB -propose
+        let year = bannerText.substring(10, 12);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `💍 ${year} 年 June Bride`;
+    } else if (bannerText.startsWith("tanabata_")) { // tanabata
+        let year = bannerText.substring(11, 13);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🎋 ${year} 年七夕`;
+    } else if (bannerText.startsWith("summer_")) { // summer
+        let year = bannerText.substring(9, 11);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `⛱️ ${year} 年夏活`;
+    } else if (bannerText.startsWith("halloween_")) { // halloween
+        let year = bannerText.substring(12, 14);
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🎃 ${year} 年万圣节`;
+    } else { // not defined
+        return "";
+    }
+    return formattedBanner + `</span>`;
+}
+
 // 处理图片路径和标题格式化
-function formatCardTitle(card19) {
+function formatCardCaption(card19) {
     // 解析标题，移除 "【" 并拆分 "】" 以获取卡牌名和角色名
     const parts = card19.title.replace(/【/g, '').split("】");
     const cardTitle = parts[0].trim();
     const cardNamae = parts.length > 1 ? fromNamaeGetName(parts[1].trim()) || "" : "";
 
     // 计算 ID 显示逻辑（id >= 337 需要 -19）
-    const formattedId = card19.id >= 337 ? card19.id - 19 : card19.id;
+    const displayId = card19.id >= 337 ? card19.id - 19 : card19.id;
+
+    // 组合格式化后的标题
+    let formattedTitle = `<strong class="card-title">${cardTitle}</strong>`;
+    if (cardNamae) {
+        formattedTitle += `<br>${cardNamae}`;
+    }
+    let formattedCaption = `${formattedTitle} | ${displayId}`;
+    let banner = card19?.series;
+    let bannerText = "<br><br><br>";
+    if (banner) {
+        formattedBanner = formatBannerText(banner, card19.id);
+        if (formattedBanner !== "") {
+            bannerText = formattedBanner;
+        }
+    }
+    return formattedCaption + bannerText;
+}
+
+// 处理图片路径和标题格式化
+function formatCardCaptionForCardManager(card19) {
+    // 解析标题，移除 "【" 并拆分 "】" 以获取卡牌名和角色名
+    const parts = card19.title.replace(/【/g, '').split("】");
+    const cardTitle = parts[0].trim();
+    const cardNamae = parts.length > 1 ? fromNamaeGetName(parts[1].trim()) || "" : "";
+
+    // 计算 ID 显示逻辑（id >= 337 需要 -19）
+    const displayId = card19.id >= 337 ? card19.id - 19 : card19.id;
 
     // 组合格式化后的标题
     let formattedTitle = `<strong class="card-title">${cardTitle}</strong>`;
@@ -28,7 +181,7 @@ function formatCardTitle(card19) {
         formattedTitle += `<br>${cardNamae}`;
     }
 
-    return `${formattedTitle} | ${formattedId}`;
+    return `${formattedTitle} | ${displayId}`;
 }
 
 // 加载 CSV 数据
@@ -234,7 +387,7 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
             <img src="${cardImgSrc}" alt="${cardInfo19.title}" class="card-img"
                 onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/images/miscs/placeholder.png';" />
         </a>
-        <figcaption>${formatCardTitle(cardInfo19)}</figcaption>
+        <figcaption>${formatCardCaption(cardInfo19)}</figcaption>
     `;
 
     cardDiv.appendChild(figure);
