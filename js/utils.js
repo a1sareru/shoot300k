@@ -68,7 +68,9 @@ function formatBannerText(banner, id_19 = 0) {
     if (id_19 in kojoIds19) { // 恒常カード
         formattedBanner += ` card-banner-kojo">`;
         formattedBanner += `🪨 恒常`;
-    } else if (bannerText.startsWith("sanrio")) { // sanrio
+    }
+    // 不定期活动
+    else if (bannerText.startsWith("sanrio")) { // sanrio
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `🎀 三丽鸥联动`;
     } else if (bannerText.startsWith("rensen")) { // rensen
@@ -77,7 +79,12 @@ function formatBannerText(banner, id_19 = 0) {
     } else if (bannerText === "robe" || id_19 in mahopaIds19) { // mahopa
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `🥳 魔法趴`;
-    } else if (bannerText === "1st"
+    } else if (bannerText === "sonatine+") { // sonatine+
+        formattedBanner += ` card-banner-special">`;
+        formattedBanner += `🎻 奏鸣曲`;
+    }
+    // 定期活动
+    else if (bannerText === "1st"
         || bannerText === "2nd"
         || bannerText === "3rd"
         || bannerText === "4th"
