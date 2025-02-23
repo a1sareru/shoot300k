@@ -181,13 +181,13 @@ async function renderCalcResults(calcResults, results, ids19, highlightColor = "
 }
 
 
-async function createCardElement(id19, cardMap, ownedIds19, cardTags, hideTags = false, color = "pink") {
+async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags = false, color = "pink") {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card-with-info-and-tags");
 
     // 获取卡片信息
-    const cardInfo = cardMap.get(String(id19));
-    if (!cardInfo) {
+    const cardInfo19 = cardMap19.get(String(id19));
+    if (!cardInfo19) {
         console.error(`卡片 ID ${id19} 未找到！`);
         return null;
     }
@@ -199,7 +199,7 @@ async function createCardElement(id19, cardMap, ownedIds19, cardTags, hideTags =
     const cardLink = `https://wiki.biligame.com/mahoyaku/Card_${displayId}`;
 
     // 获取稀有度（rarity），确保它是 3 或 4
-    const rarity = cardInfo.rarity;
+    const rarity = cardInfo19.rarity;
     if (rarity === '3') {
         cardDiv.classList.add("rarity-3");
     } else if (rarity === '4') {
@@ -231,10 +231,10 @@ async function createCardElement(id19, cardMap, ownedIds19, cardTags, hideTags =
     const figure = document.createElement("figure");
     figure.innerHTML = `
         <a href="${cardLink}" target="_blank" rel="noopener noreferrer">
-            <img src="${cardImgSrc}" alt="${cardInfo.title}" class="card-img"
+            <img src="${cardImgSrc}" alt="${cardInfo19.title}" class="card-img"
                 onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/images/miscs/placeholder.png';" />
         </a>
-        <figcaption>${formatCardTitle(cardInfo)}</figcaption>
+        <figcaption>${formatCardTitle(cardInfo19)}</figcaption>
     `;
 
     cardDiv.appendChild(figure);
