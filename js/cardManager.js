@@ -27,7 +27,7 @@ function renderCards(cards, selectedIds = new Set()) {
         // 设置卡牌内容（图片和标题）
         cardEl.innerHTML = `
             <figure>
-              <img src="https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${card.id}.jpg"
+              <img src="public/images/cards/${card.id}.jpg"
                   alt="${card.title}"
                   onerror="this.src='';" />
               <figcaption>
@@ -107,7 +107,7 @@ function filterSSR() {
         });
     } else {
         // 进入 SSR 过滤模式
-        fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv')
+        fetch('public/data/character_card.csv')
             .then(response => response.text())
             .then(csvText => {
                 const cards = parseCSV(csvText);

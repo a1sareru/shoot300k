@@ -323,7 +323,7 @@ async function renderCalcResults(calcResults, results, ids19, highlightColor = "
                 const tagIds = group.dset_tag.split(",").map(tag => tag.trim());
                 tagIds.forEach(tagId => {
                     const tagImg = document.createElement("img");
-                    tagImg.src = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/characteristics/${tagId}.png`;
+                    tagImg.src = `public/images/characteristics/${tagId}.png`;
                     tagImg.classList.add("tag-img");
                     tagsContainer.appendChild(tagImg);
                 });
@@ -361,7 +361,7 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
     // 计算显示时的ID
     const displayId = id19 >= 337 ? id19 - 19 : id19;
 
-    const cardImgSrc = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/cards/${id19}.jpg`;
+    const cardImgSrc = `public/images/cards/${id19}.jpg`;
     const cardLink = `https://wiki.biligame.com/mahoyaku/Card_${displayId}`;
 
     // 获取稀有度（rarity），确保它是 3 或 4
@@ -385,7 +385,7 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
         const rarity3Tags = cardTags.get(String(id19)) || new Set();
         rarity3Tags.forEach(tagId => {
             const tagImg = document.createElement("img");
-            tagImg.src = `https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/characteristics/${tagId}.png`;
+            tagImg.src = `public/images/characteristics/${tagId}.png`;
             tagImg.classList.add("tag-img");
             tagsContainer.appendChild(tagImg);
         });
@@ -399,7 +399,7 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
     figure.innerHTML = `
         <a href="${cardLink}" target="_blank" rel="noopener noreferrer">
             <img src="${cardImgSrc}" alt="${cardInfo19.title}" class="card-img"
-                onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/images/miscs/placeholder.png';" />
+                onerror="this.src='public/images/images/miscs/placeholder.png';" />
         </a>
         <figcaption>${figureCaption}</figcaption>
     `;
