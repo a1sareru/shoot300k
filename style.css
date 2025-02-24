@@ -232,6 +232,7 @@
     .container {
         max-width: 960px;
         margin: 20px auto 20px;
+
         /* 确保底部有间距 */
         padding: 20px;
         background: #fff;
@@ -645,14 +646,6 @@
         background: white;
     }
 
-    /* .card-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 10px;
-    } */
-
     .tag-container {
         margin-top: 5px;
         display: flex;
@@ -691,11 +684,6 @@
             padding: 6px;
             margin-top: 6px;
         }
-
-        /* .card-container {
-            gap: 5px;
-            margin-top: 5px;
-        } */
 
         .tag-icon {
             width: 24px;
@@ -772,8 +760,8 @@
 
     @media (max-width: 600px) {
         .card-with-info-and-tags {
-            width: 110px;
-            padding: 8px;
+            width: 100px;
+            padding: 3px;
         }
 
         .card-with-info-and-tags figcaption {
@@ -798,7 +786,7 @@
         align-items: flex-start;
 
         justify-content: flex-start;
-        gap: 10px;
+        gap: 0px;
 
     }
 
