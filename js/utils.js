@@ -65,7 +65,7 @@ function formatBannerText(banner, id_19 = 0) {
     }
 
     // 匹配处理
-    if (id_19 in kojoIds19) { // 恒常カード
+    if (kojoIds19.includes(id_19)) { // 恒常カード
         formattedBanner += ` card-banner-kojo">`;
         formattedBanner += `🪨 恒常`;
     }
@@ -165,7 +165,7 @@ function formatCardCaption(card19) {
     let banner = card19?.series;
     let bannerText = "<br><br><br>";
     if (banner) {
-        formattedBanner = formatBannerText(banner, card19.id);
+        formattedBanner = formatBannerText(banner, +card19.id);
         if (formattedBanner !== "") {
             bannerText = formattedBanner;
         }
@@ -390,12 +390,13 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
 
     // 创建卡片 figure 结构
     const figure = document.createElement("figure");
+    const figureCaption = formatCardCaption(cardInfo19);
     figure.innerHTML = `
         <a href="${cardLink}" target="_blank" rel="noopener noreferrer">
             <img src="${cardImgSrc}" alt="${cardInfo19.title}" class="card-img"
                 onerror="this.src='https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/images/images/miscs/placeholder.png';" />
         </a>
-        <figcaption>${formatCardCaption(cardInfo19)}</figcaption>
+        <figcaption>${figureCaption}</figcaption>
     `;
 
     cardDiv.appendChild(figure);
