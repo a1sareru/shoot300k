@@ -64,12 +64,13 @@ function formatBannerText(banner, id_19 = 0) {
         bannerText = bannerText.substring(6);
     }
 
-    // 匹配处理
-    if (kojoIds19.includes(id_19)) { // 恒常カード
+    /* 匹配处理 */
+    // 恒常カード
+    if (bannerText === "kojo") {
         formattedBanner += ` card-banner-kojo">`;
         formattedBanner += `🪨 恒常`;
     }
-    // 不定期活动
+    // 不定期
     else if (bannerText.startsWith("sanrio_")) { // sanrio (note: the season event should be excluded)
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `🎀 三丽鸥联动`;
@@ -83,7 +84,7 @@ function formatBannerText(banner, id_19 = 0) {
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `🎻 奏鸣曲`;
     }
-    // 定期活动
+    // 定期
     else if (bannerText === "1st"
         || bannerText === "2nd"
         || bannerText === "3rd"
@@ -163,9 +164,13 @@ function formatCardCaption(card19) {
     }
     let formattedCaption = `${formattedTitle} | ${displayId}`;
     let banner = card19?.series;
+    let id19 = +card19.id;
+    if (kojoIds19.includes(id19)) {
+        banner = "kojo";
+    }
     let bannerText = "<br><br><br>";
     if (banner) {
-        formattedBanner = formatBannerText(banner, +card19.id);
+        formattedBanner = formatBannerText(banner, id19);
         if (formattedBanner !== "") {
             bannerText = formattedBanner;
         }
