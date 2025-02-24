@@ -139,7 +139,7 @@ function formatBannerText(banner, id_19 = 0) {
     } else if (bannerText.startsWith("halloween_")) { // halloween
         let year = bannerText.substring(12, 14);
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎃 ${year} 年万圣节`;
+        formattedBanner += `🎃 ${year} 年万圣夜`;
     } else { // not defined
         return "";
     }
