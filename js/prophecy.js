@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         results.push({
                             quad: quadCandidate,
                             dset: card0Candidates,
-                            set_tag: tags
+                            dset_tag: tags
                         });
                     }
                 }
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         results.push({
                             quad: quadCandidate,
                             dset: card0Candidates,
-                            set_tag: tags
+                            dset_tag: tags
                         });
                     }
                 }
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             results_weak.push({
                                 quad: quadCandidate,
                                 dset: card0Candidates,
-                                set_tag: tags
+                                dset_tag: tags
                             });
                         }
                     }
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         results_weak.push({
                             quad: quadCandidate,
                             dset: card0Candidates,
-                            set_tag: tags
+                            dset_tag: tags
                         });
                     }
                 }
