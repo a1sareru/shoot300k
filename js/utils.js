@@ -70,7 +70,7 @@ function formatBannerText(banner, id_19 = 0) {
         formattedBanner += `🪨 恒常`;
     }
     // 不定期活动
-    else if (bannerText.startsWith("sanrio")) { // sanrio
+    else if (bannerText.startsWith("sanrio_")) { // sanrio (note: the season event should be excluded)
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `🎀 三丽鸥联动`;
     } else if (bannerText.startsWith("rensen")) { // rensen
