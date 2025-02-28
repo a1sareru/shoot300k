@@ -468,4 +468,4 @@ if __name__ == "__main__":
 
     os.makedirs(args.output_dir, exist_ok=True)
     with open(f"{args.output_dir}/full_solution.json", "w") as f:
-        json.dump(full_solution, f, indent=4)
+        json.dump(full_solution, f)
