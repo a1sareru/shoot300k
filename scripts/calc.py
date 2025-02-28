@@ -4,6 +4,12 @@ import pandas as pd
 import os
 import json
 
+def get_two_bit_numbers():
+    """
+    Generate all possible 2-bit numbers for the low 7 bits
+    """
+    return [sum(1 << i for i in bits) for bits in combinations(range(7), 2)]
+
 
 def generate_valid_sets_1bit(x):
     """
@@ -17,8 +23,7 @@ def generate_valid_sets_1bit(x):
     x_low = x & FULL_MASK
 
     # Enumerate all possible 2-bit numbers
-    two_bit_numbers = [sum(1 << i for i in bits)
-                       for bits in combinations(range(7), 2)]
+    two_bit_numbers = get_two_bit_numbers()
 
     valid_sets = []
 
@@ -52,8 +57,7 @@ def generate_valid_sets_0bit():
     one_bit_numbers = [1 << i for i in range(7)]
 
     # Enumerate all possible 2-bit numbers
-    two_bit_numbers = [sum(1 << i for i in bits)
-                       for bits in combinations(range(7), 2)]
+    two_bit_numbers = get_two_bit_numbers()
 
     valid_sets = []
 
@@ -89,8 +93,7 @@ def generate_valid_sets_2bit(x):
     x_low = x & FULL_MASK
 
     # Enumerate all possible 2-bit numbers
-    two_bit_numbers = [sum(1 << i for i in bits)
-                       for bits in combinations(range(7), 2)]
+    two_bit_numbers = get_two_bit_numbers()
 
     valid_sets = []
 
