@@ -35,10 +35,8 @@ def generate_valid_sets_1bit(x):
         # Calculate the remaining bits
         remain = FULL_MASK & ~(two1 | two2 | x_low)
         # Generate all possible combinations of 1-bit numbers accordingly
-        bit_indices = [i for i in range(7) if remain & (1 << i)]
-        one1 = 1 << bit_indices[0]
-        one2 = 1 << bit_indices[1]
-        # one[i]'s sequence does not matter
+        one1, one2 = [1 << i for i in range(7) if remain & (1 << i)]
+
         valid_sets.append((two1, two2, one1, one2))
 
     return valid_sets
@@ -104,7 +102,7 @@ def generate_valid_sets_2bit(x):
         remain = FULL_MASK & ~(two | x_low)
         # remain has exactly 3 bits, so just split it into 3 1-bit numbers
         one0, one1, one2 = [1 << i for i in range(7) if (remain >> i) & 1]
-        valid_sets.append([two, one0, one1, one2])
+        valid_sets.append((two, one0, one1, one2))
 
     return valid_sets
 
