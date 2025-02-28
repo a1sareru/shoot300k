@@ -243,6 +243,9 @@ if __name__ == "__main__":
 
     # Colors: 1-5
     colors = tuple(range(1, 6))
+    
+    # Length of single color's tag list
+    tags_len = 7
 
     # Encoded tag info
     tag_codes = generate_tag_codes()
@@ -333,40 +336,9 @@ if __name__ == "__main__":
         quad_dict[color_pair_as_key] = {}
 
         # Iterate over all tag pairs for the selected color pair
-        # Namely [A1, A2], [A1, B1]
-        for i in range(len(color_1_tags)):
-            # This loop is for [A1, A2]
-            for j in range(i + 1, len(color_1_tags)):
-                tagA1, tagA2 = (1 << i), (1 << j)
-                if not (set(tag_cards[str(color_1_tags[i])]) &
-                        set(tag_cards[str(color_1_tags[j])])):
-                    # there is no card with both tags,
-                    #  so we can skip this tag pair
-                    continue
 
-                # find solutions
-                quad_list = get_quads_from_solutions(
-                    find_solutions_3_1(tagA1 | tagA2),
-                    cards_encoded[color_1],
-                    cards_encoded[color_2]
-                )
-
-                if not quad_list:
-                    # there is no solution, so we can skip this tag pair
-                    continue
-
-                # generate the key for the tag pair
-                tag_pair_as_key = f"{color_1_tags[i]},{color_1_tags[j]}"
-
-                # Store the results in the corresponding json structure
-                # quad_dict
-                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
-                # card0_dict
-                card0_dict[color_pair_as_key][tag_pair_as_key] = list(
-                    set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_1_tags[j])]))
-
-            # This loop is for [A1, B1]
-            for j in range(len(color_2_tags)):
+        for i in range(tags_len):
+            for j in range(tags_len): # This loop is for [A1, B1]
                 tagA, tagB = (1 << i), (1 << j)
                 if not (set(tag_cards[str(color_1_tags[i])]) &
                         set(tag_cards[str(color_2_tags[j])])):
@@ -395,10 +367,38 @@ if __name__ == "__main__":
                 card0_dict[color_pair_as_key][tag_pair_as_key] = list(
                     set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
 
-        # Despite the 2 loops above, we still need to consider the tag pairs [B1, B2]
-        # This loop is for [B1, B2]
-        for i in range(len(color_2_tags)):
-            for j in range(i + 1, len(color_2_tags)):
+        # for i in range(len(color_1_tags)):
+            for j in range(i + 1, tags_len):  # This loop is for [A1, A2]
+                tagA1, tagA2 = (1 << i), (1 << j)
+                if not (set(tag_cards[str(color_1_tags[i])]) &
+                        set(tag_cards[str(color_1_tags[j])])):
+                    # there is no card with both tags,
+                    #  so we can skip this tag pair
+                    continue
+
+                # find solutions
+                quad_list = get_quads_from_solutions(
+                    find_solutions_3_1(tagA1 | tagA2),
+                    cards_encoded[color_1],
+                    cards_encoded[color_2]
+                )
+
+                if not quad_list:
+                    # there is no solution, so we can skip this tag pair
+                    continue
+
+                # generate the key for the tag pair
+                tag_pair_as_key = f"{color_1_tags[i]},{color_1_tags[j]}"
+
+                # Store the results in the corresponding json structure
+                # quad_dict
+                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
+                # card0_dict
+                card0_dict[color_pair_as_key][tag_pair_as_key] = list(
+                    set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_1_tags[j])]))
+        
+        for i in range(tags_len): # This loop is for [B1, B2]
+            for j in range(i + 1, tags_len):
                 tagB1, tagB2 = (1 << i), (1 << j)
                 if not (set(tag_cards[str(color_2_tags[i])]) &
                         set(tag_cards[str(color_2_tags[j])])):
