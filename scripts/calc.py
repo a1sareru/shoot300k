@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import json
 
+
 def get_two_bit_numbers():
     """
     Generate all possible 2-bit numbers for the low 7 bits
@@ -185,6 +186,36 @@ def get_tag_color_and_code(tag, all_tags):
     return color, 1 << index
 
 
+def get_quads_from_solutions(
+        solutions,
+        cards_encoded_a,
+        cards_encoded_b,
+):
+    flag_next = False
+    quad_list = []
+    for s in solutions:
+        # add a 4-array to store the card id, each element is a list
+        tmp_quad = [[] for _ in range(4)]
+        for m in range(4):
+            intersection = set(cards_encoded_a[s[m][0]]) & set(
+                cards_encoded_b[s[m][1]])
+            if not intersection:
+                flag_next = True
+                break
+            else:
+                tmp_quad[m] = intersection
+
+        # if there is no card, skip this solution
+        if flag_next:
+            flag_next = False
+            continue
+
+        for quad in product(*tmp_quad):
+            quad_list.append(sorted(quad))
+
+    return quad_list
+
+
 # Main function
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -314,27 +345,11 @@ if __name__ == "__main__":
                     continue
 
                 # find solutions
-                flag_next = False
-                quad_list = []
-                for s in find_solutions_3_1(tagA1 | tagA2):
-                    # add a 4-array to store the card id, each element is a list
-                    tmp_quad = [[] for _ in range(4)]
-                    for m in range(4):
-                        intersection = set(cards_encoded[color_1][s[m][0]]) & set(
-                            cards_encoded[color_2][s[m][1]])
-                        if not intersection:
-                            flag_next = True
-                            break
-                        else:
-                            tmp_quad[m] = intersection
-
-                    # if there is no card, skip this solution
-                    if flag_next:
-                        flag_next = False
-                        continue
-                    
-                    for quad in product(*tmp_quad):
-                        quad_list.append(sorted(quad))
+                quad_list = get_quads_from_solutions(
+                    find_solutions_3_1(tagA1 | tagA2),
+                    cards_encoded[color_1],
+                    cards_encoded[color_2]
+                )
 
                 if not quad_list:
                     # there is no solution, so we can skip this tag pair
@@ -360,25 +375,11 @@ if __name__ == "__main__":
                     continue
 
                 # find solutions
-                flag_next = False
-                quad_list = []
-                for s in find_solutions_2_2(tagA, tagB):
-                    # add a 4-array to store the card id, each element is a list
-                    quad = [[] for _ in range(4)]
-                    for m in range(4):
-                        intersection = set(cards_encoded[color_1][s[m][0]]) & set(
-                            cards_encoded[color_2][s[m][1]])
-                        if not intersection or len(intersection) > 1:
-                            flag_next = True
-                            break
-                        else:
-                            quad[m] = intersection.pop()
-
-                    # if there is no card, skip this solution
-                    if flag_next:
-                        flag_next = False
-                        continue
-                    quad_list.append(sorted(quad))
+                quad_list = get_quads_from_solutions(
+                    find_solutions_2_2(tagA, tagB),
+                    cards_encoded[color_1],
+                    cards_encoded[color_2]
+                )
 
                 if not quad_list:
                     # there is no solution, so we can skip this tag pair
@@ -406,27 +407,11 @@ if __name__ == "__main__":
                     continue
 
                 # find solutions
-                flag_next = False
-                quad_list = []
-                for s in find_solutions_3_1(tagB1 | tagB2):
-                    # add a 4-array to store the card id, each element is a list
-                    tmp_quad = [[] for _ in range(4)]
-                    for m in range(4):
-                        intersection = set(cards_encoded[color_2][s[m][0]]) & set(
-                            cards_encoded[color_1][s[m][1]])
-                        if not intersection:
-                            flag_next = True
-                            break
-                        else:
-                            tmp_quad[m] = intersection
-
-                    # if there is no card, skip this solution
-                    if flag_next:
-                        flag_next = False
-                        continue
-                    
-                    for quad in product(*tmp_quad):
-                        quad_list.append(sorted(quad))
+                quad_list = get_quads_from_solutions(
+                    find_solutions_3_1(tagB1 | tagB2),
+                    cards_encoded[color_2],
+                    cards_encoded[color_1]
+                )
 
                 if not quad_list:
                     # there is no solution, so we can skip this tag pair
