@@ -289,7 +289,7 @@ if __name__ == "__main__":
     card0_dict = {}
     quad_dict = {}
 
-    # Iterate over all color pairs
+    # Iterate over color pairs ([A])
     for color_pair in questions:
         color_1, color_2 = color_pair
         color_pair_as_key = f"{color_1},{color_2}"
@@ -301,6 +301,7 @@ if __name__ == "__main__":
         quad_dict[color_pair_as_key] = {}
 
         # Iterate over all tag pairs for the selected color pair
+        # Namely [A1, A2], [A1, B1]
         for i in range(len(color_1_tags)):
             # This loop is for [A1, A2]
             for j in range(i + 1, len(color_1_tags)):
@@ -392,6 +393,7 @@ if __name__ == "__main__":
                 card0_dict[color_pair_as_key][tag_pair_as_key] = list(
                     set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
 
+        # Despite the 2 loops above, we still need to consider the tag pairs [B1, B2]
         # This loop is for [B1, B2]
         for i in range(len(color_2_tags)):
             for j in range(i + 1, len(color_2_tags)):
@@ -409,8 +411,8 @@ if __name__ == "__main__":
                     # add a 4-array to store the card id, each element is a list
                     tmp_quad = [[] for _ in range(4)]
                     for m in range(4):
-                        intersection = set(cards_encoded[color_1][s[m][0]]) & set(
-                            cards_encoded[color_2][s[m][1]])
+                        intersection = set(cards_encoded[color_2][s[m][0]]) & set(
+                            cards_encoded[color_1][s[m][1]])
                         if not intersection:
                             flag_next = True
                             break
