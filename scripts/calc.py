@@ -134,10 +134,9 @@ def find_solutions_2_2(A, B):
     return solutions
 
 
-def find_solutions_3_1(A):
-    # Note: A has two bit set to 1, and 0 == B (so it is not necessary to pass B)
-    set_A = generate_valid_sets_2bit(A)  # two, one1, one2, one3
-    set_B = generate_valid_sets_0bit()  # two1, two2, two3, one
+def find_solutions_3_1(A1, A2):
+    set_A = generate_valid_sets_2bit(A1 | A2)  # two, one1, one2, one3
+    set_B = generate_valid_sets_0bit()         # two1, two2, two3, one
 
     # Save the indices of the permutations to avoid recomputing them
     permutations_idx = [
@@ -216,6 +215,50 @@ def get_quads_from_solutions(
     return quad_list
 
 
+# Process all possible tag combinations based on given information
+def process_tag_combinations(
+    color_a, color_b,
+    color_p_tags, color_q_tags,  # Note: p, q is possible to be the same
+    find_solution_func,
+    cards_encoded_a, cards_encoded_b,
+    tag_cards, quad_dict, card0_dict,
+    tags_len=7
+):
+    sorted_color_pair = sorted([color_a, color_b])
+    color_pair_as_key = f"{sorted_color_pair[0]},{sorted_color_pair[1]}"
+
+    for i in range(tags_len):
+        j_start = 0 if find_solution_func == find_solutions_2_2 else i + 1
+        for j in range(j_start, tags_len):
+            tagX, tagY = (1 << i), (1 << j)
+
+            # if there is no card with both tags, skip this tag pair
+            if not (set(tag_cards[str(color_p_tags[i])]) &
+                    set(tag_cards[str(color_q_tags[j])])):
+                continue
+
+            # find solutions
+            quad_list = get_quads_from_solutions(
+                find_solution_func(
+                    tagX, tagY),
+                cards_encoded_a,
+                cards_encoded_b
+            )
+
+            if not quad_list:
+                continue
+
+            # generate the key for the tag pair
+            tag_pair_as_key = f"{color_p_tags[i]},{color_q_tags[j]}"
+
+            # store the results in the corresponding json structure
+            quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
+            card0_dict[color_pair_as_key][tag_pair_as_key] = list(
+                set(tag_cards[str(color_p_tags[i])]) & set(
+                    tag_cards[str(color_q_tags[j])])
+            )
+
+
 # Main function
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -243,7 +286,7 @@ if __name__ == "__main__":
 
     # Colors: 1-5
     colors = tuple(range(1, 6))
-    
+
     # Length of single color's tag list
     tags_len = 7
 
@@ -290,15 +333,15 @@ if __name__ == "__main__":
     # Other data structures:
     #  - card_tags: card_id -> characteristic_id
     #  - tag_cards: characteristic_id -> card_id
-    df_card_tags_base = pd.read_csv(args.card_tags_base)
-    df_card_tags_base = df_card_tags_base[['card_id', 'characteristic_id']]
-    df_card_tags_grow = pd.read_csv(args.card_tags_grow)
-    df_card_tags_grow = df_card_tags_grow[['card_id', 'characteristic_id']]
+    df_card_tags_base = pd.read_csv(args.card_tags_base)[['card_id', 'characteristic_id']]
+    df_card_tags_grow = pd.read_csv(args.card_tags_grow)[['card_id', 'characteristic_id']]
+    # merge the two dataframes to get all card-tag mappings
     df_card_tags = pd.concat([df_card_tags_base, df_card_tags_grow])
-    # Note: it should only consider the cards in valid_cards, and the tags in silver_tags
+    # >filter: only keep records of valid cards
+    df_card_tags = df_card_tags[df_card_tags['card_id'].isin(valid_cards)]
+    # >filter: only keep records of silver tags
     df_card_tags = df_card_tags[df_card_tags['characteristic_id'].isin(
         [tag for tags in silver_tags_str for tag in tags])]
-    df_card_tags = df_card_tags[df_card_tags['card_id'].isin(valid_cards)]
     # card_tags: card_id -> [characteristic_id]
     card_tags = df_card_tags['characteristic_id'].groupby(
         df_card_tags['card_id']).apply(list).to_dict()
@@ -336,103 +379,27 @@ if __name__ == "__main__":
         quad_dict[color_pair_as_key] = {}
 
         # Iterate over all tag pairs for the selected color pair
+        # case: [A1, B1]
+        process_tag_combinations(
+            color_1, color_2, color_1_tags, color_2_tags,
+            find_solutions_2_2, cards_encoded[color_1], cards_encoded[color_2],
+            tag_cards, quad_dict, card0_dict
+        )
+        # case: [A1, A2]
+        process_tag_combinations(
+            color_1, color_2, color_1_tags, color_1_tags,
+            find_solutions_3_1, cards_encoded[color_1], cards_encoded[color_2],
+            tag_cards, quad_dict, card0_dict
+        )
+        # case: [B1, B2]
+        process_tag_combinations(
+            color_2, color_1, color_2_tags, color_2_tags,
+            find_solutions_3_1, cards_encoded[color_2], cards_encoded[color_1],
+            tag_cards, quad_dict, card0_dict
+        )
 
-        # This loop is for [A1, B1]
-        for i in range(tags_len):
-            for j in range(tags_len):
-                tagA, tagB = (1 << i), (1 << j)
-                if not (set(tag_cards[str(color_1_tags[i])]) &
-                        set(tag_cards[str(color_2_tags[j])])):
-                    # there is no card with both tags,
-                    #  so we can skip this tag pair
-                    continue
-
-                # find solutions
-                quad_list = get_quads_from_solutions(
-                    find_solutions_2_2(tagA, tagB),
-                    cards_encoded[color_1],
-                    cards_encoded[color_2]
-                )
-
-                if not quad_list:
-                    # there is no solution, so we can skip this tag pair
-                    continue
-
-                # generate the key for the tag pair
-                tag_pair_as_key = f"{color_1_tags[i]},{color_2_tags[j]}"
-
-                # Store the results in the corresponding json structure
-                # quad_dict: flatten it before storing
-                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
-                # card0_dict
-                card0_dict[color_pair_as_key][tag_pair_as_key] = list(
-                    set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
-
-        # This loop is for [A1, A2]
-        for i in range(tags_len):
-            for j in range(i + 1, tags_len):
-                tagA1, tagA2 = (1 << i), (1 << j)
-                if not (set(tag_cards[str(color_1_tags[i])]) &
-                        set(tag_cards[str(color_1_tags[j])])):
-                    # there is no card with both tags,
-                    #  so we can skip this tag pair
-                    continue
-
-                # find solutions
-                quad_list = get_quads_from_solutions(
-                    find_solutions_3_1(tagA1 | tagA2),
-                    cards_encoded[color_1],
-                    cards_encoded[color_2]
-                )
-
-                if not quad_list:
-                    # there is no solution, so we can skip this tag pair
-                    continue
-
-                # generate the key for the tag pair
-                tag_pair_as_key = f"{color_1_tags[i]},{color_1_tags[j]}"
-
-                # Store the results in the corresponding json structure
-                # quad_dict
-                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
-                # card0_dict
-                card0_dict[color_pair_as_key][tag_pair_as_key] = list(
-                    set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_1_tags[j])]))
-        
-        # This loop is for [B1, B2]
-        for i in range(tags_len):
-            for j in range(i + 1, tags_len):
-                tagB1, tagB2 = (1 << i), (1 << j)
-                if not (set(tag_cards[str(color_2_tags[i])]) &
-                        set(tag_cards[str(color_2_tags[j])])):
-                    # there is no card with both tags,
-                    #  so we can skip this tag pair
-                    continue
-
-                # find solutions
-                quad_list = get_quads_from_solutions(
-                    find_solutions_3_1(tagB1 | tagB2),
-                    cards_encoded[color_2],
-                    cards_encoded[color_1]
-                )
-
-                if not quad_list:
-                    # there is no solution, so we can skip this tag pair
-                    continue
-
-                # generate the key for the tag pair
-                tag_pair_as_key = f"{color_2_tags[i]},{color_2_tags[j]}"
-
-                # Store the results in the corresponding json structure
-                # quad_dict
-                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
-                # card0_dict
-                card0_dict[color_pair_as_key][tag_pair_as_key] = list(
-                    set(tag_cards[str(color_2_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
 
     # Save the results to the output directory
-    # Generate the full solution by combining the two json structures
-    # and save it to the output directory
     cnt = 0
     full_solution = {}
     quint_set = set()
@@ -450,10 +417,11 @@ if __name__ == "__main__":
                         quint_set.add(tmp_quint)
                 if len(tmp_card0_set) == 0:
                     continue
-                full_solution[cnt] = {}
-                full_solution[cnt]["quad"] = quad
-                full_solution[cnt]["card0s"] = tmp_card0_set
-                full_solution[cnt]["tags"] = tag_pair
+                full_solution[cnt] = {
+                    "quad": quad,
+                    "card0s": tmp_card0_set,
+                    "tags": tag_pair
+                }
                 cnt += 1
     print(f"Total solutions (quint): {len(quint_set)}")
 
