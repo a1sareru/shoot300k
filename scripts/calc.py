@@ -5,7 +5,7 @@ import os
 import json
 
 
-def generate_valid_sets(x):
+def generate_valid_sets_1bit(x):
     """
     Given a number x with only one bit set in the low 7 bits,
     find all valid sets of 4 numbers that satisfy the following conditions:
@@ -39,20 +39,125 @@ def generate_valid_sets(x):
     return valid_sets
 
 
+def generate_valid_sets_0bit():
+    """
+    find all valid sets of 4 numbers that satisfy the following conditions:
+     - 3 of the numbers have 2 bits set in the low 7 bits
+     - 1 of the numbers have 1 bit set in the low 7 bits
+     - n1 | n2 | n3 | n4 == 127
+    """
+    FULL_MASK = 0b1111111  # The mask for the low 7 bits
+
+    # Enumerate all possible 1-bit numbers
+    one_bit_numbers = [1 << i for i in range(7)]
+
+    # Enumerate all possible 2-bit numbers
+    two_bit_numbers = [sum(1 << i for i in bits)
+                       for bits in combinations(range(7), 2)]
+
+    valid_sets = []
+
+    # Enumerate all possible combinations of 1-bit numbers to get two1, two2, two3
+    for one in one_bit_numbers:
+        # Calculate the remaining bits
+        remain = FULL_MASK & ~one
+        # Enumerate all possible combinations of 2-bit numbers
+        for index_i in range(len(two_bit_numbers)):
+            if one & two_bit_numbers[index_i]:
+                continue
+            two1 = two_bit_numbers[index_i]
+            for index_j in range(index_i + 1, len(two_bit_numbers)):
+                if two1 & two_bit_numbers[index_j] or one & two_bit_numbers[index_j]:
+                    continue
+                two2 = two_bit_numbers[index_j]
+                two3 = remain & ~(two1 | two2)
+
+                valid_sets.append((two1, two2, two3, one))
+
+    return valid_sets
+
+
+def generate_valid_sets_2bit(x):
+    """
+    Given a number x with 2 bit set in the low 7 bits,
+    find all valid sets of 4 numbers that satisfy the following conditions:
+     - 1 of the numbers have 2 bits set in the low 7 bits
+     - 3 of the numbers have 1 bit set in the low 7 bits
+     - n1 | n2 | n3 | n4 | x == 127
+    """
+    FULL_MASK = 0b1111111  # The mask for the low 7 bits
+    x_low = x & FULL_MASK
+
+    # Enumerate all possible 2-bit numbers
+    two_bit_numbers = [sum(1 << i for i in bits)
+                       for bits in combinations(range(7), 2)]
+
+    valid_sets = []
+
+    # Enumerate all possible combinations of 2-bit numbers
+    for two in two_bit_numbers:
+        if (two & x_low):
+            continue
+        remain = FULL_MASK & ~(two | x_low)
+        # remain has exactly 3 bits, so just split it into 3 1-bit numbers
+        one0, one1, one2 = [1 << i for i in range(7) if (remain >> i) & 1]
+        valid_sets.append([two, one0, one1, one2])
+
+    return valid_sets
+
+
 def find_solutions_2_2(A, B):
-    set_A = generate_valid_sets(A)
-    set_B = generate_valid_sets(B)
+    set_A = generate_valid_sets_1bit(A)
+    set_B = generate_valid_sets_1bit(B)
+
+    # Save the indices of the permutations to avoid recomputing them
+    permutations_idx = [
+        (0, 2, 1, 3, 2, 0, 3, 1),
+        (0, 2, 1, 3, 2, 1, 3, 0),
+        (0, 3, 1, 2, 2, 0, 3, 1),
+        (0, 3, 1, 2, 2, 1, 3, 0),
+    ]
+
     solutions = []
     for a in set_A:
         for b in set_B:
-            solutions.append([(a[0], b[2]), (a[1], b[3]),
-                             (a[2], b[0]), (a[3], b[1])])
-            solutions.append([(a[0], b[2]), (a[1], b[3]),
-                             (a[2], b[1]), (a[3], b[0])])
-            solutions.append([(a[0], b[3]), (a[1], b[2]),
-                             (a[2], b[0]), (a[3], b[1])])
-            solutions.append([(a[0], b[3]), (a[1], b[2]),
-                             (a[2], b[1]), (a[3], b[0])])
+            for idx in permutations_idx:
+                solutions.append([
+                    (a[idx[0]], b[idx[1]]),
+                    (a[idx[2]], b[idx[3]]),
+                    (a[idx[4]], b[idx[5]]),
+                    (a[idx[6]], b[idx[7]])
+                ])
+
+    return solutions
+
+
+def find_solutions_3_1(A):
+    # Note: A has two bit set to 1, and 0 == B (so it is not necessary to pass B)
+    set_A = generate_valid_sets_2bit(A)  # two, one1, one2, one3
+    set_B = generate_valid_sets_0bit()  # two1, two2, two3, one
+
+    # Save the indices of the permutations to avoid recomputing them
+    permutations_idx = [
+        (1, 0, 2, 1, 3, 2),
+        (1, 0, 2, 2, 3, 1),
+        (1, 1, 2, 0, 3, 2),
+        (1, 1, 2, 2, 3, 0),
+        (1, 2, 2, 0, 3, 1),
+        (1, 2, 2, 1, 3, 0),
+    ]
+
+    solutions = []
+    for a in set_A:
+        for b in set_B:
+            card_fixed = (a[0], b[3])
+            for idx in permutations_idx:
+                solutions.append([
+                    card_fixed,
+                    (a[idx[0]], b[idx[1]]),
+                    (a[idx[2]], b[idx[3]]),
+                    (a[idx[4]], b[idx[5]])
+                ])
     return solutions
 
 
@@ -197,6 +302,53 @@ if __name__ == "__main__":
 
         # Iterate over all tag pairs for the selected color pair
         for i in range(len(color_1_tags)):
+            # This loop is for [A1, A2]
+            for j in range(i + 1, len(color_1_tags)):
+                tagA1, tagA2 = (1 << i), (1 << j)
+                if not (set(tag_cards[str(color_1_tags[i])]) &
+                        set(tag_cards[str(color_1_tags[j])])):
+                    # there is no card with both tags,
+                    #  so we can skip this tag pair
+                    continue
+
+                # find solutions
+                flag_next = False
+                quad_list = []
+                for s in find_solutions_3_1(tagA1 | tagA2):
+                    # add a 4-array to store the card id, each element is a list
+                    tmp_quad = [[] for _ in range(4)]
+                    for m in range(4):
+                        intersection = set(cards_encoded[color_1][s[m][0]]) & set(
+                            cards_encoded[color_2][s[m][1]])
+                        if not intersection:
+                            flag_next = True
+                            break
+                        else:
+                            tmp_quad[m] = intersection
+
+                    # if there is no card, skip this solution
+                    if flag_next:
+                        flag_next = False
+                        continue
+                    
+                    for quad in product(*tmp_quad):
+                        quad_list.append(sorted(quad))
+
+                if not quad_list:
+                    # there is no solution, so we can skip this tag pair
+                    continue
+
+                # generate the key for the tag pair
+                tag_pair_as_key = f"{color_1_tags[i]},{color_1_tags[j]}"
+
+                # Store the results in the corresponding json structure
+                # quad_dict
+                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
+                # card0_dict
+                card0_dict[color_pair_as_key][tag_pair_as_key] = list(
+                    set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_1_tags[j])]))
+
+            # This loop is for [A1, B1]
             for j in range(len(color_2_tags)):
                 tagA, tagB = (1 << i), (1 << j)
                 if not (set(tag_cards[str(color_1_tags[i])]) &
@@ -240,12 +392,52 @@ if __name__ == "__main__":
                 card0_dict[color_pair_as_key][tag_pair_as_key] = list(
                     set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
 
-        # Note:
-        #  The following break statements are used for testing purposes.
-        #  Therefore, they should be removed when the script is used in production.
-        #         break  # test one tag pair for now [loop j]
-        #     break  # test one tag pair for now [loop i]
-        # break  # test one color pair for now
+        # This loop is for [B1, B2]
+        for i in range(len(color_2_tags)):
+            for j in range(i + 1, len(color_2_tags)):
+                tagB1, tagB2 = (1 << i), (1 << j)
+                if not (set(tag_cards[str(color_2_tags[i])]) &
+                        set(tag_cards[str(color_2_tags[j])])):
+                    # there is no card with both tags,
+                    #  so we can skip this tag pair
+                    continue
+
+                # find solutions
+                flag_next = False
+                quad_list = []
+                for s in find_solutions_3_1(tagB1 | tagB2):
+                    # add a 4-array to store the card id, each element is a list
+                    tmp_quad = [[] for _ in range(4)]
+                    for m in range(4):
+                        intersection = set(cards_encoded[color_1][s[m][0]]) & set(
+                            cards_encoded[color_2][s[m][1]])
+                        if not intersection:
+                            flag_next = True
+                            break
+                        else:
+                            tmp_quad[m] = intersection
+
+                    # if there is no card, skip this solution
+                    if flag_next:
+                        flag_next = False
+                        continue
+                    
+                    for quad in product(*tmp_quad):
+                        quad_list.append(sorted(quad))
+
+                if not quad_list:
+                    # there is no solution, so we can skip this tag pair
+                    continue
+
+                # generate the key for the tag pair
+                tag_pair_as_key = f"{color_2_tags[i]},{color_2_tags[j]}"
+
+                # Store the results in the corresponding json structure
+                # quad_dict
+                quad_dict[color_pair_as_key][tag_pair_as_key] = quad_list
+                # card0_dict
+                card0_dict[color_pair_as_key][tag_pair_as_key] = list(
+                    set(tag_cards[str(color_2_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
 
     # Save the results to the output directory
     # Generate the full solution by combining the two json structures
