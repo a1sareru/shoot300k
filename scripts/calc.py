@@ -440,7 +440,6 @@ if __name__ == "__main__":
         color_1, color_2 = color_pair
         color_pair_as_key = f"{color_1},{color_2}"
         for tag_pair in quad_dict[color_pair_as_key]:
-            tag_pair_as_key = f"{color_1_tags[i]},{color_2_tags[j]}"
             for quad in quad_dict[color_pair_as_key][tag_pair]:
                 tmp_card0_set = []
                 # remove the card0 from tmp_card0_set if sorted(quad+[card0]) is already in full_solution_set
