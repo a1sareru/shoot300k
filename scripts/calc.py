@@ -337,8 +337,9 @@ if __name__ == "__main__":
 
         # Iterate over all tag pairs for the selected color pair
 
+        # This loop is for [A1, B1]
         for i in range(tags_len):
-            for j in range(tags_len): # This loop is for [A1, B1]
+            for j in range(tags_len):
                 tagA, tagB = (1 << i), (1 << j)
                 if not (set(tag_cards[str(color_1_tags[i])]) &
                         set(tag_cards[str(color_2_tags[j])])):
@@ -367,8 +368,9 @@ if __name__ == "__main__":
                 card0_dict[color_pair_as_key][tag_pair_as_key] = list(
                     set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_2_tags[j])]))
 
-        # for i in range(len(color_1_tags)):
-            for j in range(i + 1, tags_len):  # This loop is for [A1, A2]
+        # This loop is for [A1, A2]
+        for i in range(tags_len):
+            for j in range(i + 1, tags_len):
                 tagA1, tagA2 = (1 << i), (1 << j)
                 if not (set(tag_cards[str(color_1_tags[i])]) &
                         set(tag_cards[str(color_1_tags[j])])):
@@ -397,7 +399,8 @@ if __name__ == "__main__":
                 card0_dict[color_pair_as_key][tag_pair_as_key] = list(
                     set(tag_cards[str(color_1_tags[i])]) & set(tag_cards[str(color_1_tags[j])]))
         
-        for i in range(tags_len): # This loop is for [B1, B2]
+        # This loop is for [B1, B2]
+        for i in range(tags_len):
             for j in range(i + 1, tags_len):
                 tagB1, tagB2 = (1 << i), (1 << j)
                 if not (set(tag_cards[str(color_2_tags[i])]) &
@@ -453,6 +456,7 @@ if __name__ == "__main__":
                 full_solution[cnt]["card0s"] = tmp_card0_set
                 full_solution[cnt]["tags"] = tag_pair
                 cnt += 1
+    print(f"Total solutions (quint): {len(quint_set)}")
 
     os.makedirs(args.output_dir, exist_ok=True)
     with open(f"{args.output_dir}/full_solution.json", "w") as f:
