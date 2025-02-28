@@ -210,21 +210,23 @@ if __name__ == "__main__":
                 quad_list = []
                 for s in find_solutions_2_2(tagA, tagB):
                     # add a 4-array to store the card id, each element is a list
-                    quad = [[] for _ in range(4)]
+                    tmp_quad = [[] for _ in range(4)]
                     for m in range(4):
                         intersection = set(cards_encoded[color_1][s[m][0]]) & set(
                             cards_encoded[color_2][s[m][1]])
-                        if not intersection or len(intersection) > 1:
+                        if not intersection:
                             flag_next = True
                             break
                         else:
-                            quad[m] = intersection.pop()
+                            tmp_quad[m] = intersection
 
                     # if there is no card, skip this solution
                     if flag_next:
                         flag_next = False
                         continue
-                    quad_list.append(sorted(quad))
+                    # flatten tmp_quad, and add the sorted quads to quad_list
+                    for quad in product(*tmp_quad):
+                        quad_list.append(sorted(quad))
 
                 if not quad_list:
                     # there is no solution, so we can skip this tag pair
@@ -258,18 +260,18 @@ if __name__ == "__main__":
         color_pair_as_key = f"{color_1},{color_2}"
         for tag_pair in quad_dict[color_pair_as_key]:
             tag_pair_as_key = f"{color_1_tags[i]},{color_2_tags[j]}"
-            for quad in quad_dict[color_pair_as_key][tag_pair]:
+            for tmp_quad in quad_dict[color_pair_as_key][tag_pair]:
                 tmp_card0_set = []
                 # remove the card0 from tmp_card0_set if sorted(quad+[card0]) is already in full_solution_set
                 for card0 in card0_dict[color_pair_as_key][tag_pair]:
-                    tmp_quint = tuple(sorted(quad+[card0]))
+                    tmp_quint = tuple(sorted(tmp_quad+[card0]))
                     if tmp_quint not in quint_set:
                         tmp_card0_set.append(card0)
                         quint_set.add(tmp_quint)
                 if len(tmp_card0_set) == 0:
                     continue
                 full_solution[cnt] = {}
-                full_solution[cnt]["quad"] = quad
+                full_solution[cnt]["quad"] = tmp_quad
                 full_solution[cnt]["card0s"] = tmp_card0_set
                 full_solution[cnt]["tags"] = tag_pair
                 cnt += 1
