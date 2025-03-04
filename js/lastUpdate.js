@@ -20,7 +20,7 @@ async function fetchCardDataLastUpdated() {
         if (!response.ok) throw new Error(`请求失败: ${response.status}`);
 
         const lastUpdated = await response.text(); // Assuming the file contains the last updated date as text
-        const lastUpdatedDate = new Date(lastUpdated);
+        const lastUpdatedDate = new Date(lastUpdated.replace(/-/g, '/'));
         const currentDate = new Date();
 
         // 计算差距（单位：天）
