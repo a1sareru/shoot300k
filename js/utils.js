@@ -168,7 +168,7 @@ function formatCardCaption(card19) {
     if (kojoIds19.includes(id19)) {
         banner = "kojo";
     }
-    let bannerText = "<br><br><br>";
+    let bannerText = `<br><br><span class="card-banner card-banner-special">❓ 其他季活限定</span>`;
     if (banner) {
         formattedBanner = formatBannerText(banner, id19);
         if (formattedBanner !== "") {

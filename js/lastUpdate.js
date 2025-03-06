@@ -28,9 +28,9 @@ async function fetchCardDataLastUpdated() {
         const diffDays = Math.floor((diffTime) / (60 * 60 * 24)); // in days (floor because we don't want partial days)
 
         // 显示最后更新时间及“X天前”
-        document.getElementById("data-last-updated").textContent = `（卡牌数据最后更新：${diffDays}天前｜${lastUpdated}）`;
+        document.getElementById("data-last-updated").textContent = `（上次更新：${diffDays}天前｜${lastUpdated}）`;
     } catch (error) {
-        document.getElementById("data-last-updated").textContent = "（卡牌数据最后更新：获取失败）";
+        document.getElementById("data-last-updated").textContent = "（上次更新：获取失败）";
         console.error("获取卡牌数据最后更新时间失败:", error);
     }
 }
