@@ -77,7 +77,7 @@ function formatBannerText(banner, id_19 = 0) {
     } else if (bannerText.startsWith("rensen")) { // rensen
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `🌱 Caulis`;
-    } else if (bannerText === "robe" || id_19 in mahopaIds19) { // mahopa
+    } else if (bannerText === "robe" || mahopaIds19.includes(id_19)) { // mahopa
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `🥳 魔法趴`;
     } else if (bannerText === "sonatine+") { // sonatine+
