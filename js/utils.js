@@ -124,11 +124,11 @@ function formatBannerText(banner, id_19 = 0) {
     } else if (bannerText.startsWith("jb_")) { // JB
         let year = bannerText.substring(5, 7);
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year} 年 June Bride`;
+        formattedBanner += `💍 ${year} 年 Something Gift`;
     } else if (bannerText.startsWith("propose_")) { // JB -propose
         let year = bannerText.substring(10, 12);
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year} 年 June Bride`;
+        formattedBanner += `💍 ${year} 年 Something Gift`;
     } else if (bannerText.startsWith("tanabata_")) { // tanabata
         let year = bannerText.substring(11, 13);
         formattedBanner += ` card-banner-special">`;
