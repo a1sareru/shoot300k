@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // 获取对应的 tab-content ID
             const targetId = this.getAttribute("data-target");
+            localStorage.setItem("activeTab", targetId);
 
             // 隐藏所有 tab-content
             document.querySelectorAll(".tab-content").forEach(tab => {
@@ -30,7 +31,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 默认激活 "Top" 页面
-    document.querySelector(".nav-item[data-target='topPage']").classList.add("active");
-    document.querySelector("#topPage").classList.add("active");
+    const savedTab = localStorage.getItem("activeTab") || "topPage";
+
+    // 激活对应 tab-content 和 nav-item
+    const savedNav = document.querySelector(`.nav-item[data-target='${savedTab}']`);
+    const savedContent = document.getElementById(savedTab);
+
+    // fallback 逻辑
+    if (savedNav && savedContent) {
+        savedNav.classList.add("active");
+        savedContent.classList.add("active");
+    } else {
+        document.querySelector(".nav-item[data-target='topPage']").classList.add("active");
+        document.querySelector("#topPage").classList.add("active");
+    }
+    if (savedTab === "selectCards") {
+        document.body.style.overflow = "hidden";
+        loadCards();
+    } else {
+        document.body.style.overflow = "auto";
+    }
 });
