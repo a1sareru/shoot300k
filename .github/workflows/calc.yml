@@ -13,9 +13,10 @@ on:
       - '.github/workflows/last-update.yml'
       - 'js/**'
       - 'public/images/**'
+      - 'static/**'
       - '.gitignore'
-      - 'favicon.ico'
       - 'index.html'
+      - 'site.webmanifest'
       - 'style.css'
   workflow_dispatch:
 jobs:
