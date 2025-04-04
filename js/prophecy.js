@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const filteredIds19 = await filtedCardByIds19(ids19);
 
             // 读取 JSON 数据
-            const fullSolutionResponse = await fetch("https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/solutions/full_solution.json");
+            const fullSolutionResponse = await fetch("../solutions/full_solution.json");
 
             if (!fullSolutionResponse.ok) {
                 throw new Error("无法加载卡组计算数据");

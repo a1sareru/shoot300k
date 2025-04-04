@@ -211,7 +211,7 @@ async function loadCSV(url) {
 
 // 抓取并解析卡牌库数据 (csv)
 async function fetchAndParseCards() {
-    const csvText = await loadCSV('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/character_card.csv');
+    const csvText = await loadCSV('../public/data/character_card.csv');
     return csvText ? parseCSV(csvText) : [];
 }
 
@@ -410,11 +410,11 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
 
 async function fetchAndParseCardTags() {
     const urls = [
-        "https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/card_give_characteristic.csv",
-        "https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/card_give_characteristic_grow_list.csv"
+        "../public/data/card_give_characteristic.csv",
+        "../public/data/card_give_characteristic_grow_list.csv"
     ];
 
-    const rarityDataUrl = "https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/main/public/data/characteristics_normal.csv";
+    const rarityDataUrl = "../public/data/characteristics_normal.csv";
 
     const cardTags = new Map(); // cardId -> Set(tagId)
     const rarity3Tags = new Set(); // 存储 rarity=3 的 tagId

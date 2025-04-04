@@ -1,5 +1,7 @@
-tmp*
-raw*
-local_*
-.vscode
 .DS_Store
+.vscode
+*-last-update
+local_*
+raw*
+solutions
+tmp*
