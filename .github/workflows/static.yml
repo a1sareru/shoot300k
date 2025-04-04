@@ -8,7 +8,6 @@ on:
     paths-ignore:
       - ".github/workflows/calc.yml"
       - ".github/workflows/last-update.yml"
-      - "public/data/**"
       - "scripts/**"
 
   # Allows you to run this workflow manually from the Actions tab
