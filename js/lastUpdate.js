@@ -1,6 +1,6 @@
 async function fetchRepoLastUpdated() {
     try {
-        const response = await fetch('../repo-last-update');
+        const response = await fetch('repo-last-update');
         if (!response.ok) throw new Error(`请求失败: ${response.status}`);
 
         const lastUpdated = await response.text(); // Assuming the file contains the last updated date as text
@@ -16,7 +16,7 @@ fetchRepoLastUpdated();
 
 async function fetchCardDataLastUpdated() {
     try {
-        const response = await fetch('../data-last-update');
+        const response = await fetch('data-last-update');
         if (!response.ok) throw new Error(`请求失败: ${response.status}`);
 
         const lastUpdated = await response.text(); // Assuming the file contains the last updated date as text
