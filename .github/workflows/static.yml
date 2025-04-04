@@ -38,7 +38,8 @@ jobs:
       - name: Copy files from artifacts branch
         run: |
           git clone --depth 1 --branch artifacts https://github.com/${{ github.repository }} temp-artifacts
-          cp -r temp-artifacts/* .
+          ls -la temp-artifacts
+          cp -r temp-artifacts/. .
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
