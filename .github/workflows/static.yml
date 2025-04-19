@@ -40,6 +40,10 @@ jobs:
           git clone --depth 1 --branch artifacts https://github.com/${{ github.repository }} temp-artifacts
           ls -la temp-artifacts
           cp -r temp-artifacts/* .
+      - name: Download data-last-update file
+        run: |
+          curl -L https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/data-last-update -o data-last-update
+          curl -L https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/repo-last-update -o repo-last-update
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
