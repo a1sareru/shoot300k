@@ -1,916 +1,1002 @@
-    /* 基础重置 */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --link-color: #1E90FF;
+    --link-hover: #0073E6;
+    --card-bg: #fafafa;
+    --container-bg: #fff;
+    --navbar-bg: #333;
+    --navbar-text: white;
+    --highlight-calc: pink;
+    --highlight-prophecy: #88dae3;
+    --button-bg: #f49907;
+    --button-hover-bg: #ffb949;
+    --clear-btn-bg: #e74c3c;
+    --clear-btn-hover: #c0392b;
+    --submit-btn-bg: #544329;
+    --submit-btn-hover: #7e6b57;
+    --card-title-text: #000080;
+    --result-container-border: #ddd;
+    --result-container-bg: #eef2f5;
+    --select-ids-bg: #f8f9fa;
+    --select-ids-border: #ccc;
+    --select-cards-scrollable-bg: #eef2f5;
+    --select-cards-scrollable-border: #d1d9e6;
+    --result-container-text: #333;
+    --rarity-3-color-a: #f8f8ff;
+    --rarity-3-color-b: #d1d1d171;
+    --rarity-4-color-a: #fff9e171;
+    --rarity-4-color-b: #fdd99171;
+    --h2-bg: #f5f5f5;
+    --h2-border: #ffcc00;
+    --h2-text: #444;
+    --header-text-shadow: #0000001a;
+    --header-box-shadow: #0000001a;
+    --header-border-bottom: #ddd;
+    --h3-text: #444;
+    --h4-text: #555;
+    --h5-text: #666;
+    --textarea-bg: #f0f0f0;
+}
 
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1e1e1e;
+        --text-color: #eeeeee;
+        --link-color: #66ccff;
+        --link-hover: #33bbff;
+        --card-bg: #3c3c48;
+        --container-bg: #2c2c2c;
+        --navbar-bg: #111;
+        --navbar-text: #fff;
+        --highlight-calc: #ffb6c1;
+        --highlight-prophecy: #b0e0e6;
+        --button-bg: #d98a00;
+        --button-hover-bg: #ffa500;
+        --clear-btn-bg: #ff5c5c;
+        --clear-btn-hover: #c0392b;
+        --submit-btn-bg: #8b7355;
+        --submit-btn-hover: #a78c7e;
+        --card-title-text: #add8e6;
+        --result-container-border: #444;
+        --result-container-bg: #2c2c2c;
+        --select-ids-bg: #3c3c3c;
+        --select-ids-border: #555;
+        --select-cards-scrollable-bg: #3c3c3c;
+        --select-cards-scrollable-border: #555;
+        --result-container-text: #eee;
+        --rarity-3-color-a: #5b5a5a;
+        --rarity-3-color-b: #80808080;
+        --rarity-4-color-a: #d4af3771;
+        --rarity-4-color-b: #b8860b71;
+        --h2-bg: #4d4747;
+        --h2-border: #ffcc00;
+        --h2-text: #eee;
+        --header-text-shadow: #0000001a;
+        --header-box-shadow: #0000001a;
+        --header-border-bottom: #444;
+        --h3-text: #eee;
+        --h4-text: #aaa;
+        --h5-text: #bbb;
+        --textarea-bg: #444;
+    }
+}
+
+/* 基础重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.8;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        background-color: #ffffff;
-        color: #333333;
-        line-height: 1.8;
-        padding: 20px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        min-height: 100vh;
-    }
-
-    @media (max-width: 768px) {
-        body {
-            padding: 10px;
-            font-size: small;
-        }
-    }
-
-    p {
-        /* 段落间距设置为16px */
-        margin-bottom: 16px;
-    }
-
-    @media (max-width: 600px) {
-        p {
-            /* 在较小的屏幕上减少段落间距 */
-            margin-bottom: 8px;
-        }
-    }
-
-    del {
-        color: gray;
-    }
-
-    .my-links {
-        /* 允许长单词或连续字符换行 */
-        word-break: break-word;
-
-        /* 兼容性更好 */
-        overflow-wrap: break-word;
-
-        /* 适中的亮蓝色 */
-        color: #1E90FF;
-
-        /* 取消下划线 */
-        text-decoration: none;
-
-        /* 平滑颜色过渡 */
-        transition: color 0.3s ease-in-out;
-    }
-
-    .my-links:hover {
-        /* 悬停时加深蓝色 */
-        color: #0073E6;
-
-        /* 仅在悬停时显示下划线 */
-        text-decoration: underline;
-    }
-
-    .komejirushi-text {
-        color: #606060;
-        font-size: smaller;
-        font-weight: 600;
-    }
-
-    @media screen and (max-width: 600px) {
-        .komejirushi-text {
-            font-size: x-small;
-        }
-    }
-
-    .result-container-text {
-        color: gray;
-    }
-    
-    .highlight-border-calc {
-        color: pink;
-        font-weight: 600;
-    }
-
-    .highlight-border-prophecy {
-        color: #88dae3;
-        font-weight: 600;
-    }
-
-    h2 {
-        font-size: 24px;
-        color: #333;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-        margin-bottom: 15px;
         padding: 10px;
-        background-color: #f5f5f5;
-        border-left: 5px solid #ffcc00;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        font-size: small;
     }
+}
 
-    @media (max-width: 600px) {
-        h2 {
-            font-size: 18px;
-            padding: 8px;
-            margin-top: 14px;
-            margin-bottom: 10px;
-        }
-    }
+p {
+    /* 段落间距设置为16px */
+    margin-bottom: 16px;
+}
 
-    /* h3 - 比 h2 略小，但仍有一定的强调 */
-    h3 {
-        font-size: 20px;
-        color: #444;
-        font-weight: bold;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        margin-top: 18px;
-        margin-bottom: 12px;
-        padding: 5px 0;
-        border-bottom: 2px solid #ddd;
-    }
-
-
-    /* h4 - 比 h3 更小，适合作为小标题 */
-    h4 {
-        font-size: 18px;
-        color: #555;
-        font-weight: bold;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        margin-top: 16px;
-        margin-bottom: 10px;
-        padding: 4px 0;
-    }
-
-    /* h5 - 最小的标题，适合辅助信息 */
-    h5 {
-        font-size: 16px;
-        color: #666;
-        font-weight: bold;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-        margin-top: 14px;
+@media (max-width: 600px) {
+    p {
+        /* 在较小的屏幕上减少段落间距 */
         margin-bottom: 8px;
-        padding: 3px 0;
+    }
+}
+
+del {
+    color: gray;
+}
+
+.my-links {
+    /* 允许长单词或连续字符换行 */
+    word-break: break-word;
+
+    /* 兼容性更好 */
+    overflow-wrap: break-word;
+
+    /* 适中的亮蓝色 */
+    color: var(--link-color);
+
+    /* 取消下划线 */
+    text-decoration: none;
+
+    /* 平滑颜色过渡 */
+    transition: color 0.3s ease-in-out;
+}
+
+.my-links:hover {
+    /* 悬停时加深蓝色 */
+    color: var(--link-hover);
+
+    /* 仅在悬停时显示下划线 */
+    text-decoration: underline;
+}
+
+.komejirushi-text {
+    color: #606060;
+    font-size: smaller;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 600px) {
+    .komejirushi-text {
+        font-size: x-small;
+    }
+}
+
+.result-container-text {
+    color: var(--result-container-text);
+}
+
+.highlight-border-calc {
+    color: var(--highlight-calc);
+    font-weight: 600;
+}
+
+.highlight-border-prophecy {
+    color: var(--highlight-prophecy);
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 24px;
+    color: var(--h2-text);
+    text-shadow: 0 1px 3px var(--header-text-shadow);
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: var(--h2-bg);
+    border-left: 5px solid var(--h2-border);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px var(--header-box-shadow);
+}
+
+@media (max-width: 600px) {
+    h2 {
+        font-size: 18px;
+        padding: 8px;
+        margin-top: 14px;
+        margin-bottom: 10px;
+    }
+}
+
+/* h3 - 比 h2 略小，但仍有一定的强调 */
+h3 {
+    font-size: 20px;
+    color: var(--h3-text);
+    font-weight: bold;
+    text-shadow: 0 1px 2px var(--header-box-shadow);
+    margin-top: 18px;
+    margin-bottom: 12px;
+    padding: 5px 0;
+    border-bottom: 2px solid var(--header-border-bottom);
+}
+
+
+/* h4 - 比 h3 更小，适合作为小标题 */
+h4 {
+    font-size: 18px;
+    color: var(--h4-text);
+    font-weight: bold;
+    text-shadow: 0 1px 2px var(--header-text-shadow);
+    margin-top: 16px;
+    margin-bottom: 10px;
+    padding: 4px 0;
+}
+
+/* h5 - 最小的标题，适合辅助信息 */
+h5 {
+    font-size: 16px;
+    color: var(--h5-text);
+    font-weight: bold;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-top: 14px;
+    margin-bottom: 8px;
+    padding: 3px 0;
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+    h3 {
+        font-size: 18px;
+        margin-top: 14px;
+        margin-bottom: 10px;
+        border-bottom: 1.5px solid var(--header-border-bottom);
     }
 
-    /* 移动端适配 */
-    @media (max-width: 600px) {
-        h3 {
-            font-size: 18px;
-            margin-top: 14px;
-            margin-bottom: 10px;
-            border-bottom: 1.5px solid #ccc;
-        }
-
-        h4 {
-            font-size: 16px;
-            margin-top: 12px;
-            margin-bottom: 8px;
-        }
-
-        h5 {
-            font-size: 14px;
-            margin-top: 10px;
-            margin-bottom: 6px;
-        }
+    h4 {
+        font-size: 16px;
+        margin-top: 12px;
+        margin-bottom: 8px;
     }
 
-    /* spoiler样式 */
-    .spoiler {
-        color: #3f3f3f;
-        background-color: #3f3f3f;
-        padding: 2px;
-        border-radius: 3px;
-        transition: background-color 0.3s, color 0.3s;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-
-        /* 防止文字被选择 */
-        user-select: none;
+    h5 {
+        font-size: 14px;
+        margin-top: 10px;
+        margin-bottom: 6px;
     }
+}
 
-    .spoiler:hover {
-        color: white;
-        background: linear-gradient(145deg, #555, #222);
-    }
+/* spoiler样式 */
+.spoiler {
+    color: #3f3f3f;
+    background-color: #3f3f3f;
+    padding: 2px;
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+
+    /* 防止文字被选择 */
+    user-select: none;
+}
+
+.spoiler:hover {
+    color: var(--navbar-text);
+    background: linear-gradient(145deg, #555, #222);
+}
 
 
-    /* 顶部导航栏 */
+/* 顶部导航栏 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--navbar-bg);
+    color: var(--navbar-text);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+/* 导航栏选项 */
+.nav-item {
+    cursor: pointer;
+    padding: 10px 15px;
+    color: var(--navbar-text);
+    text-decoration: none;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.nav-item:hover {
+    background: #555;
+}
+
+.nav-item.active {
+    font-weight: bold;
+    border-bottom: 2px solid #ffcc00;
+}
+
+@media (max-width: 600px) {
     .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #333;
-        color: white;
-        display: flex;
+        padding: 5px 0;
+        flex-direction: row;
+        flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
-        padding: 10px 0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
     }
 
-    /* 导航栏选项 */
     .nav-item {
-        cursor: pointer;
-        padding: 10px 15px;
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-        transition: background 0.3s;
-    }
-
-    .nav-item:hover {
-        background: #555;
-    }
-
-    .nav-item.active {
-        font-weight: bold;
-        border-bottom: 2px solid #ffcc00;
-    }
-
-    @media (max-width: 600px) {
-        .navbar {
-            padding: 5px 0;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .nav-item {
-            padding: 8px 10px;
-            text-align: center;
-            font-size: 14px;
-            flex-grow: 1;
-            width: 50%;
-            /* 使每个导航项填满一半的导航栏宽度 */
-        }
-    }
-
-    .container {
-        max-width: 960px;
-        margin: 20px auto 20px;
-
-        /* 确保底部有间距 */
-        padding: 20px;
-        background: #fff;
-        box-shadow: 0 2px 5px #0000001a;
-        border-radius: 4px;
-
-
-    }
-
-    @media (max-width: 600px) {
-        .container {
-            /* 增加顶部边距以适应展开的导航栏，更小的左右边距 */
-            margin: 110px 10px 10px;
-            padding: 15px;
-            font-size: 95%;
-        }
-    }
-
-
-    .bottom-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 60px;
-        background-color: #333;
-        color: white;
+        padding: 8px 10px;
         text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         font-size: 14px;
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        flex-grow: 1;
+        width: 50%;
+        /* 使每个导航项填满一半的导航栏宽度 */
     }
+}
 
-    /* 各部分内容 */
+.container {
+    max-width: 960px;
+    margin: 20px auto 20px;
+
+    /* 确保底部有间距 */
+    padding: 20px;
+    background: var(--container-bg);
+    box-shadow: 0 2px 5px #0000001a;
+    border-radius: 4px;
+
+
+}
+
+@media (max-width: 600px) {
+    .container {
+        /* 增加顶部边距以适应展开的导航栏，更小的左右边距 */
+        margin: 110px 10px 10px;
+        padding: 15px;
+        font-size: 95%;
+    }
+}
+
+
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: var(--navbar-bg);
+    color: var(--navbar-text);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 各部分内容 */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.2s ease-in;
+    padding-top: 50px;
+    margin: auto 50px 50px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@media (max-width: 600px) {
     .tab-content {
-        display: none;
-        animation: fadeIn 0.2s ease-in;
-        padding-top: 50px;
-        margin: auto 50px 50px;
+        padding-top: 10px;
+        margin: 0 10px 60px;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
 
-    .tab-content.active {
-        display: block;
+    to {
+        opacity: 1;
     }
-
-    @media (max-width: 600px) {
-        .tab-content {
-            padding-top: 10px;
-            margin: 0 10px 60px;
-        }
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
+}
 
 
-    /* 卡牌列表区域样式 */
-    #card-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-bottom: 40px;
-    }
+/* 卡牌列表区域样式 */
+#card-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 40px;
+}
 
-    .card {
-        display: inline-block;
-        width: 110px;
-        height: 135px;
-        margin: 5px;
-        text-align: left;
-        padding: 8px 2px;
-        border-radius: 12px;
-        background: #fafafa;
-        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-        cursor: pointer;
-    }
+.card {
+    display: inline-block;
+    width: 110px;
+    height: 135px;
+    margin: 5px;
+    text-align: left;
+    padding: 8px 2px;
+    border-radius: 12px;
+    background: var(--card-bg);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    cursor: pointer;
+}
 
-    .card p {
-        margin: 8px 0;
-        font-size: 0.9rem;
-    }
+.card p {
+    margin: 8px 0;
+    font-size: 0.9rem;
+}
 
-    .card-title {
-        font-size: 10.5px;
-        color: navy;
-    }
+.card-title {
+    font-size: 10.5px;
+    color: var(--card-title-text);
+}
 
-    .card-banner {
-        display: inline-block;
-        padding: 1.2px 5px;
-        border-radius: 3px;
-        box-shadow:0.5px 0.5px;
-        font-weight: 600;
-    }
+.card-banner {
+    display: inline-block;
+    padding: 1.2px 5px;
+    border-radius: 3px;
+    box-shadow: 0.5px 0.5px;
+    font-weight: 600;
+}
 
-    .card-banner-kojo {
-        background: linear-gradient(
-            45deg,
-            rgba(0, 153, 68, .2), rgba(0,153,68,.2) 25%, transparent 25%, transparent 50%,
-            rgba(0,153,68,.2), rgba(0,153,68,.2) 75%, transparent 75%, transparent 
-        );
-        background-size: 5px 5px;
-        background-color: rgba(224, 165, 109, 0.5);
-    }
+.card-banner-kojo {
+    background: linear-gradient(45deg,
+            rgba(0, 153, 68, .2), rgba(0, 153, 68, .2) 25%, transparent 25%, transparent 50%,
+            rgba(0, 153, 68, .2), rgba(0, 153, 68, .2) 75%, transparent 75%, transparent);
+    background-size: 5px 5px;
+    background-color: rgba(224, 165, 109, 0.5);
+}
 
-    .card-banner-special {
-        background: linear-gradient(
-            45deg,
+.card-banner-special {
+    background: linear-gradient(45deg,
             rgba(90, 150, 250, 0.15), rgba(90, 150, 250, 0.15) 25%, transparent 25%, transparent 50%,
-            rgba(90, 150, 250, 0.15), rgba(90, 150, 250, 0.15) 75%, transparent 75%, transparent
-        );
-        background-size: 5px 5px;
-        background-color: rgba(255, 177, 239, 0.25);
-    }
+            rgba(90, 150, 250, 0.15), rgba(90, 150, 250, 0.15) 75%, transparent 75%, transparent);
+    background-size: 5px 5px;
+    background-color: rgba(255, 177, 239, 0.25);
+}
 
-    /* 边框样式 */
-    .gold-border {
-        border: 3px solid gold;
-    }
+/* 边框样式 */
+.gold-border {
+    border: 3px solid gold;
+}
 
-    .silver-border {
-        border: 3px solid silver;
-    }
+.silver-border {
+    border: 3px solid silver;
+}
 
-    /* 选中效果 */
-    .card.selected {
-        transform: scale(1.02);
-        box-shadow: 0 0 5px #0000008b;
-    }
+/* 选中效果 */
+.card.selected {
+    transform: scale(1.02);
+    box-shadow: 0 0 5px #0000008b;
+}
 
-    /* 只有选中时显示背景 */
-    .card.selected.gold-border {
-        background: linear-gradient(135deg, #fff9e1, #fdd991);
-    }
+/* 只有选中时显示背景 */
+.card.selected.silver-border {
+    background: linear-gradient(135deg, var(--rarity-3-color-a), var(--rarity-3-color-b));
+}
 
-    .card.selected.silver-border {
-        background: linear-gradient(135deg, #f8f8ff, #c0c0c0);
-    }
+.card.selected.gold-border {
+    background: linear-gradient(135deg, var(--rarity-4-color-a), var(--rarity-4-color-b));
+}
 
-    /* 图片与文字（figure） */
-    figure {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 0;
-    }
+/* 图片与文字（figure） */
+figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
 
+figure img {
+    width: 34px;
+    height: 60px;
+}
+
+figure figcaption {
+    var(--navbar-text)-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 9px;
+    text-align: center;
+    word-break: normal;
+    line-break: strict;
+    line-height: 1.7;
+    margin: 2px 0;
+    padding: 2px;
+}
+
+@media (max-width: 600px) {
     figure img {
-        width: 34px;
-        height: 60px;
+        width: 30px;
+        height: auto;
     }
 
     figure figcaption {
-        white-space: normal;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        font-size: 9px;
-        text-align: center;
-        word-break: normal;
-        line-break: strict;
-        line-height: 1.7;
-        margin: 2px 0;
-        padding: 2px;
+        font-size: 8px;
     }
+}
 
-    @media (max-width: 600px) {
-        figure img {
-            width: 30px;
-            height: auto;
-        }
+/* 按钮样式 */
+button {
+    background-color: var(--button-bg);
+    color: var(--navbar-text);
+    border: none;
+    padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
 
-        figure figcaption {
-            font-size: 8px;
-        }
-    }
+button:hover {
+    background-color: var(--button-hover-bg);
+    transform: scale(1.01);
+    box-shadow: 0 0 5px rgba(229, 160, 58, 0.54);
+}
 
-    /* 按钮样式 */
+@media (max-width: 600px) {
     button {
-        background-color: #f49907;
-        color: white;
-        border: none;
-        padding: 6px 14px;
-        font-size: 14px;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-right: 15px;
-        margin-bottom: 15px;
-    }
-
-    button:hover {
-        background-color: #ffb949;
-        transform: scale(1.01);
-        box-shadow: 0 0 5px rgba(229, 160, 58, 0.54);
-    }
-
-    @media (max-width: 600px) {
-        button {
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 6px;
-
-            /* 缩小间距 */
-            margin-right: 7px;
-            margin-bottom: 7px;
-
-        }
-    }
-
-    .clear-btn {
-        background-color: #e74c3c;
-    }
-
-    .clear-btn:hover {
-        background-color: #c0392b;
-    }
-
-    .submit-btn {
-        background-color: #544329;
-    }
-
-    .submit-btn:hover {
-        background-color: #7e6b57;
-    }
-
-    /* 复制按钮样式 */
-    .copy-btn {
-        background-color: #2196F3;
-        color: white;
-        border: none;
-        align-self: right;
-        padding: 6px 12px;
-        font-size: 0.8rem;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .copy-btn:hover {
-        background-color: #1976D2;
-    }
-
-    .selectCards-header {
-        margin-bottom: 25px;
-    }
-
-    @media screen and (max-width: 600px) {
-        .selectCards-header {
-            margin-bottom: 10px;
-        }
-    }
-
-    /* 卡牌列表滚动容器 */
-    .selectCards-scrollable {
-        /* 确保不会遮住 footer */
-        max-height: calc(85vh - 160px - 60px - 90px);
-        overflow-y: auto;
-
-        /* 淡灰色背景，柔和过渡 */
-        background: #eef2f5;
-
-        /* 让边角更柔和 */
-        border-radius: 8px;
-
-        margin: 15px;
-
-        /* 🚀 添加“内嵌”视觉效果 */
-        /* 内阴影 */
-        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
-        /* 轻微的边框，让它有层次感 */
-        border: 1px solid #d1d9e6;
-    }
-
-    @media screen and (max-width: 600px) {
-        .selectCards-scrollable {
-            max-height: calc(85vh - 160px - 60px - 175px);
-        }
-
-    }
-
-    #selected-ids {
-        font-size: 14px;
-        flex-wrap: wrap;
-        justify-content: center;
-
-        /* 避免被 `card-list` 遮挡 */
-        position: relative;
-
-        /* 轻微灰色背景，柔和视觉 */
-        background-color: #f8f9fa;
-
-        /* 轻微边框 */
-        border: 1px solid #ccc;
-
-        /* 圆角边框 */
+        font-size: 10px;
+        padding: 4px 10px;
         border-radius: 6px;
 
-        /* 适当的内边距 */
-        padding: 8px 12px;
-
-        /* 允许换行 */
-        white-space: pre-wrap;
-
-        /* 遇到长单词换行 */
-        word-break: break-word;
-
-        /* 设置框的固定高度，防止内容过少时太小 */
-        height: 70px;
-
-        /* 超出时可以滚动 */
-        overflow-y: auto;
-
-        /* 确保它是块级元素 */
-        display: block;
+        /* 缩小间距 */
+        margin-right: 7px;
+        margin-bottom: 7px;
 
     }
+}
 
-    @media screen and (max-width: 600px) {
-        #selected-ids {
-            font-size: 12px;
-            padding: 6px 10px;
-            border-radius: 4px;
-            height: 40px;
-        }
+.clear-btn {
+    background-color: var(--clear-btn-bg);
+}
 
+.clear-btn:hover {
+    background-color: var(--clear-btn-hover);
+}
+
+.submit-btn {
+    background-color: var(--submit-btn-bg);
+}
+
+.submit-btn:hover {
+    background-color: var(--submit-btn-hover);
+}
+
+/* 复制按钮样式 */
+.copy-btn {
+    background-color: #2196F3;
+    color: var(--navbar-text);
+    border: none;
+    align-self: right;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.copy-btn:hover {
+    background-color: #1976D2;
+}
+
+.selectCards-header {
+    margin-bottom: 25px;
+}
+
+@media screen and (max-width: 600px) {
+    .selectCards-header {
+        margin-bottom: 10px;
+    }
+}
+
+/* 卡牌列表滚动容器 */
+.selectCards-scrollable {
+    /* 确保不会遮住 footer */
+    max-height: calc(85vh - 160px - 60px - 90px);
+    overflow-y: auto;
+
+    /* 淡灰色背景，柔和过渡 */
+    background: var(--select-cards-scrollable-bg);
+
+    /* 让边角更柔和 */
+    border-radius: 8px;
+
+    margin: 15px;
+
+    /* 🚀 添加“内嵌”视觉效果 */
+    /* 内阴影 */
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+    /* 轻微的边框，让它有层次感 */
+    border: 1px solid var(--select-cards-scrollable-border);
+}
+
+@media screen and (max-width: 600px) {
+    .selectCards-scrollable {
+        max-height: calc(85vh - 160px - 60px - 175px);
     }
 
-    /* 居中提交区域 */
+}
+
+#selected-ids {
+    font-size: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    /* 避免被 `card-list` 遮挡 */
+    position: relative;
+
+    /* 轻微灰色背景，柔和视觉 */
+    background-color: var(--select-ids-bg);
+
+    /* 轻微边框 */
+    border: 1px solid var(--select-ids-border);
+
+    /* 圆角边框 */
+    border-radius: 6px;
+
+    /* 适当的内边距 */
+    padding: 8px 12px;
+
+    /* 允许换行 */
+    var(--navbar-text)-space: pre-wrap;
+
+    /* 遇到长单词换行 */
+    word-break: break-word;
+
+    /* 设置框的固定高度，防止内容过少时太小 */
+    height: 70px;
+
+    /* 超出时可以滚动 */
+    overflow-y: auto;
+
+    /* 确保它是块级元素 */
+    display: block;
+
+}
+
+@media screen and (max-width: 600px) {
+    #selected-ids {
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 4px;
+        height: 40px;
+    }
+
+}
+
+/* 居中提交区域 */
+.submit-result-container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+@media (max-width: 600px) {
     .submit-result-container {
-        width: 90%;
-        margin: 0 auto;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
+}
 
-    @media (max-width: 600px) {
-        .submit-result-container {
-            padding: 0 10px;
-            box-sizing: border-box;
-        }
-    }
+.string-input-area {
+    width: 100%;
+    max-width: 600px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
 
-    .string-input-area {
-        width: 100%;
-        max-width: 600px;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 14px;
+    /* 禁止用户调整大小 */
+    resize: none;
+}
 
-        /* 禁止用户调整大小 */
-        resize: none;
+.submit-btn {
+    margin-top: 10px;
+    font-size: 14px;
+    padding: 6px 12px;
+}
+
+@media screen and (max-width: 600px) {
+    #card-input {
+        font-size: 13px;
+        padding: 6px;
+        border-radius: 4px;
     }
 
     .submit-btn {
-        margin-top: 10px;
-        font-size: 14px;
-        padding: 6px 12px;
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 6px;
     }
 
-    @media screen and (max-width: 600px) {
-        #card-input {
-            font-size: 13px;
-            padding: 6px;
-            border-radius: 4px;
-        }
+}
 
-        .submit-btn {
-            font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 6px;
-        }
+textarea {
+    background-color: var(--textarea-bg);
+    color: var(--text-color);
+}
 
+.result-container {
+    border: 1px solid var(--result-container-border);
+    padding: 8px;
+    margin-top: 12px;
+
+    /* 淡灰色背景，柔和过渡 */
+    background: var(--result-container-bg);
+
+    /* 让边角更柔和 */
+    border-radius: 8px;
+
+
+    /* 🚀 添加“内嵌”视觉效果 */
+    /* 内阴影 */
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.error-text {
+    font-size: 13px;
+    font-weight: bold;
+    color: red;
+}
+
+.result-group {
+    border: 1px solid #ddd;
+    padding: 8px;
+    margin-top: 8px;
+    background: var(--navbar-text);
+}
+
+.tag-container {
+    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tag-icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 4px;
+}
+
+@media (max-width: 600px) {
+    #card-input {
+        font-size: 13px;
+        padding: 6px;
+        border-radius: 4px;
+    }
+
+    .submit-btn {
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 6px;
     }
 
     .result-container {
-        border: 1px solid #ddd;
-        padding: 8px;
-        margin-top: 12px;
-
-        /* 淡灰色背景，柔和过渡 */
-        background: #eef2f5;
-
-        /* 让边角更柔和 */
-        border-radius: 8px;
-
-
-        /* 🚀 添加“内嵌”视觉效果 */
-        /* 内阴影 */
-        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 6px;
+        margin-top: 10px;
     }
 
     .error-text {
-        font-size: 13px;
-        font-weight: bold;
-        color: red;
+        font-size: 12px;
     }
 
     .result-group {
-        border: 1px solid #ddd;
-        padding: 8px;
-        margin-top: 8px;
-        background: white;
-    }
-
-    .tag-container {
-        margin-top: 5px;
-        display: flex;
-        flex-wrap: wrap;
+        padding: 6px;
+        margin-top: 6px;
     }
 
     .tag-icon {
-        width: 28px;
-        height: 28px;
-        margin-right: 4px;
+        width: 24px;
+        height: 24px;
+        margin-right: 3px;
     }
+}
 
-    @media (max-width: 600px) {
-        #card-input {
-            font-size: 13px;
-            padding: 6px;
-            border-radius: 4px;
-        }
+.card-group {
+    display: flex;
+    flex-wrap: wrap;
 
-        .submit-btn {
-            font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 6px;
-        }
+    /* 让多张卡之间有间距 */
+    gap: 10px;
 
-        .result-container {
-            padding: 6px;
-            margin-top: 10px;
-        }
+    align-items: center;
+    justify-content: center;
+}
 
-        .error-text {
-            font-size: 12px;
-        }
-
-        .result-group {
-            padding: 6px;
-            margin-top: 6px;
-        }
-
-        .tag-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 3px;
-        }
-    }
-
+@media screen and (max-width: 600px) {
     .card-group {
-        display: flex;
-        flex-wrap: wrap;
-
-        /* 让多张卡之间有间距 */
-        gap: 10px;
-
-        align-items: center;
-        justify-content: center;
-    }
-
-    @media screen and (max-width: 600px) {
-        .card-group {
-            gap: 5px;
-        }
-
-    }
-
-    /* 卡片整体样式 */
-
-    /* 角色名样式 */
-    .character-name {
-        font-size: 12px;
-        color: #666;
-    }
-
-    /* Quad 卡片 */
-    .card-with-info-and-tags {
-        display: flex;
-        /* display: flex; */
-        width: 128px;
-        margin: 5px;
-        text-align: left;
-        padding: 8px 2px;
-        border: 2px solid #ddd;
-        background: #fafafa;
-        flex-direction: column;
-        align-items: center;
-        border-radius: 8px;
-        box-shadow: 2px 2px 5px #0000001a;
-        transition: transform 0.2s ease-in-out;
-
-        box-sizing: content-box;
-    }
-
-
-
-    /* 适配 figcaption 文字 */
-    .card-with-info-and-tags figcaption {
-        white-space: normal;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        font-size: 9px;
-        text-align: center;
-        word-break: normal;
-        line-break: strict;
-        line-height: 1.5;
-        margin: 2px 0;
-        padding: 2px;
-
-        /* 防止被压缩 */
-        flex-shrink: 0;
-    }
-
-
-    @media (max-width: 600px) {
-        .card-with-info-and-tags {
-            width: 100px;
-            padding: 3px;
-        }
-
-        .card-with-info-and-tags figcaption {
-            font-size: 8px;
-        }
-    }
-
-    /* 统一卡片图片样式 */
-    .card-img {
-        width: 34px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 5px;
-    }
-
-    /* Quad 卡片的容器（横向排列） */
-    .card-container {
-        display: flex;
-        flex-wrap: wrap;
-
-        /* 避免 .set-card-container 过长时拉高其他元素 */
-        align-items: flex-start;
-
-        justify-content: flex-start;
-        gap: 0px;
-
-    }
-
-    /* Set 组的容器 */
-    .set-card-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-
-
-        border: 2px dotted #b7c4ff;
-        border-radius: 8px;
-        padding: 5px;
-        margin-top: 5px;
         gap: 5px;
-        width: auto;
     }
 
+}
 
-    /* 3星卡片（渐变淡银色） */
-    .rarity-3 {
-        background: linear-gradient(135deg, #f8f8ff, #d1d1d171);
+/* 卡片整体样式 */
+
+/* 角色名样式 */
+.character-name {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Quad 卡片 */
+.card-with-info-and-tags {
+    display: flex;
+    /* display: flex; */
+    width: 128px;
+    margin: 5px;
+    text-align: left;
+    padding: 8px 2px;
+    border: 2px solid #ddd;
+    background: var(--card-bg);
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px #0000001a;
+    transition: transform 0.2s ease-in-out;
+
+    box-sizing: content-box;
+}
+
+
+
+/* 适配 figcaption 文字 */
+.card-with-info-and-tags figcaption {
+    var(--navbar-text)-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 9px;
+    text-align: center;
+    word-break: normal;
+    line-break: strict;
+    line-height: 1.5;
+    margin: 2px 0;
+    padding: 2px;
+
+    /* 防止被压缩 */
+    flex-shrink: 0;
+}
+
+
+@media (max-width: 600px) {
+    .card-with-info-and-tags {
+        width: 100px;
+        padding: 3px;
     }
 
-    /* 4星卡片（渐变淡金色） */
-    .rarity-4 {
-        background: linear-gradient(135deg, #fff9e171, #fdd99171);
+    .card-with-info-and-tags figcaption {
+        font-size: 8px;
     }
+}
+
+/* 统一卡片图片样式 */
+.card-img {
+    width: 34px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Quad 卡片的容器（横向排列） */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    /* 避免 .set-card-container 过长时拉高其他元素 */
+    align-items: flex-start;
+
+    justify-content: flex-start;
+    gap: 0px;
+
+}
+
+/* Set 组的容器 */
+.set-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 
 
-    .tags-container {
-        display: flex;
-        flex-direction: column;
-        /* 竖向排列 */
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .tag-img {
-        width: 60px;
-        height: auto;
-        margin: 5px 0;
-        /* 竖向间距 */
-    }
+    border: 2px dotted #b7c4ff;
+    border-radius: 8px;
+    padding: 5px;
+    margin-top: 5px;
+    gap: 5px;
+    width: auto;
+}
 
 
+/* 3星卡片（渐变淡银色） */
+.rarity-3 {
+    background: linear-gradient(135deg, var(--rarity-3-color-a), var(--rarity-3-color-b));
+}
+
+/* 4星卡片（渐变淡金色） */
+.rarity-4 {
+    /* background: linear-gradient(135deg, var(--container-bg)9e171, #fdd99171); */
+    background: linear-gradient(135deg, var(--rarity-4-color-a), var(--rarity-4-color-b));
+}
+
+
+.tags-container {
+    display: flex;
+    flex-direction: column;
+    /* 竖向排列 */
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.tag-img {
+    width: 60px;
+    height: auto;
+    margin: 5px 0;
+    /* 竖向间距 */
+}
+
+
+.plain-container {
+    display: flex;
+
+    /* 确保在小屏幕时元素换行 */
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    /* 给图片和文字之间添加间距 */
+    gap: 20px;
+}
+
+.plain-image img {
+    max-width: 90px;
+    height: auto;
+}
+
+.plain-text {
+    /* 文字部分占据剩余空间 */
+    flex: 1;
+}
+
+@media (max-width: 768px) {
     .plain-container {
-        display: flex;
-
-        /* 确保在小屏幕时元素换行 */
-        flex-wrap: wrap;
-
+        /* 小屏幕时改为纵向排列 */
+        flex-direction: column;
         align-items: center;
-
-        /* 给图片和文字之间添加间距 */
-        gap: 20px;
     }
+}
 
-    .plain-image img {
-        max-width: 90px;
-        height: auto;
-    }
+/* 设置外层列表的基本缩进 */
+ul,
+ol {
+    /* 为所有列表（ul 和 ol）设置左缩进 */
+    margin-left: 20px;
 
-    .plain-text {
-        /* 文字部分占据剩余空间 */
-        flex: 1;
-    }
+    /* 为所有列表设置内边距，确保内容不会与边界重叠 */
+    padding-left: 20px;
+}
 
-    @media (max-width: 768px) {
-        .plain-container {
-            /* 小屏幕时改为纵向排列 */
-            flex-direction: column;
-            align-items: center;
-        }
-    }
+/* 设置列表项的样式 */
+li {
+    /* 每个列表项之间的间距 */
+    margin-bottom: 8px;
+}
 
-    /* 设置外层列表的基本缩进 */
-    ul,
-    ol {
-        /* 为所有列表（ul 和 ol）设置左缩进 */
-        margin-left: 20px;
+/* 处理嵌套列表，递归缩进 */
+ul ul,
+ol ol {
+    /* 每层嵌套增加左边缩进 */
+    margin-left: 20px;
 
-        /* 为所有列表设置内边距，确保内容不会与边界重叠 */
-        padding-left: 20px;
-    }
+    /* 每层嵌套增加内边距 */
+    padding-left: 20px;
+}
 
-    /* 设置列表项的样式 */
-    li {
-        /* 每个列表项之间的间距 */
-        margin-bottom: 8px;
-    }
+/* 递归嵌套时可设置不同的符号 */
+ul ul {
+    /* 第二层列表使用圆圈符号 */
+    list-style-type: circle;
+}
 
-    /* 处理嵌套列表，递归缩进 */
-    ul ul,
-    ol ol {
-        /* 每层嵌套增加左边缩进 */
-        margin-left: 20px;
-
-        /* 每层嵌套增加内边距 */
-        padding-left: 20px;
-    }
-
-    /* 递归嵌套时可设置不同的符号 */
-    ul ul {
-        /* 第二层列表使用圆圈符号 */
-        list-style-type: circle;
-    }
-
-    ol ol {
-        /* 第二层有序列表使用字母符号 */
-        list-style-type: lower-alpha;
-    }
+ol ol {
+    /* 第二层有序列表使用字母符号 */
+    list-style-type: lower-alpha;
+}
