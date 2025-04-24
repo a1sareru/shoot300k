@@ -40,45 +40,45 @@
 }
 
 .dark {
-        --bg-color: #1e1e1e;
-        --text-color: #eeeeee;
-        --link-color: #66ccff;
-        --link-hover: #33bbff;
-        --card-bg: #3c3c48;
-        --container-bg: #2c2c2c;
-        --navbar-bg: #111;
-        --navbar-text: #fff;
-        --highlight-calc: #ffb6c1;
-        --highlight-prophecy: #b0e0e6;
-        --button-bg: #d98a00;
-        --button-hover-bg: #ffa500;
-        --clear-btn-bg: #ff5c5c;
-        --clear-btn-hover: #c0392b;
-        --submit-btn-bg: #8b7355;
-        --submit-btn-hover: #a78c7e;
-        --card-title-text: #add8e6;
-        --result-container-border: #444;
-        --result-container-bg: #2c2c2c;
-        --select-ids-bg: #3c3c3c;
-        --select-ids-border: #555;
-        --select-cards-scrollable-bg: #3c3c3c;
-        --select-cards-scrollable-border: #555;
-        --result-container-text: #eee;
-        --rarity-3-color-a: #5b5a5a;
-        --rarity-3-color-b: #80808080;
-        --rarity-4-color-a: #d4af3771;
-        --rarity-4-color-b: #b8860b71;
-        --h2-bg: #4d4747;
-        --h2-border: #ffcc00;
-        --h2-text: #eee;
-        --header-text-shadow: #0000001a;
-        --header-box-shadow: #0000001a;
-        --header-border-bottom: #444;
-        --h3-text: #eee;
-        --h4-text: #aaa;
-        --h5-text: #bbb;
-        --textarea-bg: #444;
-   }
+    --bg-color: #1e1e1e;
+    --text-color: #eeeeee;
+    --link-color: #66ccff;
+    --link-hover: #33bbff;
+    --card-bg: #3c3c48;
+    --container-bg: #2c2c2c;
+    --navbar-bg: #111;
+    --navbar-text: #fff;
+    --highlight-calc: #ffb6c1;
+    --highlight-prophecy: #b0e0e6;
+    --button-bg: #d98a00;
+    --button-hover-bg: #ffa500;
+    --clear-btn-bg: #ff5c5c;
+    --clear-btn-hover: #c0392b;
+    --submit-btn-bg: #8b7355;
+    --submit-btn-hover: #a78c7e;
+    --card-title-text: #bceeff;
+    --result-container-border: #766969;
+    --result-container-bg: #161618;
+    --select-ids-bg: #3c3c3c;
+    --select-ids-border: #555;
+    --select-cards-scrollable-bg: #3c3c3c;
+    --select-cards-scrollable-border: #555;
+    --result-container-text: #eee;
+    --rarity-3-color-a: #5b5a5a;
+    --rarity-3-color-b: #80808080;
+    --rarity-4-color-a: #d4af3771;
+    --rarity-4-color-b: #b8860b71;
+    --h2-bg: #4d4747;
+    --h2-border: #ffcc00;
+    --h2-text: #eee;
+    --header-text-shadow: #0000001a;
+    --header-box-shadow: #0000001a;
+    --header-border-bottom: #444;
+    --h3-text: #eee;
+    --h4-text: #aaa;
+    --h5-text: #bbb;
+    --textarea-bg: #444;
+}
 
 /* 基础重置 */
 * {
@@ -487,7 +487,7 @@ figure img {
 }
 
 figure figcaption {
-    var(--navbar-text)-space: normal;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -636,7 +636,7 @@ button:hover {
     padding: 8px 12px;
 
     /* 允许换行 */
-    var(--navbar-text)-space: pre-wrap;
+    white-space: pre-wrap;
 
     /* 遇到长单词换行 */
     word-break: break-word;
@@ -737,10 +737,10 @@ textarea {
 }
 
 .result-group {
-    border: 1px solid #ddd;
+    border: 1px solid var(--header-border-bottom);
     padding: 8px;
     margin-top: 8px;
-    background: var(--navbar-text);
+    background: var(--container-bg);
 }
 
 .tag-container {
@@ -838,7 +838,7 @@ textarea {
 
 /* 适配 figcaption 文字 */
 .card-with-info-and-tags figcaption {
-    var(--navbar-text)-space: normal;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
 
