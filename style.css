@@ -39,8 +39,7 @@
     --textarea-bg: #f0f0f0;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
+.dark {
         --bg-color: #1e1e1e;
         --text-color: #eeeeee;
         --link-color: #66ccff;
@@ -79,8 +78,7 @@
         --h4-text: #aaa;
         --h5-text: #bbb;
         --textarea-bg: #444;
-    }
-}
+   }
 
 /* 基础重置 */
 * {
