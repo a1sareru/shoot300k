@@ -43,7 +43,24 @@ jobs:
       - name: Download data-last-update file
         run: |
           curl -L https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/data-last-update -o data-last-update
-          curl -L https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/repo-last-update -o repo-last-update
+          curl -L https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/repo-last-update -o repo-last-update-remote
+
+          # Get current date in UTC (yyyy-mm-dd)
+          current_date=$(date -u +"%Y-%m-%d")
+
+          # Read date from downloaded file
+          if [ -f repo-last-update-remote ]; then
+            remote_date=$(cat repo-last-update-remote)
+          else
+            remote_date=""
+          fi
+
+          # Compare and select the latest
+          if [ "$remote_date" \> "$current_date" ]; then
+            echo "$remote_date" > repo-last-update
+          else
+            echo "$current_date" > repo-last-update
+          fi
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
