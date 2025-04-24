@@ -76,6 +76,20 @@
         }
     }
 
+    .result-container-text {
+        color: gray;
+    }
+    
+    .highlight-border-calc {
+        color: pink;
+        font-weight: 600;
+    }
+
+    .highlight-border-prophecy {
+        color: #88dae3;
+        font-weight: 600;
+    }
+
     h2 {
         font-size: 24px;
         color: #333;

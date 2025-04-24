@@ -196,7 +196,7 @@
     <div id="calc" class="tab-content">
       <p>在下面的文本框内输入您所持有卡牌对应的ID列表（以半角逗号分隔），点击按钮即可计算。</p>
       <div class="komejirushi-text">
-        <p>未持有的卡牌（即需要借用的卡牌）将以<span style="color: pink; font-weight: 600;">粉色边框</span>标出。</p>
+        <p>未持有的卡牌（即需要借用的卡牌）将以<span class="highlight-border-calc">粉色边框</span>标出。</p>
         <p>点击结果中的卡牌图片可跳转到卡牌在中文WIKI的对应页面 <del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。</p>
         <p>⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
       </div>
@@ -213,7 +213,7 @@
       </div>
 
       <!-- 计算错误消息 -->
-      <p id="calc-error" class="error-text" style="display: none; color: red;"></p>
+      <p id="calc-error" class="error-text" style="display: none;"></p>
 
       <!-- 计算结果区域 -->
       <h2>计算结果</h2>
@@ -222,7 +222,7 @@
         <del>是贤者就用魔法上网，这是不是很合理</del>
       </p>
       <div id="calc-results" class="result-container">
-        <p style="color: gray;">还没有进行过计算哦</p>
+        <p class="result-container-text">还没有进行过计算哦</p>
       </div>
     </div>
 
@@ -244,7 +244,7 @@
       <br>
       <p>在下面的文本框内输入您所持有卡牌对应的ID列表（以半角逗号分隔），点击按钮即可计算。</p>
       <div class="komejirushi-text">
-        <p>未持有的卡牌（即需要借用的卡牌）将以<span style="color: #88dae3; font-weight: 600;">蓝色边框</span>标出。</p>
+        <p>未持有的卡牌（即需要借用的卡牌）将以<span class="highlight-border-prophecy">蓝色边框</span>标出。</p>
         <p>点击结果中的卡牌图片可跳转到卡牌在中文WIKI的对应页面 <del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。</p>
         <p>⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
       </div>
@@ -261,7 +261,7 @@
       </div>
 
       <!-- 计算错误消息 -->
-      <p id="prophecy-calc-error" class="error-text" style="display: none; color: red;"></p>
+      <p id="prophecy-calc-error" class="error-text" style="display: none;"></p>
 
       <!-- 计算结果区域 -->
       <h2>预言(?)结果</h2>
@@ -270,7 +270,7 @@
         <del>是贤者就用魔法上网，这是不是很合理</del>
       </p>
       <div id="prophecy-calc-results" class="result-container">
-        <p style="color: gray;">还没有进行过预言(?)哦</p>
+        <p class="result-container-text">还没有进行过预言(?)哦</p>
       </div>
     </div>
 
