@@ -188,31 +188,6 @@ function formatCardCaption(card19) {
     return formattedCaption + bannerText;
 }
 
-// 处理图片路径和标题格式化
-function formatCardCaptionForCardManager(card19) {
-    // 解析标题，移除 "【" 并拆分 "】" 以获取卡牌名和角色名
-    const parts = card19.title.replace(/【/g, '').split("】");
-    const cardTitle = parts[0].trim();
-    const cardNamae = parts.length > 1 ? fromNamaeGetName(parts[1].trim()) || "" : "";
-
-    // 计算 ID 显示逻辑（id >= 337 需要 -19）
-    const displayId = card19.id >= 337 ? card19.id - 19 : card19.id;
-
-    // 组合格式化后的标题
-    let formattedTitle = `
-        <a href="https://wiki.biligame.com/mahoyaku/Card_${displayId}" target="_blank" rel="noopener noreferrer">
-            <strong class="card-title">
-                ${cardTitle}
-            </strong>
-        </a>
-    `;
-    if (cardNamae) {
-        formattedTitle += `<br>${cardNamae}`;
-    }
-
-    return `${formattedTitle} | ${displayId}`;
-}
-
 // 加载 CSV 数据
 async function loadCSV(url) {
     try {

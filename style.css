@@ -405,7 +405,7 @@ h5 {
 .card {
     display: inline-block;
     width: 110px;
-    height: 135px;
+    /* height: 135px; */
     margin: 5px;
     text-align: left;
     padding: 8px 2px;
