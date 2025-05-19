@@ -164,7 +164,11 @@ function formatCardCaption(card19) {
     const displayId = card19.id >= 337 ? card19.id - 19 : card19.id;
 
     // 组合格式化后的标题
-    let formattedTitle = `<strong class="card-title">${cardTitle}</strong>`;
+    let formattedTitle = `
+        <a href="https://wiki.biligame.com/mahoyaku/Card_${displayId}" target="_blank" rel="noopener noreferrer">
+            <strong class="card-title">${cardTitle}</strong>
+        </a>
+    `;
     if (cardNamae) {
         formattedTitle += `<br>${cardNamae}`;
     }
@@ -195,7 +199,13 @@ function formatCardCaptionForCardManager(card19) {
     const displayId = card19.id >= 337 ? card19.id - 19 : card19.id;
 
     // 组合格式化后的标题
-    let formattedTitle = `<strong class="card-title">${cardTitle}</strong>`;
+    let formattedTitle = `
+        <a href="https://wiki.biligame.com/mahoyaku/Card_${displayId}" target="_blank" rel="noopener noreferrer">
+            <strong class="card-title">
+                ${cardTitle}
+            </strong>
+        </a>
+    `;
     if (cardNamae) {
         formattedTitle += `<br>${cardNamae}`;
     }
