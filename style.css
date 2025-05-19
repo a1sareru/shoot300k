@@ -593,6 +593,7 @@ button:hover {
 .selectCards-scrollable {
     /* 确保不会遮住 footer */
     max-height: calc(85vh - 160px - 60px - 90px);
+    padding-bottom: 120px;
     overflow-y: auto;
 
     /* 淡灰色背景，柔和过渡 */
