@@ -68,50 +68,85 @@ function formatBannerText(banner, id_19 = 0) {
         || bannerText === "10th"
         // 等魔法使的约定真能活这么久再说👋
     ) { // anniversary
-        let year = bannerText.substring(0, bannerText.length - 2);
+        let year_id = bannerText.substring(0, bannerText.length - 2);
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎈 ${year} 周年`;
+        formattedBanner += `🎈 ${year_id}周年`;
     } else if (bannerText.startsWith("bd_")) { // BD
-        // example: bd_201902
-        let year = bannerText.substring(5, 7);
+        // example: bd_201912
+        let year_full = bannerText.substring(3, 7);
+        let year = year_full.substring(2, 4);
+        let month = bannerText.substring(7, 9);
+        let year_id = year_full - 2019;
+        if (month === "12") {
+            year_id += 1;
+        }
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎂 ${year} 年诞生日`;
+        formattedBanner += `🎂 ${year}年诞生日`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("vd_")) { // VD
         let year = bannerText.substring(5, 7);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🍫 ${year} 年情人节`;
+        formattedBanner += `🍫 ${year}年情人节`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("wd_")) { // WD
         let year = bannerText.substring(5, 7);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🍬 ${year} 年白情`;
+        formattedBanner += `🍬 ${year}年白情`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("af_")) { // AF
         let year = bannerText.substring(5, 7);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🤡 ${year} 年愚人节`;
+        formattedBanner += `🤡 ${year}年愚人节`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("warupurugis_")) { // warupurugis
         let year = bannerText.substring(14, 16);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🧙‍♀️ ${year} 年瓦夜`;
+        formattedBanner += `🧙‍♀️ ${year}年瓦夜`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("jb_")) { // JB
         let year = bannerText.substring(5, 7);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year} 年 Something Gift`;
+        formattedBanner += `💍 ${year}年 Something Gift`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("propose_")) { // JB -propose
         let year = bannerText.substring(10, 12);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year} 年 Something Gift`;
+        formattedBanner += `💍 ${year}年 Something Gift`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("tanabata_")) { // tanabata
         let year = bannerText.substring(11, 13);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎋 ${year} 年七夕`;
+        formattedBanner += `🎋 ${year}年七夕`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("summer_")) { // summer
         let year = bannerText.substring(9, 11);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `⛱️ ${year} 年夏活`;
+        formattedBanner += `⛱️ ${year}年夏活`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else if (bannerText.startsWith("halloween_")) { // halloween
         let year = bannerText.substring(12, 14);
+        let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎃 ${year} 年万圣夜`;
+        formattedBanner += `🎃 ${year}年万圣夜`;
+        formattedBanner += `<br>`;
+        formattedBanner += `[第${year_id}轮]`;
     } else { // not defined
         return "";
     }
