@@ -289,6 +289,7 @@ h5 {
 
 /* 导航栏选项 */
 .nav-item {
+    user-select: none;
     cursor: pointer;
     padding: 10px 15px;
     color: var(--navbar-text);

@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     navItems.forEach(item => {
         item.addEventListener("click", function() {
+            if (this.id === "toggle-theme") return; // 👈 跳过主题按钮
+
             // 取消所有导航项的 active 状态
             navItems.forEach(nav => nav.classList.remove("active"));
 
