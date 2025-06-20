@@ -8,38 +8,39 @@ function renderCards(cards, selectedIds = new Set()) {
         return;
     }
     cardListEl.innerHTML = '';
-    cards.forEach(card => {
-        const cardEl = document.createElement('div');
-        cardEl.className = 'card';
-        cardEl.dataset.id = card.id;
+    cards
+        .slice() // 可选：防止修改原数组
+        .sort((a, b) => b.id - a.id) // 按 id 降序排序
+        .forEach(card => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'card';
+            cardEl.dataset.id = card.id;
 
-        if (card.rarity.trim() === "4") {
-            cardEl.classList.add('gold-border');
-        } else if (card.rarity.trim() === "3") {
-            cardEl.classList.add('silver-border');
-        }
+            if (card.rarity.trim() === "4") {
+                cardEl.classList.add('gold-border');
+            } else if (card.rarity.trim() === "3") {
+                cardEl.classList.add('silver-border');
+            }
 
-        // 还原选中状态
-        if (selectedIds.has(card.id)) {
-            cardEl.classList.add("selected");
-        }
+            if (selectedIds.has(card.id)) {
+                cardEl.classList.add("selected");
+            }
 
-        // 设置卡牌内容（图片和标题）
-        cardEl.innerHTML = `
-            <figure>
-              <img src="public/images/cards/${card.id}.jpg"
-                  alt="${card.title}"
-                  onerror="this.src='';" />
-              <figcaption>
-                ${formatCardCaption(card)}
-              </figcaption>
-            </figure>
-          `;
-        cardEl.addEventListener('click', () => {
-            cardEl.classList.toggle('selected');
+            cardEl.innerHTML = `
+          <figure>
+            <img src="public/images/cards/${card.id}.jpg"
+                alt="${card.title}"
+                onerror="this.src='';" />
+            <figcaption>
+              ${formatCardCaption(card)}
+            </figcaption>
+          </figure>
+        `;
+            cardEl.addEventListener('click', () => {
+                cardEl.classList.toggle('selected');
+            });
+            cardListEl.appendChild(cardEl);
         });
-        cardListEl.appendChild(cardEl);
-    });
 }
 
 // 设置按钮功能
