@@ -402,6 +402,7 @@ if __name__ == "__main__":
     # Save the results to the output directory
     cnt = 0
     full_solution = {}
+    full_solution_bwiki = {}
     quint_set = set()
     for color_pair in questions:
         color_1, color_2 = color_pair
@@ -417,14 +418,19 @@ if __name__ == "__main__":
                         quint_set.add(tmp_quint)
                 if len(tmp_card0_set) == 0:
                     continue
-                full_solution[cnt] = {
+                current_solution = {
                     "quad": quad,
                     "card0s": tmp_card0_set,
-                    "tags": tag_pair
+                    "colors": color_pair_as_key
                 }
+                full_solution_bwiki[cnt] = current_solution.copy()
+                current_solution['tags'] = tag_pair;
+                full_solution[cnt] = current_solution
                 cnt += 1
     print(f"Total solutions (quint): {len(quint_set)}")
 
     os.makedirs(args.output_dir, exist_ok=True)
     with open(f"{args.output_dir}/full_solution.json", "w") as f:
         json.dump(full_solution, f)
+    with open(f"{args.output_dir}/full_solution_bwiki.json", "w") as f:
+        json.dump(full_solution_bwiki, f)
