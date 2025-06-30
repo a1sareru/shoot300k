@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const quadCandidate = fullSolutionData[solution]["quad"];
                 const card0Candidates = fullSolutionData[solution]["card0s"];
                 const tags = fullSolutionData[solution]["tags"];
+                const colors = fullSolutionData[solution]["colors"];
 
                 if (!quadCandidate || !card0Candidates) continue; // 跳过空数据
 
@@ -75,7 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         results.push({
                             quad: quadCandidate,
                             dset: card0Candidates,
-                            dset_tag: tags
+                            dset_tag: tags,
+                            colors: colors
                         });
                     }
                 }
@@ -87,7 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         results.push({
                             quad: quadCandidate,
                             dset: card0Candidates,
-                            dset_tag: tags
+                            dset_tag: tags,
+                            colors: colors
                         });
                     }
                 }
@@ -99,7 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             results_weak.push({
                                 quad: quadCandidate,
                                 dset: card0Candidates,
-                                dset_tag: tags
+                                dset_tag: tags,
+                                colors: colors
                             });
                         }
                     }
@@ -107,7 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         results_weak.push({
                             quad: quadCandidate,
                             dset: card0Candidates,
-                            dset_tag: tags
+                            dset_tag: tags,
+                            colors: colors
                         });
                     }
                 }

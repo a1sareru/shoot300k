@@ -277,6 +277,8 @@ async function renderCalcResults(calcResults, results, ids19, highlightColor = "
     results.forEach(async group => {
         const groupDiv = document.createElement("div");
         groupDiv.classList.add("result-group");
+        console.log("group.colors: ", group.colors);
+        group.colors.split(',').forEach(id => groupDiv.classList.add('s30k-res-color-' + id.trim()));
 
         const cardContainer = document.createElement("div");
         cardContainer.classList.add("card-container");
