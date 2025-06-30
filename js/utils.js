@@ -271,13 +271,13 @@ async function renderCalcResults(calcResults, results, ids19, highlightColor = "
 
     calcResults.innerHTML += `
         <div class="s30k-color-filter-buttons">
-            只显示包含
+            只显示特性颜色包含
             <button data-filter="s30k-res-color-1" style="background-color:#f1c40f;">白</button>
             <button data-filter="s30k-res-color-2" style="background-color:#e74c3c;">红</button>
             <button data-filter="s30k-res-color-3" style="background-color:#2ecc71;">绿</button>
             <button data-filter="s30k-res-color-4" style="background-color:#3498db;">蓝</button>
             <button data-filter="s30k-res-color-5" style="background-color:#9b59b6;">紫</button>
-            的卡牌；或者
+            的卡组；或者
             <button data-filter="all" style="background-color:#95a5a6;">显示全部</button>
         </div>`;
 
