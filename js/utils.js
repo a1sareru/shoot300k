@@ -269,6 +269,31 @@ async function renderCalcResults(calcResults, results, ids19, highlightColor = "
         return;
     }
 
+    calcResults.innerHTML += `
+        <div class="s30k-color-filter-buttons">
+            只显示包含
+            <button data-filter="s30k-res-color-1" style="background-color:#f1c40f;">白</button>
+            <button data-filter="s30k-res-color-2" style="background-color:#e74c3c;">红</button>
+            <button data-filter="s30k-res-color-3" style="background-color:#2ecc71;">绿</button>
+            <button data-filter="s30k-res-color-4" style="background-color:#3498db;">蓝</button>
+            <button data-filter="s30k-res-color-5" style="background-color:#9b59b6;">紫</button>
+            的卡牌；或者
+            <button data-filter="all" style="background-color:#95a5a6;">显示全部</button>
+        </div>`;
+
+    document.querySelectorAll('.s30k-color-filter-buttons button').forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.getAttribute('data-filter');
+            document.querySelectorAll('.result-group').forEach(group => {
+            if (filter === 'all') {
+                group.style.display = '';
+            } else {
+                group.style.display = group.classList.contains(filter) ? '' : 'none';
+            }
+            });
+        });
+    });
+
     const cards19 = await fetchAndParseCards();
     const cardMap19 = new Map(cards19.map(card => [String(card.id), card]));
     const ids19Set = new Set(ids19); // 用户持有的卡片
