@@ -1,5 +1,14 @@
 let isFilteringSSR = false; // 标记是否处于 SSR 过滤模式
 
+// 更新已选卡片 ID 的显示
+function updateSelectedIdsDisplay() {
+    const selectedCards = document.querySelectorAll(".card.selected");
+    const selectedIds = Array.from(selectedCards).map(card => card.dataset.id);
+
+    const selectedIdsEl = document.getElementById("selected-ids");
+    selectedIdsEl.innerHTML = `${selectedIds.join(",")}`;
+}
+
 // 渲染卡牌列表到页面
 function renderCards(cards, selectedIds = new Set()) {
     const cardListEl = document.getElementById('card-list');
@@ -38,6 +47,7 @@ function renderCards(cards, selectedIds = new Set()) {
         `;
             cardEl.addEventListener('click', () => {
                 cardEl.classList.toggle('selected');
+                updateSelectedIdsDisplay();
             });
             cardListEl.appendChild(cardEl);
         });
@@ -77,6 +87,7 @@ function toggleAllSR() {
 
     // 根据状态切换按钮文本
     toggleButton.textContent = allSelected ? "选中全部SR" : "去除全部SR";
+    updateSelectedIdsDisplay();
 }
 
 function restoreSelectedCards(selectedIds) {
@@ -85,6 +96,7 @@ function restoreSelectedCards(selectedIds) {
             card.classList.add("selected"); // ✅ 重新标记选中
         }
     });
+    updateSelectedIdsDisplay();
 }
 
 function filterSSR() {
@@ -132,5 +144,25 @@ function clearAllSelectedCards() {
         card.classList.remove("selected");
     });
 
-    document.getElementById("selected-ids").innerHTML = ""; // 清空已选 ID 显示
+    updateSelectedIdsDisplay();
 }
+
+// 复制当前框内结果
+document.getElementById('copy-result').addEventListener('click', () => {
+    const text = document.getElementById('selected-ids').innerText;
+    const ids = text.match(/\d+(,\s*\d+)*/); // 提取数字 ID 串
+
+    if (!ids) {
+        alert('没有选中的卡牌');
+        return;
+    }
+
+    navigator.clipboard.writeText(ids[0])
+        .then(() => {
+            alert('结果已复制到剪贴板');
+        })
+        .catch(err => {
+            alert('复制失败，请手动复制');
+            console.error(err);
+        });
+});
