@@ -28,7 +28,7 @@ function renderCards(cards, selectedIds = new Set()) {
 
             cardEl.innerHTML = `
           <figure>
-            <img src="public/images/cards/${card.id}.jpg"
+            <img src="public/images/card_icons/Card_icon_${card.id >= 337 ? card.id - 19 : card.id}.png"
                 alt="${card.title}"
                 onerror="this.src='';" />
             <figcaption>

@@ -485,8 +485,8 @@ figure {
 }
 
 figure img {
-    width: 34px;
-    height: 60px;
+    width: 80px;
+    height: auto;
 }
 
 figure figcaption {
@@ -872,8 +872,8 @@ textarea {
 
 /* 统一卡片图片样式 */
 .card-img {
-    width: 34px;
-    height: 60px;
+    width: 80px;
+    height: auto;
     object-fit: cover;
     border-radius: 5px;
 }

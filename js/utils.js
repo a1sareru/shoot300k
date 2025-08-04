@@ -379,7 +379,7 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
     // 计算显示时的ID
     const displayId = id19 >= 337 ? id19 - 19 : id19;
 
-    const cardImgSrc = `public/images/cards/${id19}.jpg`;
+    const cardImgSrc = `public/images/card_icons/Card_icon_${displayId}.png`;
     const cardLink = `https://wiki.biligame.com/mahoyaku/Card_${displayId}`;
 
     // 获取稀有度（rarity），确保它是 3 或 4
