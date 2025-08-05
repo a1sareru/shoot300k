@@ -1,9 +1,16 @@
+let currentLangDict = {};
+
+function getI18n(key, fallback = '') {
+  return currentLangDict[key] || fallback;
+}
+
 async function loadLanguage(lang) {
   try {
     const res = await fetch(`lang/${lang}.json`);
     if (!res.ok) throw new Error("语言包加载失败");
 
     const dict = await res.json();
+    currentLangDict = dict;
 
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
@@ -16,6 +23,11 @@ async function loadLanguage(lang) {
         el.innerHTML = value;
       }
     });
+
+    // 更新动态按钮等文字
+    if (typeof updateDynamicText === 'function') {
+      updateDynamicText();
+    }
   } catch (e) {
     console.error(e);
   }
