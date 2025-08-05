@@ -20,11 +20,11 @@
 <body>
   <!-- 固定顶部的导航栏 -->
   <nav class="navbar">
-    <a class="nav-item" data-target="topPage">✨ Top</a>
-    <a class="nav-item" data-target="selectCards">🎴 持有卡牌</a>
-    <a class="nav-item" data-target="calc">🧮 卡组计算</a>
-    <a class="nav-item" data-target="prophecy">📜 予言書(仮)</a>
-    <a class="nav-item" data-target="about">🤫 关于</a>
+    <a class="nav-item" data-target="topPage" data-i18n="top.nav-topPage">✨ 首页</a>
+    <a class="nav-item" data-target="selectCards" data-i18n="top.nav-selectCards">🎴 持有卡牌</a>
+    <a class="nav-item" data-target="calc" data-i18n="top.nav-calc">🧮 卡组计算</a>
+    <a class="nav-item" data-target="prophecy" data-i18n="top.nav-prophecy">📜 予言書(仮)</a>
+    <a class="nav-item" data-target="about" data-i18n="top.nav-about">🤫 关于</a>
     <a class="nav-item" id="toggle-theme">☀️/🌙</a>
   </nav>
 
@@ -32,83 +32,28 @@
   <div class="container">
     <!-- Top -->
     <div id="topPage" class="tab-content">
-      <p id="repo-last-updated" style="text-align: right;" class="komejirushi-text">
+      <p id="repo-last-updated" style="text-align: right;" class="komejirushi-text" data-i18n="top.repo-last-updated">
         ※ 本站最后更新：加载中…
       </p>
-      <p><strong>【重要提醒】境内用户可以考虑使用本站的 BWIKI 版本： <a class="my-links"
-            href="https://wiki.biligame.com/mahoyaku/Shoot300k">Shoot300k@BWIKI</a></strong><ul>
-          <li><a class="my-links"
-            href="https://wiki.biligame.com/mahoyaku/Shoot300k">Shoot300k@BWIKI</a> 的功能与本站基本一致，但在境内加载时更流畅 <del>无需魔法上网</del></li>
-          <li>使用前<strong>请务必通读</strong>站内的 <a class="my-links"
-            href="https://wiki.biligame.com/mahoyaku/Shoot300k/使用说明及免责条款">使用说明</a></li>
-          </ul>
-      </p>
-      <hr>
-      <p>
-        这是某位懒惰贤者为自己开发的双色银卡组配卡助手。
-      </p>
-      <p><strong>请尽可能在电脑/平板等屏幕较大的设备的浏览器中访问本站点！</strong><br>
-        只做了最低程度的多端适配→不推荐在移动端使用
-        <del>真的要在小屏幕上手动选卡吗（闭眼）</del><br>
-        站点功能全部由浏览器运行，后台不会存储您的任何数据
-        <del>因为根本没有后台</del>
-      </p>
-      <h2>🍎 使用方法</h2>
+      <div data-i18n="top.top-info">
+      </div>
+      <h2 data-i18n="top.h2-usage"></h2>
       <p></p>
-      <ul>
-        <li>首先，在「持有卡牌」页面，通过选中卡牌，生成您的「卡牌库存」字符串。</li>
-        <li>然后，前往「卡组计算」页面，输入导出的「卡牌库存」字符串，进行计算。</li>
-      </ul>
+      <ul data-i18n="top.h2-usage-content"></ul>
       </p>
       <br>
-      <p>
-        目前，各<strong>计算结果页</strong>已标注以下类型的卡牌：
-      <ul>
-        <li><strong>🪨恒常</strong></li>
-        <li><strong>定时限定</strong>：
-          🎈周年、🎂诞生日、🍫情人节 <span class="komejirushi-text">(2.14)</span>、
-          🍬白情 <span class="komejirushi-text">(3.14)</span>、
-          🤡愚人节 <span class="komejirushi-text">(4.1)</span>、
-          🧙‍♀️瓦尔普吉斯之夜 <span class="komejirushi-text">(4.30-5.1)</span>、
-          💍Something Gift <span class="komejirushi-text">(6月上旬)</span>、
-          🎋七夕 <span class="komejirushi-text">(7.7)</span>、
-          ⛱️夏活 <span class="komejirushi-text">(8月)</span>、
-          🎃万圣夜 <span class="komejirushi-text">(10.31)</span>
-        </li>
-        <li><strong>特殊主题的不定时限定</strong>：
-          🎀三丽鸥联动 <span class="komejirushi-text">(友達のいる世界へ)</span>、
-          🌱Caulis <span class="komejirushi-text">(根茎/爬塔)</span>、
-          🥳魔法趴 <span class="komejirushi-text">(魔法使いパーティ)</span>、
-          🎻奏鸣曲 <span class="komejirushi-text">(ソナチネ/双人活动)</span>
-        </li>
-         <li><strong>❓不在恒常池</strong>：
-          其他限定活动、
-          不进卡池的活动报酬卡等
-        </li>
-      </ul>
+      <p data-i18n="top.card-annotation-note">
       </p>
-      <h2>⚠️ 注意事项</h2>
-      <p>
-        本页面使用了coly inc.的『魔法使的约定』的图像。禁止转载和发布相关图像。© coly
-      </p>
-      <ul>
-        <li><strong>卡牌稀有度</strong>：仅考虑 SSR 和 SR；详情→请参阅「关于」页面；</li>
-        <li><strong>数据来源</strong>：<span class="spoiler">都说了相信的心就是贤者的魔法你怎么就不信呢😠</span> + 开发者人工补充💦；</li>
-        <li><strong>卡牌序号</strong>：已与 <a class="my-links"
-            href="https://wiki.biligame.com/mahoyaku">魔法使的约定WIKI_BWIKI_哔哩哔哩</a> 及 <a class="my-links"
-            href="https://gamerch.com/wizard-promise">魔法使いの約束攻略Wiki | Gamerch</a> 对齐；</li>
-        <li><strong>更新频率</strong>：Caulis活动前必更新；其余时段不定期更新
-          <span id="data-last-updated" class="komejirushi-text">（上次更新：加载中…）</span>；
-        </li>
-        <li><strong>报错/建议</strong>：如有错漏报告或其他建议（🙇‍♀️🙇‍♀️🙇‍♀️🫶🫶🫶），欢迎联系开发者 🙌 🙌 🙌 <ul>
-            <li>联系方式→请参阅「关于」页面。</li>
-          </ul>
-        </li>
-      </ul>
+      <h2 data-i18n="top.h2-caution"></h2>
+      <div data-i18n="top.h2-caution-content"></div>
+      <div data-i18n="top.content-below-may-not-translated"></div>
       <h2>📣 记事</h2>
+      <p><span style="font-weight: 900;">[2025-08-05]</span><br>
+        为非功能部分添加了i18n支持。
+      </p>
       <p><span style="font-weight: 900;">[2025-08-04]</span><br>
-        将卡牌图片更换为辨识度更佳的 icon 版。<br>
-        将选卡界面改为即点即显示。
+        卡牌图片更换为辨识度更佳的 icon 版。<br>
+        选卡界面改为即点即显示。
       </p>
       <p><span style="font-weight: 900;">[2025-07-21]</span><br>
         数据更新频率从月更改为不定期更新。
@@ -214,23 +159,7 @@
     <div id="selectCards" class="tab-content" style="margin: 10px;">
       <div class="selectCards-header">
         <div class="submit-result-container">
-          <div class="komejirushi-text">
-            <p>⚠️ 注意：
-            <ol>
-              <li>
-                「只显示SSR」按钮会清空已选的SR，请慎重操作。
-                <del>如果使用该功能，则推荐完全不考虑SR。</del>
-              </li>
-              <li>
-                建议妥善保存所使用的字符串。
-              </li>
-              <li>
-                点击卡牌标题即可跳转到卡牌在中文WIKI的对应页面
-                <del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。
-              </li>
-            </ol>
-            </p>
-          </div>
+          <div class="komejirushi-text" data-i18n="cardmanager.description"></div>
           <button id="clear-selection" class="clear-btn">清空选择</button>
           <button id="toggle-sr">选中全部SR</button>
           <button id="filter-ssr">只显示SSR</button>
@@ -248,11 +177,10 @@
 
     <!-- 卡组计算 -->
     <div id="calc" class="tab-content">
-      <p>在下面的文本框内输入您所持有卡牌对应的ID列表（以半角逗号分隔），点击按钮即可计算。</p>
+      <p data-i18n="calc-desc-line1"></p>
       <div class="komejirushi-text">
-        <p>未持有的卡牌（即需要借用的卡牌）将以<span class="highlight-border-calc">粉色边框</span>标出。</p>
-        <p>点击结果中的卡牌图片/卡牌标题即可跳转到卡牌在中文WIKI的对应页面 <del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。</p>
-        <p>⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
+        <p data-i18n="calc-desc-line2"></p>
+        <span data-i18n="calc-desc-line3"></span>
       </div>
 
       <div>
@@ -270,13 +198,11 @@
       <p id="calc-error" class="error-text" style="display: none;"></p>
 
       <!-- 计算结果区域 -->
-      <h2>计算结果</h2>
-      <p class="komejirushi-text">
-        😼🪄 如果下方既没有出现卡组信息，也没有出现文字提示，则建议换用魔法上网后重试！<br>
-        <del>是贤者就用魔法上网，这是不是很合理</del>
+      <h2 data-i18n="calc-results-title"></h2>
+      <p class="komejirushi-text" data-i18n="magic-net-hint-zh">
       </p>
       <div id="calc-results" class="result-container">
-        <p class="result-container-text">还没有进行过计算哦</p>
+        <p class="result-container-text" data-i18n="calc-results-original-text"></p>
       </div>
     </div>
 
@@ -287,22 +213,16 @@
         <div class="plain-image">
           <img src="public/images/miscs/kanryou.png" alt="予言書：完了" />
         </div>
-        <div class="plain-text">
-          <p>没有在「卡组计算」页面获得结果的贤者酱，可参考本页结果，进行合理的抽卡规划。</p>
-          <p>已在「卡牌计算」页面获得结果的贤者酱，本页面只显示缺少 2 张卡牌的情况。如果缺少 1-2 张卡牌的情况均无解，默认将显示缺少 3 张卡牌的情况 <del>是不是很贴心</del>。</p>
-          <p>由于该功能难以充分测试，请谨慎使用 <del>以防浏览器爆炸</del>。有任何问题欢迎联系开发者 🙇‍♀️🙇‍♀️🙇‍♀️</p>
-        </div>
+        <div class="plain-text" data-i18n="prophecy-special-note"></div>
       </div>
       <!-- 分割线 -->
       <hr>
       <br>
-      <p>在下面的文本框内输入您所持有卡牌对应的ID列表（以半角逗号分隔），点击按钮即可计算。</p>
+      <p data-i18n="calc-desc-line1"></p>
       <div class="komejirushi-text">
-        <p>未持有的卡牌（即需要借用的卡牌）将以<span class="highlight-border-prophecy">蓝色边框</span>标出。</p>
-        <p>点击结果中的卡牌图片/卡牌标题即可跳转到卡牌在中文WIKI的对应页面 <del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。</p>
-        <p>⚠️ 请不要过于信赖本页面对输入的缓存；建议妥善保存所使用的字符串。</p>
+        <p data-i18n="prophecy-desc-line2"></p>
+        <span data-i18n="calc-desc-line3"></span>
       </div>
-
       <div>
         <!-- 用户输入框 -->
         <div>
@@ -318,13 +238,10 @@
       <p id="prophecy-calc-error" class="error-text" style="display: none;"></p>
 
       <!-- 计算结果区域 -->
-      <h2>预言(?)结果</h2>
-      <p class="komejirushi-text">
-        😼🪄 如果下方既没有出现卡组信息，也没有出现文字提示，则建议换用魔法上网后重试！<br>
-        <del>是贤者就用魔法上网，这是不是很合理</del>
-      </p>
+      <h2 data-i18n="calc-results-title"></h2>
+      <p class="komejirushi-text" data-i18n="magic-net-hint-zh"></p>
       <div id="prophecy-calc-results" class="result-container">
-        <p class="result-container-text">还没有进行过预言(?)哦</p>
+        <p class="result-container-text" data-i18n="prophcy-results-original-text"></p>
       </div>
     </div>
 
@@ -333,15 +250,12 @@
     <div id="about" class="tab-content">
       <h2>⚖️ Disclaimer</h2>
 
-      <p>本工具仅供个人研究与学习使用，任何使用本工具的行为均应符合适用法律法规。开发者不对任何用户的使用方式负责，亦不承担任何由此引发的法律责任。</p>
-      <p>本工具不存储、不传播任何受版权保护的内容。如果本工具被认为侵犯了您的合法权益，请通过电子邮件联系我们，我们将立即停止相关内容的提供并进行删除。</p>
-      <p>开发者放弃对此工具的所有权利，包括但不限于知识产权、商业利益和后续维护责任。本工具以“原样”提供，不保证其准确性、完整性或适用性，使用者需自行承担所有风险。</p>
+      <p data-i18n="disclaimer.text"></p>
 
       <h2>📮 Contact us</h2>
+      <span data-i18n="contact-us"></span>
 
-      <p><a class="my-links" href="mailto:kmbk.kr.dev@outlook.jp">kmbk.kr.dev[AT]outlook.jp</a></p>
-      <p>※ 除报错、建议和提问外，也欢迎其他主题的邮件。</p>
-
+      <div data-i18n="top.content-below-may-not-translated"></div>
       <h2>⚓️ Furthermore</h2>
 
       <p>本站点将来可能增加的功能：暂无。 <del>欢迎许愿</del></p>
@@ -496,7 +410,36 @@
   <footer class="bottom-bar text-center">
     <p>© 2025 とある名無し賢者. All rights waived.</p>
   </footer>
+  <style>
+    .lang-text {
+      padding: 1px 4px;
+      border-radius: 4px;
+      line-height: 1.4em;
+    }
 
+    .lang-text.active {
+      background-color: #ffa5a1;
+    }
+  </style>
+  <div id="lang-switcher" style="
+  position: fixed;
+  top: 80px;
+  left: 8px;
+  z-index: 9999;
+  font-size: 14px;
+  background: ghostwhite;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 2px 4px;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+">
+    <span class="lang-text" data-lang="zh" style="cursor: pointer;">🇨🇳</span>
+    <span class="lang-text" data-lang="ja" style="cursor: pointer;">🇯🇵</span>
+  </div>
 </body>
 
 <script src="js/themeToggle.js" defer></script>
@@ -504,9 +447,9 @@
 <script src="js/navigation.js" defer></script>
 <script src="js/lastUpdate.js" defer></script>
 <script src="js/cardManager.js" defer></script>
-<script src="js/interaction.js" defer></script>
 <script src="js/calc.js" defer></script>
 <script src="js/prophecy.js" defer></script>
+<script src="js/i18n.js" defer></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 </html>
