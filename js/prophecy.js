@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const cardInput = document.getElementById("prophecy-card-input");
     const submitCalc = document.getElementById("submit-prophecy-calc");
-    const calcError = document.getElementById("prophecy-calc-error");
+    const calcErrorInvalidInput = document.getElementById("prophecy-calc-error-invalid-input");
+    const calcErrorLoadFailure = document.getElementById("prophecy-calc-error-load-failure");
     const calcResults = document.getElementById("prophecy-calc-results");
 
     // 尝试从 localStorage 读取上次的输入
@@ -21,11 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 检查是否为合法的整数列表
         if (!/^\d+(,\d+)*$/.test(inputText)) {
-            calcError.textContent = "请输入合法的卡牌ID列表，使用英文逗号分隔";
-            calcError.style.display = "block";
+            calcErrorInvalidInput.textContent = getI18n("calc.error.invalid-input");
+            calcErrorInvalidInput.style.display = "block";
             return;
         }
-        calcError.style.display = "none";
+        calcErrorInvalidInput.style.display = "none";
 
         // 在提交时更新 localStorage
         localStorage.setItem("prophecyCardInput", inputText);
@@ -123,10 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 results = results.concat(results_weak);
             }
 
-            renderCalcResults(calcResults, results, filteredIds19, "#88dae3", "无能为力喏……加油攒石头抽卡吧贤者酱！");
+            renderCalcResults(calcResults, results, filteredIds19, "#88dae3", getI18n("prophecy.no-result"));
         } catch (error) {
-            calcError.textContent = "计算失败，请检查输入或稍后重试";
-            calcError.style.display = "block";
+            calcErrorLoadFailure.textContent = getI18n("calc.error.load-failure");
+            calcErrorLoadFailure.style.display = "block";
             console.error(error);
         }
     }

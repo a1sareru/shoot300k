@@ -186,16 +186,18 @@
       <div>
         <!-- 用户输入框 -->
         <div>
-          <textarea class="string-input-area" id="card-input" placeholder="输入卡牌ID列表，例如：488,879,495,794,167,71"
+          <textarea class="string-input-area" id="card-input" placeholder="" data-i18n="input.placeholder"
             rows="3"></textarea>
         </div>
 
         <!-- 提交按钮 -->
-        <button id="submit-calc" class="submit-btn">计算卡组</button>
+        <button id="submit-calc" class="submit-btn" data-i18n="btn.calc"></button>
       </div>
 
       <!-- 计算错误消息 -->
-      <p id="calc-error" class="error-text" style="display: none;"></p>
+      <p id="calc-error-invalid-input" class="error-text" style="display: none" data-i18n="calc.error.invalid-input">
+      </p>
+      <p id="calc-error-load-faliure" class="error-text" style="display: none" data-i18n="calc.error.load-failure"></p>
 
       <!-- 计算结果区域 -->
       <h2 data-i18n="calc-results-title"></h2>
@@ -226,16 +228,19 @@
       <div>
         <!-- 用户输入框 -->
         <div>
-          <textarea class="string-input-area" id="prophecy-card-input" placeholder="输入卡牌ID列表，例如：488,879,495,794,167,71"
-            rows="3"></textarea>
+          <textarea class="string-input-area" id="prophecy-card-input" placeholder=""
+            data-i18n="input.placeholder"></textarea>
         </div>
 
         <!-- 提交按钮 -->
-        <button id="submit-prophecy-calc" class="submit-btn">预言(?)卡组</button>
+        <button id="submit-prophecy-calc" class="submit-btn" data-i18n="btn.prophecy">预言(?)卡组</button>
       </div>
 
       <!-- 计算错误消息 -->
-      <p id="prophecy-calc-error" class="error-text" style="display: none;"></p>
+      <p id="prophecy-calc-error-invalid-input" class="error-text" style="display: none;"
+        data-i18n="calc.error.invalid-input"></p>
+      <p id="prophecy-calc-error-load-failure" class="error-text" style="display: none;"
+        data-i18n="calc.error.load-failure"></p>
 
       <!-- 计算结果区域 -->
       <h2 data-i18n="calc-results-title"></h2>

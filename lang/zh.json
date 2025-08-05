@@ -33,5 +33,20 @@
     "btn.copy": "复制结果",
     "alert.no-selection": "没有选中的卡牌",
     "alert.copy-success": "结果已复制到剪贴板",
-    "alert.copy-fail": "复制失败，请手动复制"
+    "alert.copy-fail": "复制失败，请手动复制",
+    "input.placeholder": "输入卡牌ID列表，例如：488,879,495,794,167,71",
+    "btn.calc": "计算卡组",
+    "result.filter.label": "只显示特性颜色包含",
+    "result.filter.white": "白",
+    "result.filter.red": "红",
+    "result.filter.green": "绿",
+    "result.filter.blue": "蓝",
+    "result.filter.purple": "紫",
+    "result.filter.show-all.bridge": " 或者 ",
+    "result.filter.show-all": "显示全部",
+    "calc.error.invalid-input": "请输入合法的卡牌ID列表，使用英文逗号分隔",
+    "calc.error.load-failure": "计算失败，可能是网络问题（并不知道怎么解决）",
+    "calc.no-result": "看起来暂时还配不出卡组喏……试试吾等的「予言書（仮）」如何～！",
+    "btn.prophecy": "预言(?)卡组",
+    "prophecy.no-result": "无能为力喏……加油攒石头抽卡吧贤者酱！"
 }

@@ -33,5 +33,20 @@
   "btn.copy": "結果をコピー",
   "alert.no-selection": "選択されたカードがありません",
   "alert.copy-success": "結果をクリップボードにコピーしました",
-  "alert.copy-fail": "コピーに失敗しました。手動でコピーしてください"
+  "alert.copy-fail": "コピーに失敗しました。手動でコピーしてください",
+  "input.placeholder": "カードの番号のリストを入力してください。例：488,879,495,794,167,71",
+  "btn.calc": "パーティ計算",
+  "result.filter.label": "特性カラーが含まれるパーティのみ表示",
+  "result.filter.white": "白",
+  "result.filter.red": "赤",
+  "result.filter.green": "緑",
+  "result.filter.blue": "青",
+  "result.filter.purple": "紫",
+  "result.filter.show-all.bridge": " または ",
+  "result.filter.show-all": "すべて表示",
+  "calc.error.invalid-input": "有効なカードIDリストを半角カンマで区切って入力してください",
+  "calc.error.load-failure": "計算に失敗しました。ネットワークの問題かもしれません（解決方法はわかりません）",
+  "calc.no-result": "今のところ組めるパーティが見つかりませんでした……「パーティ予言」に行ってみてね！",
+  "btn.prophecy": "パーティ予言",
+  "prophecy.no-result": "予言し得ず……マナ石を貯えて、ガチャを引く時を待たんの、賢者ちゃん！"
 }

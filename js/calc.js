@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const cardInput = document.getElementById("card-input");
     const submitCalc = document.getElementById("submit-calc");
-    const calcError = document.getElementById("calc-error");
+    const calcErrorInvalidInput = document.getElementById("calc-error-invalid-input");
+    const calcErrorLoadFailure = document.getElementById("calc-error-load-failure");
     const calcResults = document.getElementById("calc-results");
 
     // 尝试从 localStorage 读取上次的输入
@@ -21,11 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 检查是否为合法的整数列表
         if (!/^\d+(,\d+)*$/.test(inputText)) {
-            calcError.textContent = "请输入合法的卡牌ID列表，使用英文逗号分隔";
-            calcError.style.display = "block";
+            calcErrorInvalidInput.textContent = getI18n("calc.error.invalid-input");
+            calcErrorInvalidInput.style.display = "block";
             return;
         }
-        calcError.style.display = "none";
+        calcErrorInvalidInput.style.display = "none";
 
         // 在提交时更新 localStorage
         localStorage.setItem("cardInput", inputText);
@@ -88,11 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // 渲染计算结果
-            renderCalcResults(calcResults, results, filteredIds19, "pink", "看起来暂时还配不出卡组喏……试试吾等的「予言書（仮）」如何～！");
+            renderCalcResults(calcResults, results, filteredIds19, "pink", getI18n("calc.no-result"));
         } catch (error) {
-            document.getElementById("calc-error").textContent = "计算失败，请检查输入或稍后重试";
-            document.getElementById("calc-error").style.display = "block";
+            document.getElementById("calc-error-load-failure").textContent = getI18n("calc.error.load-failure");
+            document.getElementById("calc-error-load-failure").style.display = "block";
             console.error(error);
         }
     }
+
+
 });
