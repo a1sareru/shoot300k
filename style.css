@@ -7,6 +7,7 @@
     --container-bg: #fff;
     --navbar-bg: #333;
     --navbar-text: white;
+    --highlight-main: #615fac;
     --highlight-calc: pink;
     --highlight-prophecy: #88dae3;
     --button-bg: #f49907;
@@ -48,6 +49,7 @@
     --container-bg: #2c2c2c;
     --navbar-bg: #111;
     --navbar-text: #fff;
+    --highlight-main: #b39cdc;
     --highlight-calc: #ffb6c1;
     --highlight-prophecy: #b0e0e6;
     --button-bg: #d98a00;
@@ -165,6 +167,11 @@ del {
 .highlight-border-calc {
     color: var(--highlight-calc);
     font-weight: 600;
+}
+
+.highlight-main {
+    color: var(--highlight-main);
+    font-weight: 900;
 }
 
 .highlight-border-prophecy {
@@ -1001,4 +1008,9 @@ ul ul {
 ol ol {
     /* 第二层有序列表使用字母符号 */
     list-style-type: lower-alpha;
+}
+
+hr {
+    margin: 1.2em 0 0.6em;
+    border: 1px dotted var(--navbar-bg);
 }
