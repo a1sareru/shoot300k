@@ -39,21 +39,21 @@ function formatBannerText(banner, id_19 = 0) {
     // 恒常カード
     if (bannerText === "kojo") {
         formattedBanner += ` card-banner-kojo">`;
-        formattedBanner += `🪨 恒常`;
+        formattedBanner += `🪨 <span data-i18n="card.banner.kojo">${getI18n("card.banner.kojo")}</span>`;
     }
     // 不定期
     else if (bannerText.startsWith("sanrio_")) { // sanrio (note: the season event should be excluded)
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎀 三丽鸥联动`;
+        formattedBanner += `🎀 <span data-i18n="card.banner.sanrio">${getI18n("card.banner.sanrio")}</span>`;
     } else if (bannerText.startsWith("rensen")) { // rensen
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🌱 Caulis`;
+        formattedBanner += `🌱 <span data-i18n="card.banner.caulis">${getI18n("card.banner.caulis")}</span>`;
     } else if (bannerText === "robe" || mahopaIds19.includes(id_19)) { // mahopa
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🥳 魔法趴`;
+        formattedBanner += `🥳 <span data-i18n="card.banner.mahopa">${getI18n("card.banner.mahopa")}</span>`;
     } else if (bannerText === "sonatine+") { // sonatine+
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎻 奏鸣曲`;
+        formattedBanner += `🎻 <span data-i18n="card.banner.sonatine">${getI18n("card.banner.sonatine")}</span>`;
     }
     // 定期
     else if (bannerText === "1st"
@@ -70,7 +70,7 @@ function formatBannerText(banner, id_19 = 0) {
     ) { // anniversary
         let year_id = bannerText.substring(0, bannerText.length - 2);
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎈 ${year_id}周年`;
+        formattedBanner += `🎈 ${year_id}<span data-i18n="card.banner.anniv">${getI18n("card.banner.anniv")}</span>`;
     } else if (bannerText.startsWith("bd_")) { // BD
         // example: bd_201912
         let year_full = bannerText.substring(3, 7);
@@ -81,72 +81,62 @@ function formatBannerText(banner, id_19 = 0) {
             year_id += 1;
         }
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎂 ${year}年诞生日`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `🎂 ${year}'<span data-i18n="card.banner.birthday">${getI18n("card.banner.birthday")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("vd_")) { // VD
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🍫 ${year}年情人节`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `🍫 ${year}'<span data-i18n="card.banner.valentine">${getI18n("card.banner.valentine")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("wd_")) { // WD
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🍬 ${year}年白情`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `🍬 ${year}'<span data-i18n="card.banner.whiteday">${getI18n("card.banner.whiteday")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("af_")) { // AF
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🤡 ${year}年愚人节`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `🤡 ${year}'<span data-i18n="card.banner.aprilfool">${getI18n("card.banner.aprilfool")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("warupurugis_")) { // warupurugis
         let year = bannerText.substring(14, 16);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🧙‍♀️ ${year}年瓦夜`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `🧙‍♀️ ${year}'<span data-i18n="card.banner.walpurugis">${getI18n("card.banner.walpurugis")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("jb_")) { // JB
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year}年 Something Gift`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `💍 ${year}'<span data-i18n="card.banner.propose">${getI18n("card.banner.propose")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("propose_")) { // JB -propose
         let year = bannerText.substring(10, 12);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year}年 Something Gift`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `💍 ${year}'<span data-i18n="card.banner.propose">${getI18n("card.banner.propose")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("tanabata_")) { // tanabata
         let year = bannerText.substring(11, 13);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎋 ${year}年七夕`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `🎋 ${year}'<span data-i18n="card.banner.tanabata">${getI18n("card.banner.tanabata")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("summer_")) { // summer
         let year = bannerText.substring(9, 11);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `⛱️ ${year}年夏活`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `⛱️ ${year}'<span data-i18n="card.banner.summer">${getI18n("card.banner.summer")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("halloween_")) { // halloween
         let year = bannerText.substring(12, 14);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎃 ${year}年万圣夜`;
-        formattedBanner += `<br>`;
-        formattedBanner += `[第${year_id}轮]`;
+        formattedBanner += `🎃 ${year}'<span data-i18n="card.banner.halloween">${getI18n("card.banner.halloween")}</span>`;
+        formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else { // not defined
         return "";
     }
@@ -178,7 +168,7 @@ function formatCardCaption(card19) {
     if (kojoIds19.includes(id19)) {
         banner = "kojo";
     }
-    let bannerText = `<br><br><span class="card-banner card-banner-special">❓ 不在恒常池</span>`;
+    let bannerText = `<br><br><span class="card-banner card-banner-special">❓ <span data-i18n="card.banner.not-kojo">${getI18n("card.banner.not-kojo")}</span></span>`;
     if (banner) {
         formattedBanner = formatBannerText(banner, id19);
         if (formattedBanner !== "") {
@@ -245,7 +235,7 @@ async function loadCards() {
     const filteredCards = filterHighRarityCards(cards);
     renderCards(filteredCards);
 
-    // ✅ 保持选中状态
+    // 保持选中状态
     restoreSelectedCards(new Set(
         Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
     ));
@@ -261,7 +251,7 @@ async function filtedCardByIds19(ids19) {
 }
 
 // 渲染计算结果
-async function renderCalcResults(calcResults, results, ids19, highlightColor = "pink", zeroResultsMessage = "未找到符合条件的卡组", ) {
+async function renderCalcResults(calcResults, results, ids19, highlightColor = "pink", zeroResultsMessage = "未找到符合条件的卡组",) {
     calcResults.innerHTML = "";
 
     if (results.length === 0) {
@@ -271,16 +261,16 @@ async function renderCalcResults(calcResults, results, ids19, highlightColor = "
         return;
     }
 
-calcResults.innerHTML += `
-  <div class="s30k-color-filter-buttons">
+    calcResults.innerHTML += `
+  <div class="s30k-color-filter-buttons" style="font-weight:bold;font-size:14px;margin: 0 auto;text-align: center;">
     <span data-i18n="result.filter.label">${getI18n("result.filter.label")}</span>
-    <button data-i18n="result.filter.white" data-filter="s30k-res-color-1" style="background-color:#f1c40f;">${getI18n("result.filter.white")}</button>
-    <button data-i18n="result.filter.red" data-filter="s30k-res-color-2" style="background-color:#e74c3c;">${getI18n("result.filter.red")}</button>
-    <button data-i18n="result.filter.green" data-filter="s30k-res-color-3" style="background-color:#2ecc71;">${getI18n("result.filter.green")}</button>
-    <button data-i18n="result.filter.blue" data-filter="s30k-res-color-4" style="background-color:#3498db;">${getI18n("result.filter.blue")}</button>
-    <button data-i18n="result.filter.purple" data-filter="s30k-res-color-5" style="background-color:#9b59b6;">${getI18n("result.filter.purple")}</button>
+    <button data-i18n="result.filter.white" data-filter="s30k-res-color-1" style="background-color:#f9c950;font-weight:bold;">${getI18n("result.filter.white")}</button>
+    <button data-i18n="result.filter.red" data-filter="s30k-res-color-2" style="background-color:#f08080;font-weight:bold;">${getI18n("result.filter.red")}</button>
+    <button data-i18n="result.filter.green" data-filter="s30k-res-color-3" style="background-color:#77c9a0;font-weight:bold;">${getI18n("result.filter.green")}</button>
+    <button data-i18n="result.filter.blue" data-filter="s30k-res-color-4" style="background-color:#6eb8e6;font-weight:bold;">${getI18n("result.filter.blue")}</button>
+    <button data-i18n="result.filter.purple" data-filter="s30k-res-color-5" style="background-color:#c5a2f5;font-weight:bold;">${getI18n("result.filter.purple")}</button>
     <span data-i18n="result.filter.show-all.bridge">${getI18n("result.filter.show-all.bridge")}</span>
-    <button data-i18n="result.filter.show-all" data-filter="all" style="background-color:#95a5a6;">${getI18n("result.filter.show-all")}</button>
+    <button data-i18n="result.filter.show-all" data-filter="all" style="background-color:#95a5a6;font-weight:bold;">${getI18n("result.filter.show-all")}</button>
   </div>
 `;
 

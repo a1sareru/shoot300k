@@ -1,7 +1,8 @@
 let currentLangDict = {};
 
-function getI18n(key, fallback = '') {
-  return currentLangDict[key] || fallback;
+function getI18n(key, params = {}, fallback = '') {
+  const template = currentLangDict[key] || fallback;
+  return template.replace(/\{(\w+)\}/g, (_, k) => params[k] ?? '');
 }
 
 async function loadLanguage(lang) {
@@ -14,7 +15,18 @@ async function loadLanguage(lang) {
 
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
-      const value = dict[key];
+      const paramsAttr = el.getAttribute("data-i18n-params");
+      let params = {};
+
+      if (paramsAttr) {
+        try {
+          params = JSON.parse(paramsAttr);
+        } catch (e) {
+          console.warn("无效的 data-i18n-params:", paramsAttr);
+        }
+      }
+
+      const value = getI18n(key, params);
       if (!value) return;
 
       if ("placeholder" in el) {
