@@ -15,14 +15,23 @@ async function loadLanguage(lang) {
 
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
-      const paramsAttr = el.getAttribute("data-i18n-params");
       let params = {};
 
-      if (paramsAttr) {
+      // 优先使用 dataset 中的缓存参数（语言切换时也能保留）
+      if (el.dataset.i18nParamsCache) {
         try {
-          params = JSON.parse(paramsAttr);
-        } catch (e) {
-          console.warn("无效的 data-i18n-params:", paramsAttr);
+          params = JSON.parse(el.dataset.i18nParamsCache);
+        } catch {
+          params = {};
+        }
+      }
+      // 如果初始渲染，还没有缓存
+      else if (el.getAttribute("data-i18n-params")) {
+        try {
+          params = JSON.parse(el.getAttribute("data-i18n-params"));
+          el.dataset.i18nParamsCache = JSON.stringify(params);  // 缓存起来
+        } catch {
+          params = {};
         }
       }
 
@@ -36,7 +45,7 @@ async function loadLanguage(lang) {
       }
     });
 
-    // 更新动态按钮等文字
+    // 更新动态生成的文字（按钮等）
     if (typeof updateDynamicText === 'function') {
       updateDynamicText();
     }
@@ -47,11 +56,7 @@ async function loadLanguage(lang) {
 
 function highlightActiveLang(lang) {
   document.querySelectorAll(".lang-text").forEach(el => {
-    if (el.getAttribute("data-lang") === lang) {
-      el.classList.add("active");
-    } else {
-      el.classList.remove("active");
-    }
+    el.classList.toggle("active", el.getAttribute("data-lang") === lang);
   });
 }
 
@@ -64,18 +69,24 @@ function detectBrowserLang(supported = ["zh", "ja"], fallback = "zh") {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 如果 localStorage 有记录就用它；否则根据浏览器语言判断
   const stored = localStorage.getItem("lang");
   const lang = stored || detectBrowserLang(["zh", "ja"], "zh");
 
-  loadLanguage(lang);
+  loadLanguage(lang).then(() => {
+    fetchRepoLastUpdated();
+    fetchCardDataLastUpdated();
+  });
+
   highlightActiveLang(lang);
 
   document.querySelectorAll(".lang-text").forEach(span => {
     span.addEventListener("click", () => {
       const selectedLang = span.getAttribute("data-lang");
       localStorage.setItem("lang", selectedLang);
-      loadLanguage(selectedLang);
+      loadLanguage(selectedLang).then(() => {
+        fetchRepoLastUpdated();
+        fetchCardDataLastUpdated();
+      });
       highlightActiveLang(selectedLang);
     });
   });

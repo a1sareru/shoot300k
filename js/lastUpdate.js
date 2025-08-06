@@ -3,13 +3,18 @@ async function fetchRepoLastUpdated() {
         const response = await fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/repo-last-update');
         if (!response.ok) throw new Error(`Request fail: ${response.status}`);
 
-        const lastUpdated = lastUpdatedText = await response.text();
-        const trimmed = lastUpdated.trim();
+        const lastUpdated = (await response.text()).trim();
 
         const el = document.getElementById("repo-last-updated");
+        const params = { date: lastUpdated };
+
+        // 设置 data-i18n 和参数缓存
         el.setAttribute("data-i18n", "info.repo-last-updated");
-        el.setAttribute("data-i18n-params", JSON.stringify({ date: trimmed }));
-        el.textContent = getI18n("info.repo-last-updated", { date: trimmed });
+        el.setAttribute("data-i18n-params", JSON.stringify(params));
+        el.dataset.i18nParamsCache = JSON.stringify(params);
+
+        // 初次渲染
+        el.textContent = getI18n("info.repo-last-updated", params);
     } catch (error) {
         const el = document.getElementById("repo-last-updated");
         el.setAttribute("data-i18n", "info.repo-last-fail");
@@ -23,17 +28,21 @@ async function fetchCardDataLastUpdated() {
         const response = await fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/data-last-update');
         if (!response.ok) throw new Error(`请求失败: ${response.status}`);
 
-        const lastUpdated = await response.text();
-        const trimmed = lastUpdated.trim();
-        const lastUpdatedDate = new Date(trimmed.replace(/-/g, '/'));
+        const lastUpdated = (await response.text()).trim();
+        const lastUpdatedDate = new Date(lastUpdated.replace(/-/g, '/'));
         const currentDate = new Date();
-        const diffTime = Math.abs(currentDate - lastUpdatedDate);
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const diffDays = Math.floor(Math.abs(currentDate - lastUpdatedDate) / (1000 * 60 * 60 * 24));
 
         const el = document.getElementById("data-last-updated");
+        const params = { days: diffDays, date: lastUpdated };
+
+        // 设置 data-i18n 和参数缓存
         el.setAttribute("data-i18n", "info.data-last-updated");
-        el.setAttribute("data-i18n-params", JSON.stringify({ days: diffDays, date: trimmed }));
-        el.textContent = getI18n("info.data-last-updated", { days: diffDays, date: trimmed });
+        el.setAttribute("data-i18n-params", JSON.stringify(params));
+        el.dataset.i18nParamsCache = JSON.stringify(params);
+
+        // 初次渲染
+        el.textContent = getI18n("info.data-last-updated", params);
     } catch (error) {
         const el = document.getElementById("data-last-updated");
         el.setAttribute("data-i18n", "info.data-last-fail");
