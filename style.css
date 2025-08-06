@@ -171,7 +171,7 @@ del {
 
 .highlight-main {
     color: var(--highlight-main);
-    font-weight: 900;
+    font-weight: bold;
 }
 
 .highlight-border-prophecy {
