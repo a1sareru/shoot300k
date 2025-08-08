@@ -149,9 +149,8 @@ del {
 }
 
 .komejirushi-text {
-    color: #606060;
+    color: #343434;
     font-size: smaller;
-    font-weight: 600;
 }
 
 @media screen and (max-width: 600px) {
@@ -589,6 +588,12 @@ button:hover {
 
 .selectCards-header {
     margin-bottom: 25px;
+}
+
+#card-manager-description{
+    margin-bottom: 5px;
+    line-height: 1.2em;
+    padding: 5px;
 }
 
 @media screen and (max-width: 600px) {
