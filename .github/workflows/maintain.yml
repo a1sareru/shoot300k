@@ -2,8 +2,11 @@ name: maintain
 
 on:
   schedule:
-    - cron: "0 7 */5 * *"   # 每5天 UTC 07:00
-  workflow_dispatch:        # 手动触发也可以
+    - cron: "0 7 */5 * *"   # Every 5 days at 07:00 UTC
+  workflow_dispatch:        # Manual trigger is also possible
+
+permissions:
+  contents: write
 
 jobs:
   update-data:
