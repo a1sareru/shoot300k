@@ -409,7 +409,7 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
     figure.innerHTML = `
         <a href="${cardLink}" target="_blank" rel="noopener noreferrer">
             <img src="${cardImgSrc}" alt="${cardInfo19.title}" class="card-img"
-                onerror="this.src='public/images/images/miscs/placeholder.png';" />
+                onerror="this.onerror=null; this.src='public/images/miscs/placeholder.png';" />
         </a>
         <figcaption>${figureCaption}</figcaption>
     `;
