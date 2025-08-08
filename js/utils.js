@@ -39,21 +39,21 @@ function formatBannerText(banner, id_19 = 0) {
     // 恒常カード
     if (bannerText === "kojo") {
         formattedBanner += ` card-banner-kojo">`;
-        formattedBanner += `🪨 <span data-i18n="card.banner.kojo">${getI18n("card.banner.kojo")}</span>`;
+        formattedBanner += `<i class='oma oma-rock'></i> <span data-i18n="card.banner.kojo">${getI18n("card.banner.kojo")}</span>`;
     }
     // 不定期
     else if (bannerText.startsWith("sanrio_")) { // sanrio (note: the season event should be excluded)
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎀 <span data-i18n="card.banner.sanrio">${getI18n("card.banner.sanrio")}</span>`;
+        formattedBanner += `<i class='oma oma-ribbon'></i> <span data-i18n="card.banner.sanrio">${getI18n("card.banner.sanrio")}</span>`;
     } else if (bannerText.startsWith("rensen")) { // rensen
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🌱 <span data-i18n="card.banner.caulis">${getI18n("card.banner.caulis")}</span>`;
+        formattedBanner += `<i class='oma oma-seedling'></i> <span data-i18n="card.banner.caulis">${getI18n("card.banner.caulis")}</span>`;
     } else if (bannerText === "robe" || mahopaIds19.includes(id_19)) { // mahopa
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🥳 <span data-i18n="card.banner.mahopa">${getI18n("card.banner.mahopa")}</span>`;
+        formattedBanner += `<i class='oma oma-partying-face'></i> <span data-i18n="card.banner.mahopa">${getI18n("card.banner.mahopa")}</span>`;
     } else if (bannerText === "sonatine+") { // sonatine+
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎻 <span data-i18n="card.banner.sonatine">${getI18n("card.banner.sonatine")}</span>`;
+        formattedBanner += `<i class='oma oma-violin'></i> <span data-i18n="card.banner.sonatine">${getI18n("card.banner.sonatine")}</span>`;
     }
     // 定期
     else if (bannerText === "1st"
@@ -70,7 +70,7 @@ function formatBannerText(banner, id_19 = 0) {
     ) { // anniversary
         let year_id = bannerText.substring(0, bannerText.length - 2);
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎈 ${year_id}<span data-i18n="card.banner.anniv">${getI18n("card.banner.anniv")}</span>`;
+        formattedBanner += `<i class="oma oma-balloon"></i> ${year_id}<span data-i18n="card.banner.anniv">${getI18n("card.banner.anniv")}</span>`;
     } else if (bannerText.startsWith("bd_")) { // BD
         // example: bd_201912
         let year_full = bannerText.substring(3, 7);
@@ -81,61 +81,61 @@ function formatBannerText(banner, id_19 = 0) {
             year_id += 1;
         }
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎂 ${year}'<span data-i18n="card.banner.birthday">${getI18n("card.banner.birthday")}</span>`;
+        formattedBanner += `<i class='oma oma-birthday-cake'></i> ${year}'<span data-i18n="card.banner.birthday">${getI18n("card.banner.birthday")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("vd_")) { // VD
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🍫 ${year}'<span data-i18n="card.banner.valentine">${getI18n("card.banner.valentine")}</span>`;
+        formattedBanner += `<i class='oma oma-chocolate-bar'></i> ${year}'<span data-i18n="card.banner.valentine">${getI18n("card.banner.valentine")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("wd_")) { // WD
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🍬 ${year}'<span data-i18n="card.banner.whiteday">${getI18n("card.banner.whiteday")}</span>`;
+        formattedBanner += `<i class='oma oma-candy'></i> ${year}'<span data-i18n="card.banner.whiteday">${getI18n("card.banner.whiteday")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("af_")) { // AF
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🤡 ${year}'<span data-i18n="card.banner.aprilfool">${getI18n("card.banner.aprilfool")}</span>`;
+        formattedBanner += `<i class='oma oma-clown-face'></i> ${year}'<span data-i18n="card.banner.aprilfool">${getI18n("card.banner.aprilfool")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("warupurugis_")) { // warupurugis
         let year = bannerText.substring(14, 16);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🧙‍♀️ ${year}'<span data-i18n="card.banner.walpurugis">${getI18n("card.banner.walpurugis")}</span>`;
+        formattedBanner += `<i class='oma oma-woman-mage'></i> ${year}'<span data-i18n="card.banner.walpurugis">${getI18n("card.banner.walpurugis")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("jb_")) { // JB
         let year = bannerText.substring(5, 7);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year}'<span data-i18n="card.banner.propose">${getI18n("card.banner.propose")}</span>`;
+        formattedBanner += `<i class='oma oma-ring'></i> ${year}'<span data-i18n="card.banner.propose">${getI18n("card.banner.propose")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("propose_")) { // JB -propose
         let year = bannerText.substring(10, 12);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `💍 ${year}'<span data-i18n="card.banner.propose">${getI18n("card.banner.propose")}</span>`;
+        formattedBanner += `<i class='oma oma-ring'></i> ${year}'<span data-i18n="card.banner.propose">${getI18n("card.banner.propose")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("tanabata_")) { // tanabata
         let year = bannerText.substring(11, 13);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎋 ${year}'<span data-i18n="card.banner.tanabata">${getI18n("card.banner.tanabata")}</span>`;
+        formattedBanner += `<i class='oma oma-tanabata-tree'></i> ${year}'<span data-i18n="card.banner.tanabata">${getI18n("card.banner.tanabata")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("summer_")) { // summer
         let year = bannerText.substring(9, 11);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `⛱️ ${year}'<span data-i18n="card.banner.summer">${getI18n("card.banner.summer")}</span>`;
+        formattedBanner += `<i class='oma oma-umbrella-on-ground'></i> ${year}'<span data-i18n="card.banner.summer">${getI18n("card.banner.summer")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else if (bannerText.startsWith("halloween_")) { // halloween
         let year = bannerText.substring(12, 14);
         let year_id = year - 19;
         formattedBanner += ` card-banner-special">`;
-        formattedBanner += `🎃 ${year}'<span data-i18n="card.banner.halloween">${getI18n("card.banner.halloween")}</span>`;
+        formattedBanner += `<i class='oma oma-jack-o-lantern'></i> ${year}'<span data-i18n="card.banner.halloween">${getI18n("card.banner.halloween")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
     } else { // not defined
         return "";
@@ -168,7 +168,7 @@ function formatCardCaption(card19) {
     if (kojoIds19.includes(id19)) {
         banner = "kojo";
     }
-    let bannerText = `<br><br><span class="card-banner card-banner-special">❓ <span data-i18n="card.banner.not-kojo">${getI18n("card.banner.not-kojo")}</span></span>`;
+    let bannerText = `<br><br><span class="card-banner card-banner-special"><i class='oma oma-red-question-mark'></i> <span data-i18n="card.banner.not-kojo">${getI18n("card.banner.not-kojo")}</span></span>`;
     if (banner) {
         formattedBanner = formatBannerText(banner, id19);
         if (formattedBanner !== "") {

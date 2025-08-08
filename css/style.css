@@ -1021,3 +1021,11 @@ hr {
     margin: 1.2em 0 0.6em;
     border: 1px dotted var(--navbar-bg);
 }
+
+/* openmoji settings [override] */
+.oma {
+    height: 1.4em !important;
+    width: 1.4em !important;
+    background-size: 1.4em 1.4em !important;
+    vertical-align: -0.2em !important;
+}
