@@ -17,7 +17,7 @@ on:
       - '.gitignore'
       - 'index.html'
       - 'site.webmanifest'
-      - 'style.css'
+      - 'css/style.css'
   workflow_dispatch:
 jobs:
   build:
