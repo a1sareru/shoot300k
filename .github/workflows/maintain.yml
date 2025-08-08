@@ -26,6 +26,11 @@ jobs:
 
       - name: Run maintain.py
         run: python scripts/maintain.py
+      # this subtask is just for debug
+      - name: Who am I
+        run: |
+          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/user
 
       - name: Commit and push changes
         run: |
