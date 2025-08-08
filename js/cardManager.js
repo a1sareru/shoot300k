@@ -3,7 +3,10 @@ let isFilteringSSR = false; // 是否处于 SSR 过滤模式
 // 更新已选卡片 ID 的显示
 function updateSelectedIdsDisplay() {
   const selectedCards = document.querySelectorAll(".card.selected");
-  const selectedIds = Array.from(selectedCards).map(card => card.dataset.id);
+  const selectedIds = Array.from(selectedCards).map(card => {
+    const id = parseInt(card.dataset.id, 10);
+    return id >= 337 ? id - 19 : id;
+  });
   document.getElementById("selected-ids").innerHTML = selectedIds.join(",");
 }
 
