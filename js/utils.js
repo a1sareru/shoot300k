@@ -137,7 +137,11 @@ function formatBannerText(banner, id_19 = 0) {
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `<i class='oma oma-jack-o-lantern'></i> ${year}'<span data-i18n="card.banner.halloween">${getI18n("card.banner.halloween")}</span>`;
         formattedBanner += `<br><span data-i18n="card.banner.roundIndex" data-i18n-params='{"n": ${year_id}}'>${getI18n("card.banner.roundIndex", { n: year_id })}</span>`;
-    } else { // not defined
+    } else if (bannerText == "unknown") { // unknown
+        formattedBanner += ` card-banner-unknown">`;
+        formattedBanner += `<span data-i18n="card.banner.unknown">${getI18n("card.banner.unknown")}</span>`;
+    }
+    else { // not defined
         return "";
     }
     return formattedBanner + `</span>`;

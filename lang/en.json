@@ -3,6 +3,7 @@
   "info.repo-last-updated": "※ This site's last update: {date}",
   "info.data-last-fail": "(Last updated: Failed to load)",
   "info.data-last-updated": "(Last updated: {days} days ago | {date})",
+  "card.banner.unknown": "[Under Construction]",
   "card.banner.not-kojo": "Limited",
   "card.banner.kojo": "Permanent",
   "card.banner.anniv": "'Anniversary",

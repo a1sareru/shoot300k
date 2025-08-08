@@ -3,6 +3,7 @@
   "info.repo-last-updated": "※ 当サイトの最終更新日：{date}",
   "info.data-last-fail": "（直近の更新：読み込み失敗）",
   "info.data-last-updated": "（直近の更新：{days}日前｜{date}）",
+  "card.banner.unknown": "【工事中】",
   "card.banner.not-kojo": "恒常ガチャ以外",
   "card.banner.kojo": "恒常",
   "card.banner.anniv": "周年",

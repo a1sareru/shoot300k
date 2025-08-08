@@ -3,6 +3,7 @@
   "info.repo-last-updated": "※ 本站最后更新：{date}",
   "info.data-last-fail": "（上次更新：加载失败）",
   "info.data-last-updated": "（上次更新：{days}天前｜{date}）",
+  "card.banner.unknown": "【建设中】",
   "card.banner.not-kojo": "不在恒常池",
   "card.banner.kojo": "恒常",
   "card.banner.anniv": "周年",
