@@ -5,19 +5,19 @@ on:
     branches:
       - main
     files:
-      - 'scripts/**'
-      - 'public/data/**'
-      - '.github/workflows/calc.yml'
+      - "scripts/**"
+      - "public/data/**"
+      - ".github/workflows/calc.yml"
     paths-ignore:
-      - '.github/workflows/static.yml'
-      - '.github/workflows/last-update.yml'
-      - 'js/**'
-      - 'public/images/**'
-      - 'static/**'
-      - '.gitignore'
-      - 'index.html'
-      - 'site.webmanifest'
-      - 'css/style.css'
+      - ".github/workflows/static.yml"
+      - ".github/workflows/last-update.yml"
+      - "js/**"
+      - "public/images/**"
+      - "static/**"
+      - ".gitignore"
+      - "index.html"
+      - "site.webmanifest"
+      - "css/style.css"
   workflow_dispatch:
 jobs:
   build:
@@ -65,6 +65,9 @@ jobs:
           # Update the data-last-update file with the latest modification date
           echo "$last_modified" > data-last-update-tmp
 
+          # Update the repo-last-update file with the latest modification date
+          echo "$last_modified" > repo-last-update-tmp
+
       - name: Commit and Push Generated Files
         run: |
           git config --global user.name "github-actions[bot]"
@@ -73,10 +76,11 @@ jobs:
           git fetch origin artifacts || true
           git checkout artifacts 2>/dev/null || git checkout -b artifacts
 
-          rm -rf solutions/ data-last-update
+          rm -rf solutions/ data-last-update repo-last-update
           mv output/ solutions/
           mv data-last-update-tmp data-last-update
+          mv repo-last-update-tmp repo-last-update
 
-          git add solutions/ data-last-update
+          git add solutions/ data-last-update repo-last-update
           git commit -m "Auto-generated solutions from GitHub Actions" || echo "No changes to commit"
           git push origin artifacts

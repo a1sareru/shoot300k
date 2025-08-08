@@ -26,8 +26,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  update-repo-last-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Commit and Push Last Update Information
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin artifacts || true
+          git checkout artifacts 2>/dev/null || git checkout -b artifacts
+
+          CURRENT_DATE=$(date +"%Y-%m-%d")
+          echo $CURRENT_DATE > repo-last-update
+
+          git add repo-last-update
+          git commit -m "Auto-generated repo-last-update information from GitHub Actions" || echo "No changes to commit"
+          git push origin artifacts
+
   # Single deploy job since we're just deploying
   deploy:
+    needs: update-repo-last-update
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
