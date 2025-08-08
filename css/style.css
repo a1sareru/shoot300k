@@ -38,6 +38,7 @@
     --h4-text: #555;
     --h5-text: #666;
     --textarea-bg: #f0f0f0;
+    --komejirushi-text: #343434;
 }
 
 .dark {
@@ -80,6 +81,7 @@
     --h4-text: #aaa;
     --h5-text: #bbb;
     --textarea-bg: #444;
+    --komejirushi-text: #f0ebe2;
 }
 
 /* 基础重置 */
@@ -149,7 +151,7 @@ del {
 }
 
 .komejirushi-text {
-    color: #343434;
+    color: var(--komejirushi-text);
     font-size: smaller;
 }
 
