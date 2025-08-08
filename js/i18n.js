@@ -60,7 +60,7 @@ function highlightActiveLang(lang) {
   });
 }
 
-function detectBrowserLang(supported = ["zh", "ja"], fallback = "zh") {
+function detectBrowserLang(supported = ["zh", "ja", "en"], fallback = "zh") {
   const lang = (navigator.language || "").toLowerCase();
   for (const code of supported) {
     if (lang.startsWith(code)) return code;
@@ -70,7 +70,7 @@ function detectBrowserLang(supported = ["zh", "ja"], fallback = "zh") {
 
 document.addEventListener("DOMContentLoaded", () => {
   const stored = localStorage.getItem("lang");
-  const lang = stored || detectBrowserLang(["zh", "ja"], "zh");
+  const lang = stored || detectBrowserLang(["zh", "ja", "en"], "zh");
 
   loadLanguage(lang).then(() => {
     fetchRepoLastUpdated();

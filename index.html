@@ -37,8 +37,10 @@
     <div id="topPage" class="tab-content">
       <p id="repo-last-updated" style="text-align: right;" class="komejirushi-text"></p>
       <div style="font-size: 0.8em; text-align: center;color:#cc8eb5;">
-        <i class='oma oma-star'></i>左上のフラグアイコンをクリックすると言語を切り替えられます。現在対応している言語：中国語（簡体字）、日本語。<i
-          class='oma oma-star'></i><br><i class='oma oma-star'></i>点击左上角的旗帜小图标可切换语言。当前支持：简体中文、日文。<i
+        <i class='oma oma-star'></i>左上のフラグアイコンをクリックすると言語を切り替えられます。現在対応している言語：中国語（簡体字）、日本語、英語。<i
+          class='oma oma-star'></i><br><i class='oma oma-star'></i>Click the flag icon at the top left to switch
+        languages. Currently supported languages: Simplified Chinese, Japanese, English.<i
+          class='oma oma-star'></i><br><i class='oma oma-star'></i>点击左上角的旗帜小图标可切换语言。当前支持：简体中文、日文、英文。<i
           class='oma oma-star'></i>
       </div>
       <hr>
@@ -55,6 +57,9 @@
       <div data-i18n="top.h2-caution-content"></div>
       <div data-i18n="top.content-below-may-not-translated"></div>
       <h2><i class='oma oma-megaphone'></i> 记事</h2>
+      <p><span style="font-weight: 900;">[2025-08-08]</span><br>
+        i18n support for English has been added. You can now switch to English by clicking the flag icon at the top left.<br>The admin really doesn't know any other languages, so there are no plans to support additional languages for now.
+      </p>
       <p><span style="font-weight: 900;">[2025-08-08]</span><br>
         <a class='my-links' href='https://gamerch.com/wizard-promise' target='_blank' rel='noopener noreferrer'>『魔法使いの約束
           攻略Wiki（Gamerch）』</a>の雑談掲示板からのご報告ありがとうございます。カード番号1145および1146のカード情報を追加いたしました。<br>
@@ -385,7 +390,7 @@
 
       <h4>３　压缩搜索空间→转化为组合方案的枚举问题</h4>
       <p>常规的想法是使用动态规划相关的算法，并根据问题特性进行剪枝等优化。但是根据上面的结论，实际上可以将问题转化为组合方案的枚举问题。</p>
-      <p><del>开发者当然不会承认是因为动态规划和引用求解器的方案跑了一天一夜都没结束才开始被迫思考如何避免搜索空间爆炸问题。</del></p>
+      <p><del>开发者当然不会承认是因为动态规划和引用求解器的方案跑了一天一夜都没结束才开始被迫思考如何避免搜索空间爆炸问题。</del> </p>
       <p>既然已经证明了关于卡组构成的以上结论，那么对于指定的两种颜色，任意抽出 2 个銀枠特性，问题便转化为如何找出可凑出两种颜色的剩下各 6 个特性的 4 张卡。</p>
       <p>容易看出，符合条件的 4 张卡一共也只有 12 个銀枠特性，因此可以通过枚举这 4 张卡的组合方案来解决问题。</p>
 
@@ -455,35 +460,10 @@
   <footer class="bottom-bar text-center">
     <p>© 2025 とある名無し賢者. All rights waived.</p>
   </footer>
-  <style>
-    .lang-text {
-      padding: 1px 4px;
-      border-radius: 4px;
-      line-height: 1.4em;
-    }
-
-    .lang-text.active {
-      background-color: #ffa5a1;
-    }
-  </style>
-  <div id="lang-switcher" style="
-  position: fixed;
-  top: 80px;
-  left: 8px;
-  z-index: 9999;
-  font-size: 14px;
-  background: ghostwhite;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 2px 4px;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  align-items: center;
-">
+  <div id="lang-switcher">
     <span class="lang-text" data-lang="zh" style="cursor: pointer;">🇨🇳</span>
     <span class="lang-text" data-lang="ja" style="cursor: pointer;">🇯🇵</span>
+    <span class="lang-text" data-lang="en" style="cursor: pointer;">🇺🇸</span>
   </div>
   <script data-goatcounter="https://krkr.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
