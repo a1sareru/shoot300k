@@ -1,0 +1,33 @@
+name: maintain
+
+on:
+  schedule:
+    - cron: "0 7 */5 * *"   # 每5天 UTC 07:00
+  workflow_dispatch:        # 手动触发也可以
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run maintain.py
+        run: python scripts/maintain.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add public scripts
+          git commit -m "Auto update data" || echo "No changes to commit"
+          git push

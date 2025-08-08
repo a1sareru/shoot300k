@@ -2,15 +2,16 @@
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  workflow_run:
+    workflows: ["calc"]
+    types:
+      - completed
   push:
     branches: ["main"]
     paths-ignore:
       - ".github/workflows/calc.yml"
       - ".github/workflows/last-update.yml"
       - "scripts/**"
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages

@@ -1,6 +1,10 @@
 name: Enumerate solutions when data is updated
 
 on:
+  workflow_run:
+    workflows: ["maintain"]
+    types:
+      - completed
   push:
     branches:
       - main
