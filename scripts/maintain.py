@@ -8,6 +8,7 @@ import sys
 import time
 import re
 import requests
+from datetime import datetime
 from pathlib import Path
 from bs4 import BeautifulSoup
 from http.client import IncompleteRead
@@ -49,25 +50,53 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 LAST_CARD_INFO_FILE = LOG_DIR / "last_card_info_id.txt"
 LAST_MISMATCH_FILE = LOG_DIR / "last_characteristics_mismatch_id.txt"
 
+# ====== 日志工具 ======
+def log(level, msg):
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {level}: {msg}")
+
 # ====== 工具函数 ======
-def read_last_id_from_csv(csv_path):
+def read_last_value_from_csv(csv_path, field):
+    if not os.path.exists(csv_path):
+        return 0
     with open(csv_path, newline='', encoding='utf-8') as f:
         rows = list(csv.DictReader(f))
         if not rows:
             return 0
-        return int(rows[-1]['id'])
+        vals = []
+        for r in rows:
+            v = r.get(field)
+            if v is not None and str(v).strip().isdigit():
+                vals.append(int(v))
+        return max(vals) if vals else 0
+
+def read_last_id_from_csv(csv_path):
+    return read_last_value_from_csv(csv_path, "id")
 
 def get_start_ids():
+    # 卡牌从 character_card.csv 的最大 id + 1
+    card_last = read_last_id_from_csv(DATA_DIR / "character_card.csv")
     if LAST_CARD_INFO_FILE.exists():
-        start_card_id = int(LAST_CARD_INFO_FILE.read_text().strip())
-    else:
-        start_card_id = read_last_id_from_csv(DATA_DIR / "character_card.csv") + 1
+        txt = LAST_CARD_INFO_FILE.read_text().strip()
+        if txt.isdigit():
+            card_last = max(card_last, int(txt))
+    start_card_id = card_last + 1
 
+    # 特性从两个文件最后 card_id 的最小者 + 1
+    give_last = read_last_value_from_csv(DATA_DIR / "card_give_characteristic.csv", "card_id")
+    grow_last = read_last_value_from_csv(DATA_DIR / "card_give_characteristic_grow_list.csv", "card_id")
+    last_min = None
+    if give_last and grow_last:
+        last_min = min(give_last, grow_last)
+    else:
+        last_min = give_last or grow_last or 0
+    start_characteristics_id = last_min + 1
+
+    # 若 mismatch 文件有值，优先用更小的作为重抓起点
     if LAST_MISMATCH_FILE.exists():
         text = LAST_MISMATCH_FILE.read_text().strip()
-        start_characteristics_id = int(text) if text else start_card_id
-    else:
-        start_characteristics_id = start_card_id
+        if text.isdigit():
+            start_characteristics_id = min(start_characteristics_id, int(text))
+
     return start_card_id, start_characteristics_id
 
 def get_alt_title_for_id(card_id):
@@ -110,22 +139,24 @@ def process_card_row(tr, current_index):
     img_tag = tr.find('img', alt=True)
     if not img_tag:
         return None
-    title = img_tag['alt'].strip().split('】')[0]
+    title_prefix = img_tag['alt'].strip().split('】')[0]
     td_col2 = tr.find('td', class_='mu__table--col2')
     td_col3 = tr.find('td', class_='mu__table--col3')
     char_name, _ = extract_character_info(td_col2)
     char_data = CHARACTER_MAP.get(char_name, None) if char_name else None
-    title += '】' + char_name if char_name else ''
-    return [
-        current_index,
-        title,
-        char_data['id'] if char_data else '',
-        RARITY_MAP.get(td_col3.get_text(strip=True), 2),
-        char_data['country_id'] if char_data else '',
-        char_data['en'] if char_data else '',
-        'unknown',
-        1
-    ]
+    title_full = f"{title_prefix}】{char_name}" if char_name else title_prefix
+
+    row = {
+        'id': current_index,
+        'title': title_full,
+        'character_id': char_data['id'] if char_data else '',
+        'rarity': RARITY_MAP.get(td_col3.get_text(strip=True), 2),
+        'country': char_data['country_id'] if char_data else '',
+        'character_first_name_en': char_data['en'] if char_data else '',
+        'series': 'unknown',
+        'manually_added': 1
+    }
+    return row
 
 def export_card_infos(target_alt, start_index, csv_path):
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -134,16 +165,22 @@ def export_card_infos(target_alt, start_index, csv_path):
     found_target = False
     current_idx = start_index
     with open(csv_path, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow(['id','title','character_id','rarity','country','character_first_name_en','series','manually_added'])
+        fieldnames = ['id','title','character_id','rarity','country','character_first_name_en','series','manually_added']
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
         for tr in soup.find_all('tr'):
             if not found_target:
+                # 命中上一张 alt，跳过这一行，从下一行开始写
                 if tr.find('img', alt=lambda x: x and target_alt in x):
                     found_target = True
+                    log("INFO", f"定位到起点（上一张）：{target_alt} —— 从下一行开始写入")
+                    continue
                 else:
                     continue
-            if row_data := process_card_row(tr, current_idx):
-                writer.writerow(row_data)
+            row = process_card_row(tr, current_idx)
+            if row:
+                log("LOG", f"卡信息写入 id={current_idx}, title={row['title']}, rarity={row['rarity']}")
+                writer.writerow(row)
                 current_idx += 1
 
 # ====== 特性抓取 ======
@@ -212,77 +249,80 @@ def export_characteristics_json(target_alt, start_index):
         if not found_target:
             if tr.find('img', alt=lambda x: x and target_alt in x):
                 found_target = True
+                log("INFO", f"定位到起点（上一张）：{target_alt} —— 从下一行开始抓取特性")
+                continue
             else:
                 continue
-        if row_data := process_characteristic_row(tr):
+        row_data = process_characteristic_row(tr)
+        if row_data:
             if not row_data["基础"] or not row_data["成长"]:
                 name_td = tr.find('td', class_='mu__table--col2')
                 name = name_td.get_text(strip=True) if name_td else ""
                 row_data["卡牌名"] = name
+                log("WARN", f"特性缺失 id={current_idx}, 卡牌名={name}, 基础={row_data['基础']}, 成长={row_data['成长']}")
+            else:
+                log("LOG", f"特性写入 id={current_idx}, 基础={row_data['基础']}, 成长={row_data['成长']}")
             result[str(current_idx)] = row_data
             current_idx += 1
     return result
 
-# ====== CSV 操作 ======
-def append_csv(src_csv, dest_csv):
-    with open(dest_csv, 'rb+') as f:
-        f.seek(0, os.SEEK_END)
-        if f.tell() > 0:
-            f.seek(-1, os.SEEK_END)
-            if f.read(1) != b'\n':
-                f.write(b'\n')
-    with open(dest_csv, 'a', newline='', encoding='utf-8') as fout, \
-         open(src_csv, newline='', encoding='utf-8') as fin:
-        reader = csv.reader(fin)
-        next(reader)
-        writer = csv.writer(fout)
-        for row in reader:
-            if len(row) >= 8 and row[6] == '':
-                row[6] = 'unknown'
-            writer.writerow(row)
-
-def overwrite_from_id(src_csv, dest_csv, start_id):
-    with open(dest_csv, newline='', encoding='utf-8') as f:
-        rows = list(csv.DictReader(f))
-    fieldnames = rows[0].keys() if rows else []
-    rows = [r for r in rows if int(r['card_id']) < start_id]
+# ====== CSV 覆盖工具 ======
+def overwrite_from_id_generic(src_csv, dest_csv, key_field, start_id):
+    """将 src 追加到 dest，但会先保留 dest 中 key_field < start_id 的旧行，再覆盖写回。"""
+    kept_rows = []
+    kept_fields = []
+    if os.path.exists(dest_csv):
+        with open(dest_csv, newline='', encoding='utf-8') as f:
+            dest_reader = csv.DictReader(f)
+            kept_fields = dest_reader.fieldnames or []
+            for r in dest_reader:
+                v = r.get(key_field, "")
+                if str(v).isdigit() and int(v) < start_id:
+                    kept_rows.append(r)
+    # 读取新增
     with open(src_csv, newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for r in reader:
-            if any(v.strip() for v in r.values()):
-                rows.append(r)
+        src_reader = csv.DictReader(f)
+        if not kept_fields:
+            kept_fields = src_reader.fieldnames or []
+        new_rows = [r for r in src_reader if any((str(v).strip() if v is not None else "") for v in r.values())]
     with open(dest_csv, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=kept_fields)
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(kept_rows + new_rows)
+    log("LOG", f"覆盖写入 {dest_csv}：保留旧行 {len(kept_rows)}，追加新行 {len(new_rows)}（起点 {key_field}>={start_id}）")
 
 # ====== 主逻辑 ======
 def main():
     start_card_id, start_characteristics_id = get_start_ids()
-    print(f"[INFO] 卡信息起点 ID: {start_card_id}")
-    print(f"[INFO] 特性信息起点 ID: {start_characteristics_id}")
+    log("INFO", f"卡信息起点 ID: {start_card_id}")
+    log("INFO", f"特性信息起点 ID: {start_characteristics_id}")
+
     alt_title = get_alt_title_for_id(start_card_id - 1)
-    print(f"[INFO] 获取到起点卡的 alt: {alt_title}")
+    log("INFO", f"获取到起点卡的 alt: {alt_title}")
+
     tmp_dir = Path(__file__).resolve().parent / "tmp"
     tmp_dir.mkdir(exist_ok=True)
 
-    # 卡信息
+    # === 卡信息 ===
     tmp_card_info_csv = tmp_dir / "new_character_card.csv"
     export_card_infos(alt_title, start_card_id, tmp_card_info_csv)
-    append_csv(tmp_card_info_csv, DATA_DIR / "character_card.csv")
+    # 覆盖式写回 character_card.csv（key_field = id）
+    overwrite_from_id_generic(tmp_card_info_csv, DATA_DIR / "character_card.csv", "id", start_card_id)
 
-    # 特性
+    # === 特性 JSON ===
     tmp_characteristics_json = tmp_dir / "new_characteristics.json"
     characteristics_data = export_characteristics_json(alt_title, start_characteristics_id)
     with open(tmp_characteristics_json, 'w', encoding='utf-8') as f:
         json.dump(characteristics_data, f, ensure_ascii=False, indent=4)
+    log("INFO", f"已写入临时特性 JSON：{tmp_characteristics_json}")
 
-    # 调用 getCardGiveCharacteristics 的逻辑
+    # === 生成 give / grow 两个 CSV（内存中先构造） ===
     characteristics_map = {}
     with open(DATA_DIR / "characteristics_normal.csv", 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             characteristics_map[row['title']] = int(row['id'])
+
     character_card = {}
     with open(DATA_DIR / "character_card.csv", 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -292,18 +332,20 @@ def main():
                 'rarity': int(row['rarity']),
                 'manually_added': row['manually_added']
             }
+
     give_chars, grow_list = [], []
     for json_id, data in characteristics_data.items():
         card_id = int(json_id)
         exists_in_character_card = card_id in character_card
         manually_added = '1' if not exists_in_character_card else character_card[card_id]['manually_added']
+
         base_chars = data.get('基础', [])
         for idx, char_name in enumerate(base_chars, 1):
             char_id = characteristics_map.get(char_name)
             give_chars.append({
                 'card_id': card_id,
                 'No': idx,
-                'characteristic_id': char_id if char_id else char_name,
+                'characteristic_id': char_id if char_id is not None else char_name,
                 'manually_added': '1' if char_id is None else manually_added
             })
         grow_chars = data.get('成长', [])
@@ -316,16 +358,19 @@ def main():
             elif rarity == 4:
                 levels = [30, 55, 75, 100]
             else:
-                continue
+                levels = []
             for char_name, level in zip(grow_chars, levels):
                 char_id = characteristics_map.get(char_name)
                 grow_list.append({
                     'card_id': card_id,
                     'level': level,
-                    'characteristic_id': char_id if char_id else char_name,
+                    'characteristic_id': char_id if char_id is not None else char_name,
                     'value': '',
                     'manually_added': '1' if char_id is None else '1'
                 })
+
+        log("LOG", f"构造 give/grow：card_id={card_id}, base={base_chars}, grow={grow_chars}")
+
     tmp_give_csv = tmp_dir / "card_give_characteristics.csv"
     tmp_grow_csv = tmp_dir / "card_give_characteristics_grow_list.csv"
     with open(tmp_give_csv, 'w', newline='', encoding='utf-8') as f:
@@ -336,14 +381,16 @@ def main():
         writer = csv.DictWriter(f, fieldnames=['card_id', 'level', 'characteristic_id', 'value', 'manually_added'])
         writer.writeheader()
         writer.writerows(grow_list)
+    log("INFO", f"已写入临时 CSV：{tmp_give_csv}, {tmp_grow_csv}")
 
-    # 覆盖更新特性文件
-    overwrite_from_id(tmp_give_csv, DATA_DIR / "card_give_characteristic.csv", start_characteristics_id)
-    overwrite_from_id(tmp_grow_csv, DATA_DIR / "card_give_characteristic_grow_list.csv", start_characteristics_id)
+    # === 覆盖更新两个特性 CSV（key_field = card_id） ===
+    overwrite_from_id_generic(tmp_give_csv, DATA_DIR / "card_give_characteristic.csv", "card_id", start_characteristics_id)
+    overwrite_from_id_generic(tmp_grow_csv, DATA_DIR / "card_give_characteristic_grow_list.csv", "card_id", start_characteristics_id)
 
-    # 更新状态
+    # === 更新状态 ===
     last_id_in_card_info = read_last_id_from_csv(DATA_DIR / "character_card.csv")
     LAST_CARD_INFO_FILE.write_text(str(last_id_in_card_info), encoding='utf-8')
+
     mismatch_id = None
     for cid, data in characteristics_data.items():
         if "卡牌名" in data:
@@ -351,11 +398,11 @@ def main():
             break
     if mismatch_id:
         LAST_MISMATCH_FILE.write_text(str(mismatch_id), encoding='utf-8')
-        print(f"[WARN] 检测到数据不匹配，从 {mismatch_id} 起的特性将在下次重新抓取")
+        log("WARN", f"检测到数据不匹配，从 {mismatch_id} 起的特性将在下次重新抓取")
     else:
         LAST_MISMATCH_FILE.write_text("", encoding='utf-8')
 
-    print("[INFO] 更新完成！")
+    log("INFO", "更新完成！")
 
 if __name__ == "__main__":
     main()
