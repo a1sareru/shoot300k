@@ -10,7 +10,8 @@ on:
     branches: ["main"]
     paths-ignore:
       - ".github/workflows/calc.yml"
-      - ".github/workflows/last-update.yml"
+      - ".github/workflows/maintain.yml"
+      - "deprecate/**"
       - "scripts/**"
   workflow_dispatch:
 

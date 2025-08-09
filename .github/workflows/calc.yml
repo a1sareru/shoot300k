@@ -14,13 +14,16 @@ on:
       - ".github/workflows/calc.yml"
     paths-ignore:
       - ".github/workflows/static.yml"
+      - "css/**"
+      - "deprecate/**"
       - "js/**"
+      - "lang/**"
       - "public/images/**"
+      - "scripts/maintain-log/**"
       - "static/**"
       - ".gitignore"
       - "index.html"
       - "site.webmanifest"
-      - "css/style.css"
   workflow_dispatch:
 jobs:
   build:
