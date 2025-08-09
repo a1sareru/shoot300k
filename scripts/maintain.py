@@ -173,7 +173,7 @@ def export_card_infos(target_alt, start_index, csv_path):
                 # 命中上一张 alt，跳过这一行，从下一行开始写
                 if tr.find('img', alt=lambda x: x and target_alt in x):
                     found_target = True
-                    log("INFO", f"定位到起点（上一张）：{target_alt} —— 从下一行开始写入")
+                    log("INFO", f"定位到起点（上一张）: {target_alt} —— 从下一行开始写入")
                     continue
                 else:
                     continue
@@ -197,7 +197,7 @@ def retry_request(url, headers=None, retries=3, backoff_factor=0.5, status_force
             return session.get(url, headers=headers)
         except IncompleteRead:
             time.sleep(backoff_factor * (2 ** attempt))
-    raise ConnectionError(f"请求失败：{url}")
+    raise ConnectionError(f"请求失败: {url}")
 
 def process_characteristic_row(tr):
     img_tag = tr.find('img', alt=True)
@@ -249,7 +249,7 @@ def export_characteristics_json(target_alt, start_index):
         if not found_target:
             if tr.find('img', alt=lambda x: x and target_alt in x):
                 found_target = True
-                log("INFO", f"定位到起点（上一张）：{target_alt} —— 从下一行开始抓取特性")
+                log("INFO", f"定位到起点（上一张）: {target_alt} —— 从下一行开始抓取特性")
                 continue
             else:
                 continue
@@ -289,7 +289,103 @@ def overwrite_from_id_generic(src_csv, dest_csv, key_field, start_id):
         writer = csv.DictWriter(f, fieldnames=kept_fields)
         writer.writeheader()
         writer.writerows(kept_rows + new_rows)
-    log("LOG", f"覆盖写入 {dest_csv}：保留旧行 {len(kept_rows)}，追加新行 {len(new_rows)}（起点 {key_field}>={start_id}）")
+    log("LOG", f"覆盖写入 {dest_csv}: 保留旧行 {len(kept_rows)}，追加新行 {len(new_rows)}（起点 {key_field}>={start_id}）")
+
+def collect_and_write_permanent_ids(card_info_path: Path, output_path: Path):
+    """
+    从 character_card.csv 读取 title->id 映射，
+    抓取 https://gamerch.com/wizard-promise/175474 页面，
+    解析每行卡名匹配到 title，得到 id 列表。
+    以“追加模式”更新 permanent.txt：
+    只追加当前不存在的 ID，最终升序保存。
+    """
+    # ===== 读取现有 permanent.txt =====
+    existing_ids = set()
+    if output_path.exists():
+        try:
+            with open(output_path, "r", encoding="utf-8") as f:
+                for part in f.read().strip().split(","):
+                    part = part.strip()
+                    if part.isdigit():
+                        existing_ids.add(int(part))
+            log("INFO", f"已读取现有恒常 ID {len(existing_ids)} 条")
+        except Exception as e:
+            log("WARN", f"读取 {output_path} 出错，将重新生成: {e}")
+
+    # ===== 读取 character_card.csv，建立 title -> id 映射 =====
+    title_to_id = {}
+    with open(card_info_path, 'r', encoding='utf-8', newline='') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            try:
+                card_id = int(row['id'])
+            except Exception:
+                continue
+            title_str = row.get('title', '').strip()
+            if title_str:
+                title_to_id[title_str] = card_id
+
+    # ===== 抓取页面 =====
+    url = "https://gamerch.com/wizard-promise/175474"
+    resp = retry_request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+    if not resp or resp.status_code != 200:
+        raise ConnectionError(f"请求失败，状态码: {getattr(resp, 'status_code', 'unknown')}")
+
+    soup = BeautifulSoup(resp.content, 'html.parser')
+
+    # ===== 解析行 =====
+    found_ids = set()
+    tr_list = soup.find_all('tr')
+    for tr in tr_list:
+        td = tr.find('td', class_='mu__table--col2')
+        if not td:
+            continue
+        a_tag = td.find('a')
+        if not a_tag:
+            continue
+        href = a_tag.get('href') or ''
+        if 'wizard-promise' not in href:
+            continue
+
+        text = (a_tag.text or '').strip()
+        if not text or '】' not in text:
+            continue
+
+        try:
+            left, right = text.split('】', 1)
+        except ValueError:
+            continue
+        title_part = left
+        name_part = right
+
+        if name_part not in CHARACTER_MAP:
+            for char_name in CHARACTER_MAP:
+                if char_name in name_part:
+                    name_part = char_name
+                    break
+
+        normalized_title = f"{title_part}】{name_part}"
+
+        cid = title_to_id.get(normalized_title)
+        if cid is not None:
+            found_ids.add(cid)
+        else:
+            log("WARN", f"恒常列表未命中: {normalized_title}")
+
+    # ===== 计算新增 =====
+    new_ids = found_ids - existing_ids
+    if new_ids:
+        log("INFO", f"发现 {len(new_ids)} 条新增恒常 ID: {sorted(new_ids)}")
+    else:
+        log("INFO", "没有新增恒常 ID")
+
+    # ===== 合并 & 写回 =====
+    all_ids = sorted(existing_ids | found_ids)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8', newline='') as f:
+        f.write(",".join(map(str, all_ids)))
+
+    log("INFO", f"恒常卡牌 ID 共 {len(all_ids)} 条，已写入: {output_path}")
 
 # ====== 主逻辑 ======
 def main():
@@ -314,7 +410,7 @@ def main():
     characteristics_data = export_characteristics_json(alt_title, start_characteristics_id)
     with open(tmp_characteristics_json, 'w', encoding='utf-8') as f:
         json.dump(characteristics_data, f, ensure_ascii=False, indent=4)
-    log("INFO", f"已写入临时特性 JSON：{tmp_characteristics_json}")
+    log("INFO", f"已写入临时特性 JSON: {tmp_characteristics_json}")
 
     # === 生成 give / grow 两个 CSV（内存中先构造） ===
     characteristics_map = {}
@@ -369,7 +465,7 @@ def main():
                     'manually_added': '1' if char_id is None else '1'
                 })
 
-        log("LOG", f"构造 give/grow：card_id={card_id}, base={base_chars}, grow={grow_chars}")
+        log("LOG", f"构造 give/grow: card_id={card_id}, base={base_chars}, grow={grow_chars}")
 
     tmp_give_csv = tmp_dir / "card_give_characteristics.csv"
     tmp_grow_csv = tmp_dir / "card_give_characteristics_grow_list.csv"
@@ -381,11 +477,18 @@ def main():
         writer = csv.DictWriter(f, fieldnames=['card_id', 'level', 'characteristic_id', 'value', 'manually_added'])
         writer.writeheader()
         writer.writerows(grow_list)
-    log("INFO", f"已写入临时 CSV：{tmp_give_csv}, {tmp_grow_csv}")
+    log("INFO", f"已写入临时 CSV: {tmp_give_csv}, {tmp_grow_csv}")
 
     # === 覆盖更新两个特性 CSV（key_field = card_id） ===
     overwrite_from_id_generic(tmp_give_csv, DATA_DIR / "card_give_characteristic.csv", "card_id", start_characteristics_id)
     overwrite_from_id_generic(tmp_grow_csv, DATA_DIR / "card_give_characteristic_grow_list.csv", "card_id", start_characteristics_id)
+
+    # === 恒常（kojo）id 生成 ===
+    try:
+        permanent_out = DATA_DIR / "permanent.txt"
+        collect_and_write_permanent_ids(DATA_DIR / "character_card.csv", permanent_out)
+    except Exception as e:
+        log("ERROR", f"生成恒常卡牌列表失败: {e}")
 
     # === 更新状态 ===
     last_id_in_card_info = read_last_id_from_csv(DATA_DIR / "character_card.csv")
