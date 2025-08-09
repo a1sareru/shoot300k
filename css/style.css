@@ -39,6 +39,7 @@
     --h5-text: #666;
     --textarea-bg: #f0f0f0;
     --komejirushi-text: #343434;
+    --color-red: rgb(229, 64, 59);
 }
 
 .dark {
@@ -82,6 +83,7 @@
     --h5-text: #bbb;
     --textarea-bg: #444;
     --komejirushi-text: #f0ebe2;
+    --color-red :#ffa5a2;
 }
 
 /* 基础重置 */
@@ -1057,4 +1059,37 @@ hr {
     flex-direction: column;
     gap: 2px;
     align-items: center;
+}
+
+/* red text */
+.highlight-red {
+    color: var(--color-red);
+}
+
+/* top decorations */
+.decorate-with-stars {
+  position: relative;
+  padding: 0 12px; /* 给左右星星留空间 */
+  display: inline-block; /* 保证伪元素定位正常 */
+}
+
+.decorate-with-stars::before,
+.decorate-with-stars::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;   /* 星星宽度 */
+  height: 10px;  /* 星星高度 */
+  background-image: url("openmoji-svg-color/2B50.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: translateY(-50%);
+}
+
+.decorate-with-stars::before {
+  left: 0; /* 左边星星 */
+}
+
+.decorate-with-stars::after {
+  right: 0; /* 右边星星 */
 }
