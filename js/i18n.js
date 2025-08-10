@@ -1,5 +1,7 @@
 let currentLangDict = {};
 
+let supportedLangs = ["zh", "ja", "en", "kr"];
+
 function getI18n(key, params = {}, fallback = '') {
   const template = currentLangDict[key] || fallback;
   return template.replace(/\{(\w+)\}/g, (_, k) => params[k] ?? '');
@@ -60,7 +62,7 @@ function highlightActiveLang(lang) {
   });
 }
 
-function detectBrowserLang(supported = ["zh", "ja", "en"], fallback = "zh") {
+function detectBrowserLang(supported = supportedLangs, fallback = "zh") {
   const lang = (navigator.language || "").toLowerCase();
   for (const code of supported) {
     if (lang.startsWith(code)) return code;
@@ -70,7 +72,7 @@ function detectBrowserLang(supported = ["zh", "ja", "en"], fallback = "zh") {
 
 document.addEventListener("DOMContentLoaded", () => {
   const stored = localStorage.getItem("lang");
-  const lang = stored || detectBrowserLang(["zh", "ja", "en"], "zh");
+  const lang = stored || detectBrowserLang(supportedLangs, "zh");
 
   loadLanguage(lang).then(() => {
     fetchRepoLastUpdated();
