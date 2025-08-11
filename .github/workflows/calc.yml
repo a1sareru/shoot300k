@@ -13,6 +13,7 @@ on:
       - "public/data/**"
       - ".github/workflows/calc.yml"
     paths-ignore:
+      - ".github/workflows/maintain.yml"
       - ".github/workflows/static.yml"
       - "css/**"
       - "deprecate/**"
