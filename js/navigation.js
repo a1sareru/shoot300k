@@ -25,10 +25,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // 进入 "持有卡牌" 页面时，加载卡牌
             if (targetId === "selectCards") {
-                document.body.style.overflow = "hidden";
                 loadCards();
             } else {
-                document.body.style.overflow = "auto";
             }
         });
     });
@@ -48,9 +46,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector("#topPage").classList.add("active");
     }
     if (savedTab === "selectCards") {
-        document.body.style.overflow = "hidden";
         loadCards();
     } else {
-        document.body.style.overflow = "auto";
     }
+
 });

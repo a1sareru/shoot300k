@@ -83,7 +83,7 @@
     --h5-text: #bbb;
     --textarea-bg: #444;
     --komejirushi-text: #f0ebe2;
-    --color-red :#ffa5a2;
+    --color-red: #ffa5a2;
 }
 
 /* 基础重置 */
@@ -104,7 +104,7 @@ body {
     min-height: 100vh;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     body {
         padding: 10px;
         font-size: small;
@@ -329,9 +329,9 @@ h5 {
     .nav-item {
         padding: 8px 10px;
         text-align: center;
-        font-size: 14px;
+        font-size: 10px;
         flex-grow: 1;
-        width: 50%;
+        width: 32%;
         /* 使每个导航项填满一半的导航栏宽度 */
     }
 }
@@ -352,8 +352,8 @@ h5 {
 @media (max-width: 600px) {
     .container {
         /* 增加顶部边距以适应展开的导航栏，更小的左右边距 */
-        margin: 110px 10px 10px;
-        padding: 15px;
+        margin: 50px 0 0 0;
+        padding: 14px;
         font-size: 95%;
     }
 }
@@ -375,6 +375,13 @@ h5 {
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
 }
 
+@media screen and (max-width: 600px) {
+    .bottom-bar {
+        height: 30px;
+        font-size: 9px;
+    }
+}
+
 /* 各部分内容 */
 .tab-content {
     display: none;
@@ -390,7 +397,7 @@ h5 {
 @media (max-width: 600px) {
     .tab-content {
         padding-top: 10px;
-        margin: 0 10px 60px;
+        margin: 0 0;
     }
 }
 
@@ -534,8 +541,7 @@ button {
     border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin: 4px 2px;
 }
 
 button:hover {
@@ -547,12 +553,10 @@ button:hover {
 @media (max-width: 600px) {
     button {
         font-size: 10px;
-        padding: 4px 10px;
+        padding: 2px 4px;
         border-radius: 6px;
 
-        /* 缩小间距 */
-        margin-right: 7px;
-        margin-bottom: 7px;
+        margin: 2px 1px;
 
     }
 }
@@ -576,14 +580,6 @@ button:hover {
 /* 复制按钮样式 */
 .copy-btn {
     background-color: #2196F3;
-    color: var(--navbar-text);
-    border: none;
-    align-self: right;
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 .copy-btn:hover {
@@ -609,9 +605,18 @@ button:hover {
 /* 卡牌列表滚动容器 */
 .selectCards-scrollable {
     /* 确保不会遮住 footer */
-    max-height: calc(85vh - 160px - 60px - 90px);
+    height: 50vh;
     padding-bottom: 120px;
     overflow-y: auto;
+
+    /* iOS 惯性滚动 */
+    -webkit-overflow-scrolling: touch;
+
+    /* 阻止滚出时把外层也带着滚 */
+    overscroll-behavior: contain;
+
+    /* 明确允许纵向手势 */
+    touch-action: pan-y;
 
     /* 淡灰色背景，柔和过渡 */
     background: var(--select-cards-scrollable-bg);
@@ -630,9 +635,8 @@ button:hover {
 
 @media screen and (max-width: 600px) {
     .selectCards-scrollable {
-        max-height: calc(85vh - 160px - 60px - 175px);
+        margin: 0px;
     }
-
 }
 
 #selected-ids {
@@ -690,7 +694,6 @@ button:hover {
 
 @media (max-width: 600px) {
     .submit-result-container {
-        padding: 0 10px;
         box-sizing: border-box;
     }
 }
@@ -974,11 +977,12 @@ textarea {
     flex: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .plain-container {
         /* 小屏幕时改为纵向排列 */
         flex-direction: column;
         align-items: center;
+        font-size: 0.8em;
     }
 }
 
@@ -1061,6 +1065,14 @@ hr {
     align-items: center;
 }
 
+@media screen and (max-width: 600px) {
+    #lang-switcher {
+        font-size: 12px;
+        left: 0px;
+        padding: 0 2px;
+    }
+}
+
 /* red text */
 .highlight-red {
     color: var(--color-red);
@@ -1068,28 +1080,34 @@ hr {
 
 /* top decorations */
 .decorate-with-stars {
-  position: relative;
-  padding: 0 12px; /* 给左右星星留空间 */
-  display: inline-block; /* 保证伪元素定位正常 */
+    position: relative;
+    padding: 0 12px;
+    /* 给左右星星留空间 */
+    display: inline-block;
+    /* 保证伪元素定位正常 */
 }
 
 .decorate-with-stars::before,
 .decorate-with-stars::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 10px;   /* 星星宽度 */
-  height: 10px;  /* 星星高度 */
-  background-image: url("openmoji-svg-color/2B50.svg");
-  background-size: contain;
-  background-repeat: no-repeat;
-  transform: translateY(-50%);
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    /* 星星宽度 */
+    height: 10px;
+    /* 星星高度 */
+    background-image: url("openmoji-svg-color/2B50.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    transform: translateY(-50%);
 }
 
 .decorate-with-stars::before {
-  left: 0; /* 左边星星 */
+    left: 0;
+    /* 左边星星 */
 }
 
 .decorate-with-stars::after {
-  right: 0; /* 右边星星 */
+    right: 0;
+    /* 右边星星 */
 }
