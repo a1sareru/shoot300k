@@ -469,6 +469,7 @@ h5 {
     background-color: rgba(255, 177, 239, 0.25);
 }
 
+
 /* 边框样式 */
 .gold-border {
     border: 3px solid gold;
@@ -520,9 +521,59 @@ figure figcaption {
     padding: 2px;
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
+    .selectCards-scrollable {
+        direction: rtl;
+    }
+
+    .selectCards-scrollable>* {
+        direction: ltr;
+    }
+
+    .card {
+        width: auto;
+        padding: 0;
+        margin: 2px;
+    }
+
+    .gold-border,
+    .silver-border {
+        border: 0px;
+    }
+
+    /* 只显示图片：隐藏文字与标识（caption 和 banner） */
+    .card figure>figcaption {
+        display: none !important;
+    }
+
+    .card .card-banner {
+        display: none !important;
+    }
+
+    /* 取消 hover 效果（移动端也兜底） */
+    .card:hover {
+        transform: none !important;
+        box-shadow: none !important;
+        background: var(--card-bg) !important;
+    }
+
+    /* 非选中：加黑色遮罩；选中：移除遮罩 */
+    .card img {
+        transition: filter 0.2s ease;
+        display: block;
+        height: auto;
+    }
+
+    .card:not(.selected) img {
+        filter: brightness(0.4);
+    }
+
+    .card.selected img {
+        filter: none;
+    }
+
     figure img {
-        width: 30px;
+        width: 50px;
         height: auto;
     }
 
