@@ -559,7 +559,7 @@ figure figcaption {
 
     /* 非选中：加黑色遮罩；选中：移除遮罩 */
     .card img {
-        transition: filter 0.2s ease;
+        transition: filter 0.2s ease !important;
         display: block;
         height: auto;
     }
@@ -571,6 +571,12 @@ figure figcaption {
     .card.selected img {
         filter: none;
     }
+
+    .card.selected {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
 
     figure img {
         width: 50px;
