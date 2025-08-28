@@ -393,21 +393,24 @@ def main():
     log("INFO", f"卡信息起点 ID: {start_card_id}")
     log("INFO", f"特性信息起点 ID: {start_characteristics_id}")
 
-    alt_title = get_alt_title_for_id(start_card_id - 1)
-    log("INFO", f"获取到起点卡的 alt: {alt_title}")
+    # 分开计算两套起点的“上一张”的 alt
+    alt_title_for_cards = get_alt_title_for_id(start_card_id - 1)
+    alt_title_for_chars = get_alt_title_for_id(start_characteristics_id - 1)
+
+    log("INFO", f"获取到【卡信息】起点卡的上一张 alt: {alt_title_for_cards}")
+    log("INFO", f"获取到【特性】起点卡的上一张 alt: {alt_title_for_chars}")
 
     tmp_dir = Path(__file__).resolve().parent / "tmp"
     tmp_dir.mkdir(exist_ok=True)
 
     # === 卡信息 ===
     tmp_card_info_csv = tmp_dir / "new_character_card.csv"
-    export_card_infos(alt_title, start_card_id, tmp_card_info_csv)
-    # 覆盖式写回 character_card.csv（key_field = id）
+    export_card_infos(alt_title_for_cards, start_card_id, tmp_card_info_csv)
     overwrite_from_id_generic(tmp_card_info_csv, DATA_DIR / "character_card.csv", "id", start_card_id)
 
     # === 特性 JSON ===
     tmp_characteristics_json = tmp_dir / "new_characteristics.json"
-    characteristics_data = export_characteristics_json(alt_title, start_characteristics_id)
+    characteristics_data = export_characteristics_json(alt_title_for_chars, start_characteristics_id)
     with open(tmp_characteristics_json, 'w', encoding='utf-8') as f:
         json.dump(characteristics_data, f, ensure_ascii=False, indent=4)
     log("INFO", f"已写入临时特性 JSON: {tmp_characteristics_json}")
