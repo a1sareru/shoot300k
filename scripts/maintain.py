@@ -177,6 +177,15 @@ def export_card_infos(target_alt, start_index, csv_path):
                     continue
                 else:
                     continue
+
+            # 新增：若遇到「【BDカード（仮）】*」则停止抓取
+            img_tag = tr.find('img', alt=True)
+            if img_tag:
+                alt_text = img_tag['alt'].strip()
+                if alt_text.startswith('【BDカード（仮）】'):
+                    log("INFO", f"检测到临时BD卡，停止卡信息抓取：{alt_text}")
+                    break
+
             row = process_card_row(tr, current_idx)
             if row:
                 log("LOG", f"卡信息写入 id={current_idx}, title={row['title']}, rarity={row['rarity']}")
