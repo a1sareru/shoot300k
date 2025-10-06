@@ -64,7 +64,7 @@ function formatBannerText(banner, id_19 = 0) {
     } else if (bannerText.startsWith("rensen")) { // rensen
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `<i class='oma oma-seedling'></i> <span data-i18n="card.banner.caulis">${getI18n("card.banner.caulis")}</span>`;
-    } else if (bannerText === "robe" || mahopaIds19.includes(id_19)) { // mahopa
+    } else if (bannerText == "pajamas+"|| bannerText === "robe" || mahopaIds19.includes(id_19)) { // mahopa
         formattedBanner += ` card-banner-special">`;
         formattedBanner += `<i class='oma oma-partying-face'></i> <span data-i18n="card.banner.mahopa">${getI18n("card.banner.mahopa")}</span>`;
     } else if (bannerText === "sonatine+") { // sonatine+
