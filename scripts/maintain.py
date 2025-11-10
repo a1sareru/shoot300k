@@ -50,9 +50,111 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 LAST_CARD_INFO_FILE = LOG_DIR / "last_card_info_id.txt"
 LAST_MISMATCH_FILE = LOG_DIR / "last_characteristics_mismatch_id.txt"
 
+ICON_DIR = DATA_DIR.parent / "images" / "card_icons"  # 即 public/images/card_icons/
+ICON_DIR.mkdir(parents=True, exist_ok=True)
+
+ICON_NAME_RE = re.compile(r'^Card_icon_(\d+)\.png$')
+
 # ====== 日志工具 ======
 def log(level, msg):
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {level}: {msg}")
+
+# ====== 图标补全：工具函数 ======
+
+def get_existing_icon_ids(icons_dir: Path) -> set[int]:
+    """
+    扫描 public/images/card_icons/ 下已有的图标文件，按整数比较返回已存在的 id 集合。
+    例如 Card_icon_14.png 和 Card_icon_1000.png 会正确识别为 14 与 1000（不会用字典序）。
+    """
+    ids = set()
+    for p in icons_dir.glob("Card_icon_*.png"):
+        m = ICON_NAME_RE.match(p.name)
+        if not m:
+            continue
+        try:
+            ids.add(int(m.group(1)))
+        except ValueError:
+            continue
+    return ids
+
+
+def get_card_ids_from_csv(card_csv: Path) -> set[int]:
+    """
+    读取 character_card.csv 的全部 id（整数化），用于与已有图标做差集补全“历史漏下的”。
+    """
+    ids = set()
+    if not card_csv.exists():
+        return ids
+    with open(card_csv, newline='', encoding='utf-8') as f:
+        for row in csv.DictReader(f):
+            v = row.get('id')
+            if v is not None and str(v).strip().isdigit():
+                ids.add(int(v))
+    return ids
+
+
+def download_icon_for_id(card_id: int, icons_dir: Path) -> bool:
+    """
+    通过 BWiki 的文件重定向接口下载图标：
+    https://wiki.biligame.com/mahoyaku/Special:Redirect/file/Card_icon_<id>.png
+    下载成功即覆盖（若文件已存在则直接返回 True）。
+    """
+    out_path = icons_dir / f"Card_icon_{card_id}.png"
+    if out_path.exists():
+        return True  # 已有文件，视为成功
+
+    url = f"https://wiki.biligame.com/mahoyaku/Special:Redirect/file/Card_icon_{card_id}.png"
+    try:
+        resp = retry_request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    except Exception as e:
+        log("ERROR", f"图标下载异常 id={card_id}: {e}")
+        return False
+
+    if not resp or resp.status_code != 200:
+        log("WARN", f"图标下载失败/未找到 id={card_id}, status={getattr(resp, 'status_code', None)}")
+        return False
+
+    try:
+        with open(out_path, 'wb') as f:
+            f.write(resp.content)
+        log("LOG", f"图标下载成功 id={card_id} -> {out_path.name}")
+        return True
+    except Exception as e:
+        log("ERROR", f"写入图标失败 id={card_id}: {e}")
+        return False
+
+
+def download_missing_icons(existing_ids: set[int], all_card_ids: set[int], icons_dir: Path) -> int:
+    """
+    计算缺失 id 并下载：
+    1) 全量差集补历史缺口：all_card_ids - existing_ids
+    2) 顺延补齐：从 max(existing_ids)+1 一直到 max(all_card_ids)
+       （在 1) 已包含的情况下，这一步可能为空；两者合并去重处理）
+    返回成功下载的数量。
+    """
+    if not all_card_ids:
+        return 0
+
+    # 差集：历史缺口
+    missing = set(all_card_ids) - set(existing_ids)
+
+    # 顺延：从当前已存在的最大 id + 1 到最新 id
+    if existing_ids:
+        seq_start = max(existing_ids) + 1
+    else:
+        seq_start = min(all_card_ids)  # 目录为空时，从现有最小卡 id 开始
+    seq_end = max(all_card_ids)
+    if seq_start <= seq_end:
+        missing |= set(range(seq_start, seq_end + 1))
+
+    # 只对确实存在的卡 id 做尝试（防止构造出不在 CSV 的 id）
+    missing = sorted([i for i in missing if i in all_card_ids])
+
+    ok = 0
+    for cid in missing:
+        if download_icon_for_id(cid, icons_dir):
+            ok += 1
+    return ok
 
 # ====== 工具函数 ======
 def read_last_value_from_csv(csv_path, field):
@@ -501,6 +603,12 @@ def main():
         collect_and_write_permanent_ids(DATA_DIR / "character_card.csv", permanent_out)
     except Exception as e:
         log("ERROR", f"生成恒常卡牌列表失败: {e}")
+
+    # === 补全缺失卡图标（public/images/card_icons/Card_icon_<id>.png） ===
+    existing_icon_ids = get_existing_icon_ids(ICON_DIR)
+    all_card_ids = get_card_ids_from_csv(DATA_DIR / "character_card.csv")
+    added_icons = download_missing_icons(existing_icon_ids, all_card_ids, ICON_DIR)
+    log("INFO", f"卡图标补全完成：新增 {added_icons} 张（目录={ICON_DIR}）")
 
     # === 更新状态 ===
     last_id_in_card_info = read_last_id_from_csv(DATA_DIR / "character_card.csv")
