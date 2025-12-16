@@ -432,5 +432,35 @@ if __name__ == "__main__":
     os.makedirs(args.output_dir, exist_ok=True)
     with open(f"{args.output_dir}/full_solution.json", "w") as f:
         json.dump(full_solution, f)
-    with open(f"{args.output_dir}/full_solution_bwiki.json", "w") as f:
-        json.dump(full_solution_bwiki, f)
+    # with open(f"{args.output_dir}/full_solution_bwiki.json", "w") as f:
+    #     json.dump(full_solution_bwiki, f)
+    # feat: save the full_solution_bwiki in chunks
+    CHUNK_SIZE = 15000
+    sorted_keys = sorted(full_solution_bwiki.keys()) # ensure consistent order
+    total_items = len(sorted_keys)
+    total_chunks = (total_items + CHUNK_SIZE - 1) // CHUNK_SIZE
+    
+    meta_info = {
+        "total_chunks": total_chunks,
+        "total_items": total_items,
+        "chunk_size": CHUNK_SIZE,
+        "timestamp": int(pd.Timestamp.now().timestamp())
+    }
+
+    # save each chunk
+    for i in range(total_chunks):
+        chunk_index = i + 1
+        start_idx = i * CHUNK_SIZE
+        end_idx = start_idx + CHUNK_SIZE
+        current_keys = sorted_keys[start_idx:end_idx]
+        
+        chunk_data = {k: full_solution_bwiki[k] for k in current_keys}
+        
+        filename = f"full_solution_bwiki_{chunk_index}.json"
+        with open(f"{args.output_dir}/{filename}", "w") as f:
+            json.dump(chunk_data, f)
+        print(f"Saved chunk {chunk_index}/{total_chunks}: {filename} ({len(chunk_data)} items)")
+
+    # save the meta info
+    with open(f"{args.output_dir}/solutions4bwiki_meta.json", "w") as f:
+        json.dump(meta_info, f)
