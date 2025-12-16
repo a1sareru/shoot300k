@@ -62,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
             // 遍历 fullSolutionData
             for (const solution in fullSolutionData) {
                 // solution has "quad" and "card0s"
-                const quadCandidate = fullSolutionData[solution]["quad"];
-                const card0Candidates = fullSolutionData[solution]["card0s"];
-                const tags = fullSolutionData[solution]["tags"];
-                const colors = fullSolutionData[solution]["colors"];
+                const quadCandidate = fullSolutionData[solution]["q"];
+                const card0Candidates = fullSolutionData[solution]["a"];
+                const tags = fullSolutionData[solution]["t"];
+                const colors = fullSolutionData[solution]["c"];
 
                 if (!quadCandidate || !card0Candidates) continue; // 跳过空数据
 

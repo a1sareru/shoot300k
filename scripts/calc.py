@@ -419,12 +419,12 @@ if __name__ == "__main__":
                 if len(tmp_card0_set) == 0:
                     continue
                 current_solution = {
-                    "quad": quad,
-                    "card0s": tmp_card0_set,
-                    "colors": color_pair_as_key
+                    "q": quad, # =quad, the four cards 
+                    "a": tmp_card0_set, # the possible card0s
+                    "c": color_pair_as_key # the color pair
                 }
                 full_solution_bwiki[cnt] = current_solution.copy()
-                current_solution['tags'] = tag_pair;
+                current_solution['t'] = tag_pair; # the tag pair
                 full_solution[cnt] = current_solution
                 cnt += 1
     print(f"Total solutions (quint): {len(quint_set)}")
