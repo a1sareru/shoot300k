@@ -61,10 +61,10 @@ def log(level, msg):
 
 # ====== 图标补全：工具函数 ======
 
-
 def get_existing_icon_ids(icons_dir: Path) -> set[int]:
     """
-    扫描 public/images/card_icons/ 下已有的图标文件，返回已存在的 BWiki 编号集合。
+    扫描 public/images/card_icons/ 下已有的图标文件，按整数比较返回已存在的 id 集合。
+    例如 Card_icon_14.png 和 Card_icon_1000.png 会正确识别为 14 与 1000（不会用字典序）。
     """
     ids = set()
     for p in icons_dir.glob("Card_icon_*.png"):
@@ -93,69 +93,68 @@ def get_card_ids_from_csv(card_csv: Path) -> set[int]:
     return ids
 
 
-
-
-
-def download_icon_for_id(card_id: int, icons_dir: Path) -> str:
+def download_icon_for_id(card_id: int, icons_dir: Path) -> bool:
     """
-    下载图标，返回'success'（新下载）、'exists'（已存在）、'fail'（失败）。
+    通过 BWiki 的文件重定向接口下载图标：
+    https://wiki.biligame.com/mahoyaku/Special:Redirect/file/Card_icon_<id>.png
+    下载成功即覆盖（若文件已存在则直接返回 True）。
     """
-    bwiki_id = get_bwiki_card_page_id(card_id)
-    if bwiki_id < 1:
-        return 'fail'
-    out_path = icons_dir / f"Card_icon_{bwiki_id}.png"
+    out_path = icons_dir / f"Card_icon_{card_id}.png"
     if out_path.exists():
-        return 'exists'
+        return True  # 已有文件，视为成功
 
-    url = f"https://wiki.biligame.com/mahoyaku/Special:Redirect/file/Card_icon_{bwiki_id}.png"
+    url = f"https://wiki.biligame.com/mahoyaku/Special:Redirect/file/Card_icon_{card_id}.png"
     try:
         resp = retry_request(url, headers={'User-Agent': 'Mozilla/5.0'})
     except Exception as e:
-        log("ERROR", f"图标下载异常 id={card_id} (bwiki_id={bwiki_id}): {e}")
-        return 'fail'
+        log("ERROR", f"图标下载异常 id={card_id}: {e}")
+        return False
 
     if not resp or resp.status_code != 200:
-        log("WARN", f"图标下载失败/未找到 id={card_id} (bwiki_id={bwiki_id}), status={getattr(resp, 'status_code', None)}")
-        return 'fail'
+        log("WARN", f"图标下载失败/未找到 id={card_id}, status={getattr(resp, 'status_code', None)}")
+        return False
 
     try:
         with open(out_path, 'wb') as f:
             f.write(resp.content)
-        log("LOG", f"图标下载成功 id={card_id} (bwiki_id={bwiki_id}) -> {out_path.name}")
-        return 'success'
+        log("LOG", f"图标下载成功 id={card_id} -> {out_path.name}")
+        return True
     except Exception as e:
-        log("ERROR", f"写入图标失败 id={card_id} (bwiki_id={bwiki_id}): {e}")
-        return 'fail'
-
-
-
+        log("ERROR", f"写入图标失败 id={card_id}: {e}")
+        return False
 
 
 def download_missing_icons(existing_ids: set[int], all_card_ids: set[int], icons_dir: Path) -> int:
     """
-    只下载本地真正缺失的BWiki编号图片。
-    existing_ids: 已有的BWiki编号集合
-    all_card_ids: character_card.csv的原始id集合
+    计算缺失 id 并下载：
+    1) 全量差集补历史缺口：all_card_ids - existing_ids
+    2) 顺延补齐：从 max(existing_ids)+1 一直到 max(all_card_ids)
+       （在 1) 已包含的情况下，这一步可能为空；两者合并去重处理）
+    返回成功下载的数量。
     """
     if not all_card_ids:
         return 0
 
-    # 只对每个card_id映射后的bwiki_id判断是否缺失
-    missing = []
-    for cid in all_card_ids:
-        bwiki_id = get_bwiki_card_page_id(cid)
-        if bwiki_id < 1:
-            continue
-        if bwiki_id not in existing_ids:
-            missing.append((cid, bwiki_id))
+    # 差集：历史缺口
+    missing = set(all_card_ids) - set(existing_ids)
 
-    new_count = 0
-    for cid, _ in missing:
-        result = download_icon_for_id(cid, icons_dir)
-        if result == 'success':
-            new_count += 1
-    log("INFO", f"卡图标补全完成：新增 {new_count} 张，缺失总数 {len(missing)} 张（目录={icons_dir}）")
-    return new_count
+    # 顺延：从当前已存在的最大 id + 1 到最新 id
+    if existing_ids:
+        seq_start = max(existing_ids) + 1
+    else:
+        seq_start = min(all_card_ids)  # 目录为空时，从现有最小卡 id 开始
+    seq_end = max(all_card_ids)
+    if seq_start <= seq_end:
+        missing |= set(range(seq_start, seq_end + 1))
+
+    # 只对确实存在的卡 id 做尝试（防止构造出不在 CSV 的 id）
+    missing = sorted([i for i in missing if i in all_card_ids])
+
+    ok = 0
+    for cid in missing:
+        if download_icon_for_id(cid, icons_dir):
+            ok += 1
+    return ok
 
 # ====== 工具函数 ======
 def read_last_value_from_csv(csv_path, field):
@@ -311,73 +310,71 @@ def retry_request(url, headers=None, retries=3, backoff_factor=0.5, status_force
             time.sleep(backoff_factor * (2 ** attempt))
     raise ConnectionError(f"请求失败: {url}")
 
+def process_characteristic_row(tr):
+    img_tag = tr.find('img', alt=True)
+    if not img_tag:
+        return None
+    link_tag = tr.find('td', class_='mu__table--col1').find('a')
+    if not link_tag or not link_tag['href']:
+        return None
+    detail_url = link_tag['href']
+    if not detail_url.startswith('http'):
+        detail_url = 'https://gamerch.com' + detail_url
+    detail_resp = retry_request(detail_url, headers={'User-Agent': 'Mozilla/5.0'})
+    detail_soup = BeautifulSoup(detail_resp.content, 'html.parser')
+    traits_block = None
+    for tr_tag in detail_soup.find_all('tr'):
+        if 'パートナー特性' in tr_tag.get_text():
+            traits_block = tr_tag
+            break
+    if not traits_block:
+        return None
+    traits_td = traits_block.find_next_sibling('tr')
+    if not traits_td:
+        return None
+    traits_text = traits_td.get_text(separator='*', strip=True)
+    segments = re.split(r'\(?レベル\d+で解放\)?', traits_text)
+    base_traits = []
+    growth_traits = []
+    if segments:
+        base_part = segments[0]
+        base_traits = [t.strip('*/ ') for t in base_part.split('/') if t.strip('*/ ')]
+    base_traits = [t for t in base_traits if t]
+    if base_traits and base_traits[-1].count('*') >= 1:
+        c1, c2 = base_traits[-1].split('*')
+        base_traits[-1] = c1
+        growth_traits.append(c2)
+    if len(base_part) > 0:
+        for i in range(1, len(segments)):
+            if segments[i] and segments[i].strip('*/ '):
+                growth_traits.append(segments[i].strip('*/ '))
+    return {"基础": base_traits, "成长": growth_traits}
 
-# ====== BWiki特性抓取重构 ======
-def get_bwiki_card_page_id(card_id: int) -> int:
-    """
-    BWiki页面编号映射：<=336一致，>336需-19
-    """
-    if card_id <= 336:
-        return card_id
-    else:
-        return card_id - 19
-
-def fetch_bwiki_card_traits(card_id: int) -> dict:
-    """
-    抓取BWiki单卡页面，解析模板参数，返回特性信息。
-    """
-    page_id = get_bwiki_card_page_id(card_id)
-    url = f"https://wiki.biligame.com/mahoyaku/Card_{page_id}"
-    raw_url = url + "?action=raw"
-    try:
-        resp = retry_request(raw_url, headers={'User-Agent': 'Mozilla/5.0'})
-    except Exception as e:
-        log("ERROR", f"BWiki页面请求异常 id={card_id}, url={raw_url}: {e}")
-        return {"基础": [], "成长": [], "卡牌名": f"请求失败({card_id})"}
-    if not resp or resp.status_code != 200:
-        log("WARN", f"BWiki页面未找到 id={card_id}, url={raw_url}, status={getattr(resp, 'status_code', None)}")
-        return {"基础": [], "成长": [], "卡牌名": f"未找到({card_id})"}
-    wikitext = resp.text
-    # log("DEBUG", f"抓取页面 id={card_id}, url={raw_url}, wikitext片段: {wikitext[:300].replace(chr(10),' ').replace(chr(13),' ')} ...")
-    m = re.search(r"\{\{卡牌([\s\S]+?)\}\}", wikitext)
-    if not m:
-        idx = wikitext.find('卡牌')
-        context = wikitext[idx-50:idx+200] if idx > 50 else wikitext[:idx+200]
-        log("WARN", f"BWiki页面无卡牌模板 id={card_id}, url={raw_url}, context: {context}")
-        return {"基础": [], "成长": [], "卡牌名": f"无模板({card_id})"}
-    template = m.group(1)
-    def extract_param(field):
-        pat = rf"\|{field}\s*=([^\n\r]*)"
-        m2 = re.search(pat, template)
-        return m2.group(1).strip() if m2 else ""
-    base = extract_param("卡牌持有特性基础")
-    grow = extract_param("卡牌持有特性成长")
-    card_name = extract_param("卡牌名")
-    base_traits = [t.strip() for t in re.split(r"[\s/，,]+", base) if t.strip()]
-    grow_traits = [t.strip() for t in re.split(r"[\s/，,]+", grow) if t.strip()]
-    return {"基础": base_traits, "成长": grow_traits, "卡牌名": card_name}
-
-
-def export_characteristics_json_bwiki(start_index):
-    """
-    遍历character_card.csv，从start_index开始，抓取BWiki特性。
-    """
-    card_csv = DATA_DIR / "character_card.csv"
+def export_characteristics_json(target_alt, start_index):
+    response = retry_request("https://gamerch.com/wizard-promise/117797", headers={'User-Agent': 'Mozilla/5.0'})
+    soup = BeautifulSoup(response.content, 'html.parser')
+    found_target = False
+    current_idx = start_index
     result = {}
-    with open(card_csv, newline='', encoding='utf-8') as f:
-        for row in csv.DictReader(f):
-            try:
-                card_id = int(row['id'])
-            except Exception:
+    for tr in soup.find_all('tr'):
+        if not found_target:
+            if tr.find('img', alt=lambda x: x and target_alt in x):
+                found_target = True
+                log("INFO", f"定位到起点（上一张）: {target_alt} —— 从下一行开始抓取特性")
                 continue
-            if card_id < start_index:
-                continue
-            traits = fetch_bwiki_card_traits(card_id)
-            if not traits["基础"] or not traits["成长"]:
-                log("WARN", f"特性缺失 id={card_id}, 卡牌名={traits.get('卡牌名','')}, 基础={traits['基础']}, 成长={traits['成长']}")
             else:
-                log("LOG", f"特性写入 id={card_id}, 基础={traits['基础']}, 成长={traits['成长']}")
-            result[str(card_id)] = traits
+                continue
+        row_data = process_characteristic_row(tr)
+        if row_data:
+            if not row_data["基础"] or not row_data["成长"]:
+                name_td = tr.find('td', class_='mu__table--col2')
+                name = name_td.get_text(strip=True) if name_td else ""
+                row_data["卡牌名"] = name
+                log("WARN", f"特性缺失 id={current_idx}, 卡牌名={name}, 基础={row_data['基础']}, 成长={row_data['成长']}")
+            else:
+                log("LOG", f"特性写入 id={current_idx}, 基础={row_data['基础']}, 成长={row_data['成长']}")
+            result[str(current_idx)] = row_data
+            current_idx += 1
     return result
 
 # ====== CSV 覆盖工具 ======
@@ -502,7 +499,6 @@ def collect_and_write_permanent_ids(card_info_path: Path, output_path: Path):
     log("INFO", f"恒常卡牌 ID 共 {len(all_ids)} 条，已写入: {output_path}")
 
 # ====== 主逻辑 ======
-
 def main():
     start_card_id, start_characteristics_id = get_start_ids()
     log("INFO", f"卡信息起点 ID: {start_card_id}")
@@ -523,9 +519,9 @@ def main():
     export_card_infos(alt_title_for_cards, start_card_id, tmp_card_info_csv)
     overwrite_from_id_generic(tmp_card_info_csv, DATA_DIR / "character_card.csv", "id", start_card_id)
 
-    # === 特性 JSON（BWiki重构） ===
+    # === 特性 JSON ===
     tmp_characteristics_json = tmp_dir / "new_characteristics.json"
-    characteristics_data = export_characteristics_json_bwiki(start_characteristics_id)
+    characteristics_data = export_characteristics_json(alt_title_for_chars, start_characteristics_id)
     with open(tmp_characteristics_json, 'w', encoding='utf-8') as f:
         json.dump(characteristics_data, f, ensure_ascii=False, indent=4)
     log("INFO", f"已写入临时特性 JSON: {tmp_characteristics_json}")
@@ -611,27 +607,18 @@ def main():
     # === 补全缺失卡图标（public/images/card_icons/Card_icon_<id>.png） ===
     existing_icon_ids = get_existing_icon_ids(ICON_DIR)
     all_card_ids = get_card_ids_from_csv(DATA_DIR / "character_card.csv")
-    download_missing_icons(existing_icon_ids, all_card_ids, ICON_DIR)
+    added_icons = download_missing_icons(existing_icon_ids, all_card_ids, ICON_DIR)
+    log("INFO", f"卡图标补全完成：新增 {added_icons} 张（目录={ICON_DIR}）")
 
     # === 更新状态 ===
     last_id_in_card_info = read_last_id_from_csv(DATA_DIR / "character_card.csv")
     LAST_CARD_INFO_FILE.write_text(str(last_id_in_card_info), encoding='utf-8')
 
-    # 修正：分别记录基础特性和成长特性缺失的最小card_id，取较小者
-    min_basic_missing = None
-    min_grow_missing = None
-    for cid, data in characteristics_data.items():
-        if not data.get("基础") and (min_basic_missing is None or int(cid) < min_basic_missing):
-            min_basic_missing = int(cid)
-        if not data.get("成长") and (min_grow_missing is None or int(cid) < min_grow_missing):
-            min_grow_missing = int(cid)
     mismatch_id = None
-    if min_basic_missing is not None and min_grow_missing is not None:
-        mismatch_id = min(min_basic_missing, min_grow_missing)
-    elif min_basic_missing is not None:
-        mismatch_id = min_basic_missing
-    elif min_grow_missing is not None:
-        mismatch_id = min_grow_missing
+    for cid, data in characteristics_data.items():
+        if "卡牌名" in data:
+            mismatch_id = int(cid)
+            break
     if mismatch_id:
         LAST_MISMATCH_FILE.write_text(str(mismatch_id), encoding='utf-8')
         log("WARN", f"检测到数据不匹配，从 {mismatch_id} 起的特性将在下次重新抓取")
