@@ -35,7 +35,7 @@
   "top.content-below-may-not-translated": "<span></span>",
   "cardmanager.description": "<details open><summary><span class='highlight-main'><span style='font-size:larger;'><i class='oma oma-warning'></i> 注意</span>：（以下是详细的说明。点击本行或者本行最左端的小三角形可以折叠/展开。）</span></summary><ol><li>「只显示SSR」按钮会清空已选的SR，请慎重操作。 <del>如果使用该功能，则推荐完全不考虑SR。</del> </li><li>建议妥善保存所使用的字符串。</li><li>点击卡牌标题即可跳转到卡牌在中文WIKI的对应页面<del>预设为在新页面打开，实际可能因浏览器而异，请谨慎使用</del>。</li></ol></details>",
   "disclaimer.text": "<p>本工具仅供个人研究与学习使用，任何使用本工具的行为均应符合适用法律法规。开发者不对任何用户的使用方式负责，亦不承担任何由此引发的法律责任。</p><p>本工具不存储、不传播任何受版权保护的内容。如果本工具被认为侵犯了您的合法权益，请通过电子邮件联系我们，我们将立即停止相关内容的提供并进行删除。</p><p>开发者放弃对此工具的所有权利，包括但不限于知识产权、商业利益和后续维护责任。本工具以“原样”提供，不保证其准确性、完整性或适用性，使用者需自行承担所有风险。</p>",
-  "contact-us": "<p><a class='my-links' href='mailto:kmbk.kr.dev@outlook.jp'>kmbk.kr.dev[AT]outlook.jp</a></p><p>※ 除报错、建议和提问外，也欢迎其他主题的邮件。</p>",
+  "contact-us": "<p><a class='my-links' href='mailto:a1sareru@outlook.jp'>a1sareru[AT]outlook.jp</a></p><p>※ 除报错、建议和提问外，也欢迎其他主题的邮件。</p>",
   "calc-desc-line1": "在下面的文本框内输入您所持有卡牌对应的编号列表（以半角逗号分隔），点击按钮即可计算。",
   "calc-desc-line2": "未持有的卡牌（即需要借用的卡牌）将以<span class='highlight-border-calc'>粉色边框</span>标出。",
   "calc-prophecy-line2": "未持有的卡牌（即需要借用的卡牌）将以<span class='highlight-border-prophecy'>蓝色边框</span>标出。",
