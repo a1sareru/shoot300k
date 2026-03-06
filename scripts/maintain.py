@@ -527,7 +527,7 @@ def main():
     tmp_characteristics_json = tmp_dir / "new_characteristics.json"
     characteristics_data = export_characteristics_json_bwiki(start_characteristics_id)
     with open(tmp_characteristics_json, 'w', encoding='utf-8') as f:
-        json.dump(characteristics_data, f, ensure_ascii=False, indent=4)
+        json.dump(characteristics_data, f, ensure_ascii=False, separators=(',', ':'))
     log("INFO", f"已写入临时特性 JSON: {tmp_characteristics_json}")
 
     # === 生成 give / grow 两个 CSV（内存中先构造） ===

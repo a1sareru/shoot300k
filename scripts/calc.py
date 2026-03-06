@@ -431,7 +431,7 @@ if __name__ == "__main__":
 
     os.makedirs(args.output_dir, exist_ok=True)
     with open(f"{args.output_dir}/full_solution.json", "w") as f:
-        json.dump(full_solution, f)
+        json.dump(full_solution, f, separators=(',', ':'))
     # with open(f"{args.output_dir}/full_solution_bwiki.json", "w") as f:
     #     json.dump(full_solution_bwiki, f)
     # feat: save the full_solution_bwiki in chunks
@@ -458,9 +458,9 @@ if __name__ == "__main__":
         
         filename = f"full_solution_bwiki_{chunk_index}.json"
         with open(f"{args.output_dir}/{filename}", "w") as f:
-            json.dump(chunk_data, f)
+            json.dump(chunk_data, f, separators=(',', ':'))
         print(f"Saved chunk {chunk_index}/{total_chunks}: {filename} ({len(chunk_data)} items)")
 
     # save the meta info
     with open(f"{args.output_dir}/solutions4bwiki_meta.json", "w") as f:
-        json.dump(meta_info, f)
+        json.dump(meta_info, f, separators=(',', ':'))
