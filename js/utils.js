@@ -406,9 +406,9 @@ async function createCardElement(id19, cardMap19, ownedIds19, cardTags, hideTags
         cardDiv.classList.add("rarity-4");
     }
 
-    // 检查用户是否持有此卡，如果未持有，边框设为指定颜色
+    // 检查用户是否持有此卡，如果未持有，添加波点标记
     if (!ownedIds19.has(id19)) {
-        cardDiv.style.border = "4px solid " + color;
+        cardDiv.classList.add(color === "pink" ? "card-unowned-calc" : "card-unowned-prophecy");
     }
 
     // 如果 hideTags 为 false，才显示 tag

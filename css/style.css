@@ -451,6 +451,8 @@ h5 {
     font-weight: 600;
     line-height: 1.4;
     padding: 5px 7px;
+    position: relative;
+    z-index: 3;
 }
 
 .card-banner-kojo {
@@ -912,6 +914,8 @@ textarea {
     transition: transform 0.2s ease-in-out;
 
     box-sizing: content-box;
+    position: relative;
+    z-index: 0;
 }
 
 
@@ -932,6 +936,8 @@ textarea {
 
     /* 防止被压缩 */
     flex-shrink: 0;
+    position: relative;
+    z-index: 3;
 }
 
 
@@ -952,6 +958,8 @@ textarea {
     height: auto;
     object-fit: cover;
     border-radius: 5px;
+    position: relative;
+    z-index: 3;
 }
 
 /* Quad 卡片的容器（横向排列） */
@@ -1002,6 +1010,8 @@ textarea {
     /* 竖向排列 */
     align-items: center;
     margin-bottom: 10px;
+    position: relative;
+    z-index: 3;
 }
 
 .tag-img {
@@ -1009,6 +1019,8 @@ textarea {
     height: auto;
     margin: 5px 0;
     /* 竖向间距 */
+    position: relative;
+    z-index: 3;
 }
 
 
@@ -1167,4 +1179,71 @@ hr {
 .decorate-with-stars::after {
     right: 0;
     /* 右边星星 */
+}
+/* 未持有卡牌的波点标记 - calc（粉色波点） */
+.card-unowned-calc {
+    position: relative;
+}
+
+.card-unowned-calc::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    border-radius: 6px 6px 0 0;
+    background-image: radial-gradient(
+        circle,
+        rgba(255, 182, 193, 0.6) 3px,
+        transparent 3px
+    );
+    background-size: 12px 12px;
+    background-position: 0 0, 6px 6px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card-unowned-calc::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 3px rgba(255, 182, 193, 0.8);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 未持有卡牌的波点标记 - prophecy（蓝色波点） */
+.card-unowned-prophecy {
+    position: relative;
+}
+
+.card-unowned-prophecy::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    border-radius: 6px 6px 0 0;
+    background-image: radial-gradient(
+        circle,
+        rgba(136, 218, 227, 0.7) 3px,
+        transparent 3px
+    );
+    background-size: 12px 12px;
+    background-position: 0 0, 6px 6px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card-unowned-prophecy::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 3px rgba(136, 218, 227, 0.9);
+    pointer-events: none;
+    z-index: 2;
 }
