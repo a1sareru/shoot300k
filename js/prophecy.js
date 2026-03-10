@@ -23,10 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // 检查是否为合法的整数列表
         if (!/^\d+(,\d+)*$/.test(inputText)) {
             calcErrorInvalidInput.textContent = getI18n("calc.error.invalid-input");
-            calcErrorInvalidInput.style.display = "block";
+            calcErrorInvalidInput.classList.remove("hidden");
+            calcErrorInvalidInput.classList.add("visible");
             return;
         }
-        calcErrorInvalidInput.style.display = "none";
+        calcErrorInvalidInput.classList.add("hidden");
+        calcErrorInvalidInput.classList.remove("visible");
 
         // 在提交时更新 localStorage
         localStorage.setItem("prophecyCardInput", inputText);
@@ -127,7 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
             renderCalcResults(calcResults, results, filteredIds19, "#88dae3", getI18n("prophecy.no-result"));
         } catch (error) {
             calcErrorLoadFailure.textContent = getI18n("calc.error.load-failure");
-            calcErrorLoadFailure.style.display = "block";
+            calcErrorLoadFailure.classList.remove("hidden");
+            calcErrorLoadFailure.classList.add("visible");
             console.error(error);
         }
     }

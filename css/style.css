@@ -1247,3 +1247,17 @@ hr {
     pointer-events: none;
     z-index: 2;
 }
+
+/* 显示/隐藏工具类 */
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+/* 结果组过滤显示 */
+.result-group.filter-hidden {
+    display: none;
+}

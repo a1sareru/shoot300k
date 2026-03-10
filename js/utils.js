@@ -303,9 +303,13 @@ async function renderCalcResults(calcResults, results, ids19, highlightColor = "
             const filter = button.getAttribute('data-filter');
             document.querySelectorAll('.result-group').forEach(group => {
                 if (filter === 'all') {
-                    group.style.display = '';
+                    group.classList.remove('filter-hidden');
                 } else {
-                    group.style.display = group.classList.contains(filter) ? '' : 'none';
+                    if (group.classList.contains(filter)) {
+                        group.classList.remove('filter-hidden');
+                    } else {
+                        group.classList.add('filter-hidden');
+                    }
                 }
             });
         });
