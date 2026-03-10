@@ -273,6 +273,9 @@ async function filtedCardByIds19(ids19) {
 
 // 渲染计算结果
 async function renderCalcResults(calcResults, results, ids19, highlightColor = "pink", zeroResultsMessage = "未找到符合条件的卡组",) {
+    // 确保恒常卡列表已加载
+    await loadKojoIds19();
+
     calcResults.innerHTML = "";
 
     if (results.length === 0) {
