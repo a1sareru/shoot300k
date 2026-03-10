@@ -68,6 +68,7 @@
   "result.filter.show-all": "Show All",
   "calc.error.invalid-input": "Please enter a valid card number list separated by half-width commas",
   "calc.error.load-failure": "Calculation failed. There may be a network issue (solution unknown)",
+  "calc.option.only-owned-all": "Show only parties where all 5 cards are owned",
   "calc.no-result": "No parties could be formed at this time… Try the \"Party Prophecy\"!",
   "btn.prophecy": "Party Prophecy",
   "prophecy.no-result": "Unable to prophesy… Collect mana stones and wait for the right time to gacha, my dear sage!"

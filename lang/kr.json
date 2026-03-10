@@ -67,6 +67,7 @@
   "result.filter.show-all": "모두 표시",
   "calc.error.invalid-input": "유효한 카드 번호 리스트를 반각 쉼표로 구분지어 입력해 주세요.",
   "calc.error.load-failure": "계산에 실패했습니다. 네트워크 문제일지도 모릅니다(해결법은 모릅니다).",
+  "calc.option.only-owned-all": "5장 모두 소지하고 있는 파티만 표시",
   "calc.no-result": "현 상태로는 짤 수 있는 파티를 발견하지 못하였습니다……『파티 예언』을 해봅시다！",
   "btn.prophecy": "파티 예언",
   "prophecy.no-result": "예언을 얻지 못했어……마나석을 모아서 가챠를 돌릴 때를 기다리는 거야, 현자쨩!"

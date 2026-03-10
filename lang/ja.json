@@ -68,6 +68,7 @@
   "result.filter.show-all": "すべて表示",
   "calc.error.invalid-input": "有効なカード番号リストを半角カンマで区切って入力してください",
   "calc.error.load-failure": "計算に失敗しました。ネットワークの問題かもしれません（解決方法はわかりません）",
+  "calc.option.only-owned-all": "5枚すべて所持しているパーティのみ表示",
   "calc.no-result": "今のところ組めるパーティが見つかりませんでした……『パーティ予言』に行ってみてね！",
   "btn.prophecy": "パーティ予言",
   "prophecy.no-result": "予言し得ず……マナ石を貯えて、ガチャを引く時を待たんの、賢者ちゃん！"
