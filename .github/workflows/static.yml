@@ -34,7 +34,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v6
       - name: Commit and Push Last Update Information
         run: |
           git config --global user.name "github-actions[bot]"
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v6
       - name: Copy files from artifacts branch
         run: |
           git clone --depth 1 --branch artifacts https://github.com/${{ github.repository }} temp-artifacts

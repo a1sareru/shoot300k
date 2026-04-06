@@ -12,7 +12,7 @@ jobs:
   update-data:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.0
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.PAT_PUSH }}
 
@@ -22,7 +22,7 @@ jobs:
               https://api.github.com/user
 
       - name: Set up Python
-        uses: actions/setup-python@v5.1.1
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
