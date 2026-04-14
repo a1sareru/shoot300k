@@ -109,7 +109,12 @@ def download_icon_for_id(card_id: int, icons_dir: Path) -> str:
 
     url = f"https://wiki.biligame.com/mahoyaku/Special:Redirect/file/Card_icon_{bwiki_id}.png"
     try:
-        resp = retry_request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'https://wiki.biligame.com/mahoyaku/Card_1',
+            'Cookie': 'SESSDATA=fake_session_data_can_be_edited'
+        }
+        resp = retry_request(url, headers=headers)
     except Exception as e:
         log("ERROR", f"图标下载异常 id={card_id} (bwiki_id={bwiki_id}): {e}")
         return 'fail'
@@ -330,7 +335,12 @@ def fetch_bwiki_card_traits(card_id: int) -> dict:
     url = f"https://wiki.biligame.com/mahoyaku/Card_{page_id}"
     raw_url = url + "?action=raw"
     try:
-        resp = retry_request(raw_url, headers={'User-Agent': 'Mozilla/5.0'})
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'https://wiki.biligame.com/mahoyaku/Card_1',
+            'Cookie': 'SESSDATA=fake_session_data_can_be_edited'
+        }
+        resp = retry_request(raw_url, headers=headers)
     except Exception as e:
         log("ERROR", f"BWiki页面请求异常 id={card_id}, url={raw_url}: {e}")
         return {"基础": [], "成长": [], "卡牌名": f"请求失败({card_id})"}
