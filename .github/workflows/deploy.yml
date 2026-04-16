@@ -23,30 +23,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for Data Changes
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            data:
-              - 'public/data/**'
-              - 'scripts/calc.py'
-              - 'scripts/requirements.txt'
-              - '.github/workflows/deploy.yml'
-
       - name: Set Up Python
-        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-python@v6
         with:
           python-version: "3.10"
 
       - name: Install Dependencies
-        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
 
       - name: Run Calculation Script
-        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           python scripts/calc.py \
             -c public/data/character_card.csv \
@@ -56,7 +42,6 @@ jobs:
             -o output/
 
       - name: Generate Last Update Information
-        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
         id: last_update
         run: |
           FILE_PATH="public/data/card_give_characteristic.csv"
@@ -73,18 +58,7 @@ jobs:
           rm -rf solutions/
           mv output/ solutions/
 
-      - name: Retrieve Cached Solutions
-        if: steps.filter.outputs.data == 'false' && github.event_name != 'workflow_dispatch'
-        run: |
-          echo "No data changes detected. Retrieving solutions from artifacts branch."
-          git fetch origin artifacts
-          git checkout origin/artifacts -- solutions/ data-last-update repo-last-update || echo "Could not find solutions in artifacts branch."
-          
-          # Update repo-last-update to current date for the deployment
-          date +"%Y-%m-%d" > repo-last-update
-
       - name: Sync to Artifacts Branch
-        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -125,4 +99,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-
