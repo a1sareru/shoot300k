@@ -64,8 +64,16 @@
       <p>
         韓国語版の翻訳にご協力いただいた pick さんに感謝します。
       </p>
+      <div data-i18n="top.korean-notice"></div>
       <div data-i18n="top.content-below-may-not-translated"></div>
       <h2><i class='oma oma-megaphone'></i> 记事</h2>
+      <p><span style="font-weight: 900;">[2026-04-16]</span><br>
+        また、「所持カード」ページに、IDリストのインポート機能を追加しました。<br>
+        （添加了「持有卡牌」页面的卡牌 ID 列表导入功能。）
+      </p>
+      <p><span style="font-weight: 900;">[2026-04-16]</span><br>
+        4月15日のご報告ありがとうございました。修正しました。
+      </p>
       <p><span style="font-weight: 900;">[2026-03-10]</span><br>
         感谢热心贤者3月7日的邮件联络！<br>
         据此修复了初始等系列等恒常卡的hint显示bug，并优化了未持有卡牌的样式显示。<br>
@@ -222,7 +230,15 @@
           <button id="toggle-sr" data-i18n="btn.select-all-sr"></button>
           <button id="filter-ssr" data-i18n="btn.only-show-ssr"></button>
           <button id="copy-result" class="copy-btn" data-i18n="btn.copy"></button>
-          <div id="selected-ids"></div>
+          <br>
+          <div class="komejirushi-text">
+            <span data-i18n="cardmanager.import-prefix"></span>
+            <button id="apply-selection" data-i18n="btn.import"></button>
+            <span data-i18n="cardmanager.import-suffix"></span>
+          </div>
+          <!-- 沿用旧 ID 以保持旧版 JS 兼容性，但类型改为 textarea 以支持编辑 -->
+          <textarea id="selected-ids" class="string-input-area" rows="2" data-i18n="input.placeholder"></textarea>
+          <p id="card-manager-error" class="error-text" style="display: none;"></p>
         </div>
       </div>
       <!-- 滚动区域：卡牌列表 -->

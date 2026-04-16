@@ -373,6 +373,7 @@ h5 {
     align-items: center;
     font-size: 14px;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 6;
 }
 
 @media screen and (max-width: 600px) {

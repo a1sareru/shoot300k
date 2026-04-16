@@ -1,18 +1,112 @@
 let isFilteringSSR = false; // 是否处于 SSR 过滤模式
 
-// 更新已选卡片 ID 的显示
+// 获取当前文本框中的 ID 列表（返回显示 ID 的 Set）
+function getSelectedIdsFromUI() {
+    const inputEl = document.getElementById("selected-ids");
+    if (!inputEl) return new Set();
+    return new Set(inputEl.value.split(",")
+        .map(s => s.trim())
+        .filter(s => s !== ""));
+}
+
+// 将 ID 列表回写到文本框（不保存到本地存储）
+function setSelectedIdsToUI(idSet) {
+    const idArray = Array.from(idSet);
+    idArray.sort((a, b) => {
+        const numA = parseInt(a, 10);
+        const numB = parseInt(b, 10);
+        if (isNaN(numA) || isNaN(numB)) return 0;
+        return numB - numA;
+    });
+    const idString = idArray.join(",");
+    const inputEl = document.getElementById("selected-ids");
+    if (inputEl) {
+        if (inputEl.tagName === 'TEXTAREA') {
+            inputEl.value = idString;
+        }
+        inputEl.innerHTML = idString;
+    }
+    
+    // 同步更新页面上可见卡牌的选中样式
+    syncCardClasses(idSet);
+}
+
+// 根据 ID 集合同步页面卡牌的选中样式
+function syncCardClasses(displayIdSet) {
+    document.querySelectorAll(".card").forEach(cardEl => {
+        const internalId = parseInt(cardEl.dataset.id, 10);
+        const displayId = String(internalId >= 337 ? internalId - 19 : internalId);
+        if (displayIdSet.has(displayId)) {
+            cardEl.classList.add("selected");
+        } else {
+            cardEl.classList.remove("selected");
+        }
+    });
+}
+
+// 更新已选卡片 ID 的显示（由单卡点击触发）
 function updateSelectedIdsDisplay() {
-  const selectedCards = document.querySelectorAll(".card.selected");
-  const selectedIds = Array.from(selectedCards).map(card => {
-    const id = parseInt(card.dataset.id, 10);
-    return id >= 337 ? id - 19 : id;
-  });
-  document.getElementById("selected-ids").innerHTML = selectedIds.join(",");
+    const currentDisplaySet = getSelectedIdsFromUI();
+    
+    // 获取当前页面上所有可见且【未选中】的卡牌 ID
+    const unselectedInDom = new Set();
+    document.querySelectorAll(".card:not(.selected)").forEach(el => {
+        const id = parseInt(el.dataset.id, 10);
+        unselectedInDom.add(String(id >= 337 ? id - 19 : id));
+    });
+
+    // 获取当前页面上所有可见且【选中】的卡牌 ID
+    const selectedInDom = new Set();
+    document.querySelectorAll(".card.selected").forEach(el => {
+        const id = parseInt(el.dataset.id, 10);
+        selectedInDom.add(String(id >= 337 ? id - 19 : id));
+    });
+
+    const nextSet = new Set();
+    selectedInDom.forEach(id => nextSet.add(id));
+    
+    currentDisplaySet.forEach(id => {
+        if (!unselectedInDom.has(id)) {
+            nextSet.add(id);
+        }
+    });
+
+    setSelectedIdsToUI(nextSet);
+}
+
+// 应用手动输入的 ID 列表（导入功能）
+function applySelection() {
+  const inputEl = document.getElementById("selected-ids");
+  const errorEl = document.getElementById("card-manager-error");
+  if (!inputEl) return;
+
+  const inputText = inputEl.value.trim().replace(/\s+/g, '');
+
+  if (inputText === "") {
+    clearAllSelectedCards();
+    if (errorEl) errorEl.style.display = "none";
+    return;
+  }
+
+  // 检查格式是否正确
+  if (!/^\d+(,\d+)*$/.test(inputText)) {
+    if (errorEl) {
+      errorEl.textContent = getI18n("calc.error.invalid-input");
+      errorEl.style.display = "block";
+    }
+    return;
+  }
+  if (errorEl) errorEl.style.display = "none";
+
+  const displayIds = inputText.split(",").map(s => s.trim());
+  setSelectedIdsToUI(new Set(displayIds));
 }
 
 // 渲染卡牌列表
 function renderCards(cards, selectedIds = new Set()) {
   const cardListEl = document.getElementById("card-list");
+  if (!cardListEl) return;
+
   if (cards.length === 0) {
     cardListEl.innerText = getI18n("cardmanager.load-failure") || "卡牌加载失败。";
     return;
@@ -32,13 +126,14 @@ function renderCards(cards, selectedIds = new Set()) {
         cardEl.classList.add("silver-border");
       }
 
-      if (selectedIds.has(card.id)) {
+      const displayId = String(card.id >= 337 ? card.id - 19 : card.id);
+      if (selectedIds.has(displayId)) {
         cardEl.classList.add("selected");
       }
 
       cardEl.innerHTML = `
         <figure>
-          <img src="public/images/card_icons/Card_icon_${card.id >= 337 ? card.id - 19 : card.id}.png"
+          <img src="public/images/card_icons/Card_icon_${displayId}.png"
               alt="${card.title}" onerror="this.onerror=null; this.src='public/images/miscs/placeholder.png';">
           <figcaption>${formatCardCaption(card)}</figcaption>
         </figure>
@@ -53,46 +148,61 @@ function renderCards(cards, selectedIds = new Set()) {
 
 // 设置按钮绑定
 function setupButtons() {
-  document.getElementById("toggle-sr").addEventListener("click", toggleAllSR);
-  document.getElementById("filter-ssr").addEventListener("click", filterSSR);
-  document.getElementById("clear-selection").addEventListener("click", clearAllSelectedCards);
-  document.getElementById("copy-result").addEventListener("click", copySelectedIds);
+  const safeAddListener = (id, event, fn) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener(event, fn);
+  };
+  safeAddListener("toggle-sr", "click", toggleAllSR);
+  safeAddListener("filter-ssr", "click", filterSSR);
+  safeAddListener("clear-selection", "click", clearAllSelectedCards);
+  safeAddListener("copy-result", "click", copySelectedIds);
+  safeAddListener("apply-selection", "click", applySelection);
 }
 
 function toggleAllSR() {
   const toggleButton = document.getElementById("toggle-sr");
+  if (!toggleButton) return;
+
   if (isFilteringSSR) {
     isFilteringSSR = false;
-    document.getElementById("filter-ssr").textContent = getI18n("btn.only-show-ssr");
+    toggleButton.textContent = getI18n("btn.only-show-ssr");
     loadCards(() => toggleAllSR());
     return;
   }
-  const srCards = document.querySelectorAll(".card.silver-border");
-  const allSelected = Array.from(srCards).every(card => card.classList.contains("selected"));
-  srCards.forEach(card => card.classList.toggle("selected", !allSelected));
-  toggleButton.textContent = getI18n(allSelected ? "btn.select-all-sr" : "btn.remove-all-sr");
-  updateSelectedIdsDisplay();
+  
+  fetchAndParseCards().then(allCards => {
+      const allSrDisplayIds = allCards
+        .filter(c => c.rarity.trim() === "3")
+        .map(c => String(c.id >= 337 ? c.id - 19 : c.id));
+
+      const currentSet = getSelectedIdsFromUI();
+      const isAllSrSelected = allSrDisplayIds.every(id => currentSet.has(id));
+
+      if (isAllSrSelected) {
+        allSrDisplayIds.forEach(id => currentSet.delete(id));
+      } else {
+        allSrDisplayIds.forEach(id => currentSet.add(id));
+      }
+
+      setSelectedIdsToUI(currentSet);
+      toggleButton.textContent = getI18n(isAllSrSelected ? "btn.select-all-sr" : "btn.remove-all-sr");
+  });
 }
 
 function restoreSelectedCards(selectedIds) {
-  document.querySelectorAll(".card").forEach(card => {
-    if (selectedIds.has(card.dataset.id)) {
-      card.classList.add("selected");
-    }
-  });
+  syncCardClasses(selectedIds);
   updateSelectedIdsDisplay();
 }
 
 function filterSSR() {
   const toggleSRButton = document.getElementById("toggle-sr");
-  const selectedIds = new Set(
-    Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
-  );
+  const selectedIds = getSelectedIdsFromUI();
 
   if (isFilteringSSR) {
     isFilteringSSR = false;
-    document.getElementById("filter-ssr").textContent = getI18n("btn.only-show-ssr");
-    toggleSRButton.textContent = getI18n("btn.select-all-sr");
+    const filterBtn = document.getElementById("filter-ssr");
+    if (filterBtn) filterBtn.textContent = getI18n("btn.only-show-ssr");
+    if (toggleSRButton) toggleSRButton.textContent = getI18n("btn.select-all-sr");
     loadCards().then(() => restoreSelectedCards(selectedIds));
   } else {
     fetch("public/data/character_card.csv")
@@ -100,25 +210,23 @@ function filterSSR() {
       .then(csv => {
         const cards = parseCSV(csv);
         const ssrCards = cards.filter(card => card.rarity.trim() === "4");
-        renderCards(ssrCards);
+        renderCards(ssrCards, selectedIds);
         isFilteringSSR = true;
-        document.getElementById("filter-ssr").textContent = getI18n("btn.show-all");
-        toggleSRButton.textContent = getI18n("btn.sr-disabled");
-        restoreSelectedCards(selectedIds);
+        const filterBtn = document.getElementById("filter-ssr");
+        if (filterBtn) filterBtn.textContent = getI18n("btn.show-all");
+        if (toggleSRButton) toggleSRButton.textContent = getI18n("btn.sr-disabled");
       })
       .catch(err => console.error("加载卡牌数据失败:", err));
   }
 }
 
 function clearAllSelectedCards() {
-  document.querySelectorAll(".card.selected").forEach(card => {
-    card.classList.remove("selected");
-  });
-  updateSelectedIdsDisplay();
+  setSelectedIdsToUI(new Set());
 }
 
 function copySelectedIds() {
-  const text = document.getElementById("selected-ids").innerText;
+  const inputEl = document.getElementById("selected-ids");
+  const text = inputEl ? inputEl.value : "";
   const ids = text.match(/\d+(,\s*\d+)*/);
   if (!ids) {
     alert(getI18n("alert.no-selection") || "No cards selected.");
@@ -142,4 +250,5 @@ function updateDynamicText() {
   setText("toggle-sr", isFilteringSSR ? "btn.sr-disabled" : "btn.select-all-sr");
   setText("filter-ssr", isFilteringSSR ? "btn.show-all" : "btn.only-show-ssr");
   setText("copy-result", "btn.copy");
+  setText("apply-selection", "btn.import");
 }

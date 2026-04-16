@@ -254,13 +254,11 @@ async function loadCards() {
     await loadKojoIds19();
     const cards = await fetchAndParseCards();
     const filteredCards = filterHighRarityCards(cards);
-    renderCards(filteredCards);
+    
+    // 不再从 localStorage 恢复，每次进入/刷新均为干净状态
+    renderCards(filteredCards, new Set());
 
-    // 保持选中状态
-    restoreSelectedCards(new Set(
-        Array.from(document.querySelectorAll(".card.selected")).map(card => card.dataset.id)
-    ));
-
+    // 设置按钮绑定
     setupButtons();
 }
 
