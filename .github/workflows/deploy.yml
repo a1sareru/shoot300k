@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -36,7 +36,7 @@ jobs:
 
       - name: Set Up Python
         if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.10"
 
@@ -79,8 +79,6 @@ jobs:
           echo "No data changes detected. Retrieving solutions from artifacts branch."
           git fetch origin artifacts
           git checkout origin/artifacts -- solutions/ data-last-update repo-last-update || echo "Could not find solutions in artifacts branch."
-          # If checkout failed (branch doesn't exist or files missing), we'll still continue but might have missing files.
-          # But since we confirmed artifacts exists, it should be fine.
           
           # Update repo-last-update to current date for the deployment
           date +"%Y-%m-%d" > repo-last-update
@@ -117,13 +115,14 @@ jobs:
           fi
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: "."
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
+
