@@ -1,0 +1,129 @@
+name: Build and Deploy to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for Data Changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            data:
+              - 'public/data/**'
+              - 'scripts/calc.py'
+              - 'scripts/requirements.txt'
+              - '.github/workflows/deploy.yml'
+
+      - name: Set Up Python
+        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
+
+      - name: Run Calculation Script
+        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          python scripts/calc.py \
+            -c public/data/character_card.csv \
+            -b public/data/card_give_characteristic.csv \
+            -g public/data/card_give_characteristic_grow_list.csv \
+            -t public/data/characteristics_normal.csv \
+            -o output/
+
+      - name: Generate Last Update Information
+        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
+        id: last_update
+        run: |
+          FILE_PATH="public/data/card_give_characteristic.csv"
+          # Get the last commit date for the file
+          last_modified=$(git log -1 --format="%at" -- "$FILE_PATH" | xargs -I{} date -d @{} +"%Y-%m-%d")
+          echo "Last modified date of $FILE_PATH: $last_modified"
+          echo "$last_modified" > data-last-update
+          
+          # repo-last-update is today's date
+          current_date=$(date +"%Y-%m-%d")
+          echo "$current_date" > repo-last-update
+          
+          # Move outputs to solutions folder
+          rm -rf solutions/
+          mv output/ solutions/
+
+      - name: Retrieve Cached Solutions
+        if: steps.filter.outputs.data == 'false' && github.event_name != 'workflow_dispatch'
+        run: |
+          echo "No data changes detected. Retrieving solutions from artifacts branch."
+          git fetch origin artifacts
+          git checkout origin/artifacts -- solutions/ data-last-update repo-last-update || echo "Could not find solutions in artifacts branch."
+          # If checkout failed (branch doesn't exist or files missing), we'll still continue but might have missing files.
+          # But since we confirmed artifacts exists, it should be fine.
+          
+          # Update repo-last-update to current date for the deployment
+          date +"%Y-%m-%d" > repo-last-update
+
+      - name: Sync to Artifacts Branch
+        if: steps.filter.outputs.data == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Use a temporary worktree to push to artifacts branch
+          git fetch origin artifacts || true
+          if git rev-parse --verify origin/artifacts >/dev/null 2>&1; then
+            git worktree add ./artifacts-tmp origin/artifacts
+            rm -rf ./artifacts-tmp/solutions/ ./artifacts-tmp/data-last-update ./artifacts-tmp/repo-last-update
+            cp -r solutions/ ./artifacts-tmp/
+            cp data-last-update ./artifacts-tmp/
+            cp repo-last-update ./artifacts-tmp/
+            cd artifacts-tmp
+            git add .
+            git commit -m "Update artifacts: $(date)" || echo "No changes to commit"
+            git push origin artifacts
+            cd ..
+            git worktree remove artifacts-tmp
+          else
+            # Branch doesn't exist, create it
+            git checkout --orphan artifacts
+            git rm -rf .
+            cp -r solutions/ data-last-update repo-last-update ./
+            git add solutions/ data-last-update repo-last-update
+            git commit -m "Initialize artifacts branch"
+            git push origin artifacts
+            git checkout main
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
