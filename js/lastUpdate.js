@@ -1,6 +1,6 @@
 async function fetchRepoLastUpdated() {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/repo-last-update');
+        const response = await fetch('repo-last-update');
         if (!response.ok) throw new Error(`Request fail: ${response.status}`);
 
         const lastUpdated = (await response.text()).trim();
@@ -25,7 +25,7 @@ async function fetchRepoLastUpdated() {
 
 async function fetchCardDataLastUpdated() {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/a1sareru/shoot300k/refs/heads/artifacts/data-last-update');
+        const response = await fetch('data-last-update');
         if (!response.ok) throw new Error(`请求失败: ${response.status}`);
 
         const lastUpdated = (await response.text()).trim();
