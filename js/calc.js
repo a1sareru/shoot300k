@@ -87,10 +87,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!quadCandidate || !card0Candidates) continue; // 跳过空数据
 
                 // 如果勾选了"只显示五张全有"，检查是否全部持有
+                // 正确逻辑：4张固定卡全部持有 AND N张候选卡中至少持有1张
                 if (onlyOwnedAll) {
-                    const allFiveCards = [...quadCandidate, ...card0Candidates];
-                    const allOwned = allFiveCards.every(id => filteredIds19Set.has(id));
-                    if (!allOwned) continue; // 不是全部持有，跳过
+                    const quadAllOwned = quadCandidate.every(id => filteredIds19Set.has(id));
+                    const anyCard0Owned = card0Candidates.some(id => filteredIds19Set.has(id));
+                    if (!quadAllOwned || !anyCard0Owned) continue; // 不满足条件，跳过
                 }
 
                 if (card0Candidates.some(id => filteredIds19.includes(id))) {
