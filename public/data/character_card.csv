@@ -1286,7 +1286,7 @@ id,title,character_id,rarity,country,character_first_name_en,series,manually_add
 1304,【新作に記念のシャッターを】リケ,4,2,1,riquet,af_2025+,1
 1305,【台本チェックは入念に】ブラッドリー,9,2,2,bradley,af_2025+,1
 1306,【赫く風は彼に従い】ブラッドリー,9,4,2,bradley,,1
-1307,【夜闇色の花を回せて】ファウスト,10,4,3,faust,,1
+1307,【夜闇色の花を舞わせて】ファウスト,10,4,3,faust,,1
 1308,【雨雫色の煌めく夜に】ヒースクリフ,12,4,3,heathcliff,,1
 1309,【いびつな瞳を歪めて】オーエン,8,3,2,owen,,1
 1310,【仮面の下に隠すのは】ムル,15,3,4,murr,,1
@@ -1566,3 +1566,7 @@ id,title,character_id,rarity,country,character_first_name_en,series,manually_add
 1584,【らしくもない舌打ち】ブラッドリー,9,3,2,bradley,summer_2026+,1
 1585,【多分これもアイス！】カイン,3,2,1,cain,summer_2026+,1
 1586,【これがアイス……？】ファウスト,10,2,3,faust,summer_2026+,1
+1587,【先駆の騎士が御するは】カイン,3,4,1,cain,rensen10+,1
+1588,【美味しいご飯……？】ホワイト,6,3,2,white,rensen10+,1
+1589,【待て待てー！】ムル,15,2,4,murr,rensen10+,1
+1590,【どっちが好きかな？】ルチル,19,2,5,rutile,rensen10+,1
